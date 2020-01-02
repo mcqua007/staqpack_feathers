@@ -6,8 +6,6 @@ module.exports = (options = {}) => {
   return async context => {
         // Get authenticated user
     const user = context.params.user;
-    console.log("User: ", user);
-    console.log("context: ", context);
     //Extract Submitted Data
     const { data } = context;
  
@@ -15,7 +13,6 @@ module.exports = (options = {}) => {
     context.data = {
       ...data, // Preserve submitted data
       createdBy: user._id,
-      // createdOn: new Date()
     };
 
     return context;
