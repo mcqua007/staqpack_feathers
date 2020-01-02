@@ -12,7 +12,7 @@ module.exports = function (app) {
     todos: {type: Schema.Types.ObjectId, ref: 'Todo'},
     tags: { type: [String] },
     severity: {type: Number, enum: [1,2,3]},
-    createdBy: {type: String, required: true}
+    createdBy: {type: String}
   }, {
     timestamps: true
   });
