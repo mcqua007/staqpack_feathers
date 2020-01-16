@@ -1,11 +1,12 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
+const getCreatedByUserId = require('../../hooks/get-created-by-user-id');
 
 module.exports = {
   before: {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [],
+    create: [getCreatedByUserId()],
     update: [],
     patch: [],
     remove: []

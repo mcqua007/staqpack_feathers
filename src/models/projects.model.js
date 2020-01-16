@@ -5,8 +5,14 @@
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
+  
   const projects = new Schema({
-    text: { type: String, required: true }
+    name: { type: String, required: true },
+    description: String,
+    open: {type: Boolean, required: true, default: true},
+    type: {type: String, enum: ["personal", "team"]},
+    teamId: String,
+    createdBy: String
   }, {
     timestamps: true
   });
