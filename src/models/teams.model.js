@@ -7,8 +7,9 @@ module.exports = function (app) {
   const { Schema } = mongooseClient;
   const teams = new Schema({
     name: { type: String, required: true },
-    projects: {type: Schema.Types.ObjectId, ref: 'Projects'},
-    createdBy: String
+    //projects: [{type: Schema.Types.ObjectId, ref: 'Projects'}],
+    members: [{type: Schema.Types.ObjectId, ref: 'Users', Required: true}],
+    createdBy: {type: Schema.Types.ObjectId, ref: 'Users'}
   }, {
     timestamps: true
   });

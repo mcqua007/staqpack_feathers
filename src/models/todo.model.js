@@ -7,8 +7,8 @@ module.exports = function (app) {
   const { Schema } = mongooseClient;
   const todo = new Schema({
     name: { type: String, required: true },
-    open: {type: Boolean, default: true},
-    createdBy: String
+    completed: {type: Boolean, default: false},
+    createdBy: {type: Schema.Types.ObjectId, ref: 'Users'}
   }, {
     timestamps: true
   });

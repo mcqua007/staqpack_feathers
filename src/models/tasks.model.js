@@ -8,11 +8,13 @@ module.exports = function (app) {
   const tasks = new Schema({
     name: { type: String, required: true },
     description: { type: String },
-    open: {type: Boolean, required: true, default: true},
-    todos: {type: Schema.Types.ObjectId, ref: 'Todo'},
+    completed: {type: Boolean, required: true, default: false},
+    archived: {type: Boolean, required: true, default: false},
     tags: { type: [String] },
     severity: {type: Number, enum: [1,2,3]},
-    createdBy: {type: String}
+    order:{type: Number, required: true, default: 0},
+    createdBy: {type: Schema.Types.ObjectId, ref: 'Users'},
+    projectId: {type: Schema.Types.ObjectId, ref: 'Projects', required: true },
   }, {
     timestamps: true
   });
