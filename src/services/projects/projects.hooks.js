@@ -30,9 +30,7 @@ module.exports = {
 
   after: {
     all: [],
-    find: [
-      //checkIfMemberOfTeam()
-    ],
+    find: [],
     get: [],
     create: [],
     update: [],
