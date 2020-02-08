@@ -1,20 +1,38 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const getCreatedByUserId = require('../../hooks/get-created-by-user-id');
+const { setField } = require('feathers-authentication-hooks');
+const restrictToMembers = require('../../hooks/restrict-to-members');
+
+const limitToUser = setField({
+  from: 'params.user._id',
+  as: 'params.query.createdBy'
+});
+
+const setCreatedById = setField({
+  from: 'params.user._id',
+  as: 'data.createdBy'
+});
+
+
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
-    find: [],
-    get: [],
-    create: [getCreatedByUserId()],
-    update: [],
-    patch: [],
-    remove: []
+    all:  [authenticate('jwt'), restrictToMembers()],
+    find: [restrictToMembers()],
+    get:  [restrictToMembers()],
+    create: [
+      setCreatedById,
+      restrictToMembers() 
+    ],
+    update: [restrictToMembers()],
+    patch:  [restrictToMembers()],
+    remove: [restrictToMembers()]
   },
 
   after: {
     all: [],
-    find: [],
+    find: [
+      //checkIfMemberOfTeam()
+    ],
     get: [],
     create: [],
     update: [],
