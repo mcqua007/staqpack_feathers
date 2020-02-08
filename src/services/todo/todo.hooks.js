@@ -1,12 +1,19 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
-const getCreatedByUserId = require('../../hooks/get-created-by-user-id');
+const { setField } = require('feathers-authentication-hooks');
+
+const setCreatedById = setField({
+  from: 'params.user._id',
+  as: 'data.createdBy'
+});
 
 module.exports = {
   before: {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [getCreatedByUserId()],
+    create: [ 
+      setCreatedById 
+    ],
     update: [],
     patch: [],
     remove: []
