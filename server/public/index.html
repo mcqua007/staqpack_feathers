@@ -71,5 +71,49 @@
         <p class="center-text">For more information on Feathers see <a href="https://docs.feathersjs.com" title="Feathers Documentation" target="blank">docs.feathersjs.com</a>.</p>
       </footer>
     </main>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.1.4/core.min.js"></script>
+<script src="//unpkg.com/@feathersjs/client@^3.0.0/dist/feathers.js"></script>
+<script src="//unpkg.com/socket.io-client@1.7.3/dist/socket.io.js"></script>
+<script>
+  // Socket.io is exposed as the `io` global.
+  var socket = io('http://localhost:3030');
+  // @feathersjs/client is exposed as the `feathers` global.
+  var app = feathers();
+
+  // Set up Socket.io client with the socket
+  app.configure(feathers.socketio(socket));
+
+  socket.emit('create', 'authentication', {
+  strategy: 'local',
+  email: 'john@test.com',
+  password: 'password2'
+}, function(error, authResult) {
+  console.log(authResult); 
+  // authResult will be {"accessToken": "your token", "user": user }
+  // You can now send authenticated messages to the server
+
+       socket.on('connect', () => {
+         socket.emit('create', 'authentication', {
+           strategy: 'jwt',
+           accessToken: authResult.accessToken
+         }, function(error, newAuthResult) {
+           console.log(newAuthResult); 
+         });
+       });
+});
+
+
+
+
+socket.emit('get', 'tasks', 1, (error, message) => {
+  console.log('Found taks', message);
+});
+  // Receive real-time events through Socket.io
+  app.service('projects')
+    .on('created', message => console.log('New message created', message));
+
+
+  // feathers.errors is an object with all of the custom error types.
+</script>
   </body>
 </html>

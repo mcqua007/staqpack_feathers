@@ -1,8 +1,21 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
+
+<script>
+//import Main from './components/Main.vue'
+//import Home from './views/Home.vue'
+
+
+export default {
+  name: 'App',
+  components: {
+   // Home,
+  }
+}
+</script>
 
 <style>
 #app {
@@ -11,18 +24,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin-top: 60px;
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+img{
+  max-width: 500px;
+  width:100%;
 }
 </style>

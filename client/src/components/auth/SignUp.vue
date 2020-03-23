@@ -15,10 +15,10 @@
               <label for="password"><b>Password:</b></label>
               <input type="password" class="form-control"  name="password" placeholder="Super Secret Password" v-model="password">
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label for="alias"><b>Username:</b></label>
               <input type="text" class="form-control" name="username" placeholder="burgerbob" v-model="username">
-            </div>
+            </div> -->
 
 
             <div class="form-group text-center">
@@ -34,6 +34,9 @@
 
 <script>
 
+//import feathersClient from '../../../feathers-client-config.js'
+
+import axios from 'axios';
 
 export default {
   name: 'SignUp',
@@ -41,14 +44,28 @@ export default {
     return {
       email: null,
       password: null,
-      username: null,
+      //username: null,
       slug: null,
       output: null
     }
   },
   methods: {
     signup() {
-
+    if(this.email && this.password ){
+       axios.post('http://localhost:3030/users', {
+           email: this.email,
+           password: this.password
+       }).then((res) =>{
+           console.log('Created User:', res)
+          this.$store.dispatch('authenticateUser', { 
+              strategy: 'local',
+              email: this.email, 
+              password: this.password
+         });
+       }).catch((err) => {
+           console.log(err);
+       })
+     }
     }
   }
 }

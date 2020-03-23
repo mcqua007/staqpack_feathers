@@ -1,14 +1,21 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div>
+    <h1>This is restricted to logged in users only </h1>
+    <button @click="logout">Logout</button>
   </div>
 </template>
 
 <script>
+import feathersClient from '../../feathers-client-config.js'
 export default {
   name: 'Main',
-  props: {
-    msg: String
+  methods: {
+    logout(){
+      feathersClient.logout();
+      //alert('You are Logged out!');
+      this.$store.commit('destroyUser');
+      this.$router.push({name: 'Home'}); //once logged out
+    }
   }
 }
 </script>

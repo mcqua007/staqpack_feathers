@@ -26,9 +26,8 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
-
-
+//import axios from 'axios';
+//import feathersClient from '../../../feathers-client-config.js'
   export default {
     name: 'Login',
     data(){
@@ -39,21 +38,56 @@ import axios from 'axios';
       }
     },
     methods: {
-      login(){
-        if(this.email && this.password){
-           axios.post('http://localhost:3030/authentication/',{
-               strategy: 'local',
-               email: this.email,
-               password: this.password
+    //   login(){
+    //     if(this.email && this.password){
+    //        axios.post('http://localhost:3030/authentication/',{
+    //            strategy: 'local',
+    //            email: this.email,
+    //            password: this.password
 
-           }).then((res)=>{
-                console.log(res);
-                 this.$store.dispatch('setUser', res.data);
-                 this.$router.push({name: 'Main'}) //once logged route to login
+    //        }).then((res)=>{
+    //             console.log(res);
+    //              this.$store.dispatch('setUser', res.data);
+    //              this.$router.push({name: 'Main'}) //once logged route to login
 
-           }).catch((error)=>{
-              console.log(error);
-         });
+    //        }).catch((error)=>{
+    //           console.log(error);
+    //      });
+    //     }
+    //   }
+     login(){
+        if(this.email && this.password){ 
+            this.$store.dispatch('authenticateUser', {
+              strategy: 'local',
+              email: this.email,
+              password: this.password
+            });
+          // Authenticate with the local email/password strategy 
+        //   feathersClient.authenticate({
+        //     strategy: 'local',
+        //     email: this.email,
+        //     password: this.password
+        //   }).then((res) => {
+        //     // Logged in
+        //     console.log(res);
+        //     this.$store.dispatch('setUser', res.user);
+
+        //     this.$router.push({name: 'Main'}) //once logged route to login
+        //   }).catch(e => {
+        //     // Show login page (potentially with `e.message`)
+        //     console.error('Authentication error', e);
+        //   });
+
+         //socket password stratgegy
+        //  socket.emit('create', 'authentication', {
+        //    strategy: 'local',
+        //    email: this.email,
+        //    password: this.password
+        //  }, function(error, authResult) {
+        //    console.log(authResult); 
+        //    // authResult will be {"accessToken": "your token", "user": user }
+        //    // You can now send authenticated messages to the server
+        //  });
         }
       }
     }
