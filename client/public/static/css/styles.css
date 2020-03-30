@@ -5,3 +5,13 @@
   font-family: 'Leckerli One', cursive;
   font-size: 25px;
 }
+a,[role="link"]{
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+a:hover,[role="link"]:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    cursor: pointer;
+}
