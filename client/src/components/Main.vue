@@ -1,14 +1,25 @@
 <template>
   <div>
+    <TopBar></TopBar>
+    <div class="container">
+      <Forms></Forms>
+    </div>
     <h1>This is restricted to logged in users only </h1>
     <button @click="logout">Logout</button>
   </div>
 </template>
 
 <script>
-import feathersClient from '../../feathers-client-config.js'
+import feathersClient from '@/feathers-client-config.js'
+import TopBar from '@/components/layout/TopBar.vue'
+import Forms from '@/components/layout/Forms.vue'
+
 export default {
   name: 'Main',
+  components:{
+    TopBar,
+    Forms,
+  },
   methods: {
     logout(){
       feathersClient.logout();
