@@ -18,7 +18,10 @@
        <div class="link-wrap">
            <router-link to="/contact">Contact Us</router-link>
       </div>
-      <div class="link-wrap">
+      <div v-if="loggedIn" class="link-wrap">
+          <span class="link" role="link" @click="$store.dispatch('logout')">Log Out</span>
+      </div>
+      <div v-else class="link-wrap">
            <router-link to="/login">Log In</router-link>
       </div>
      </div>
@@ -38,16 +41,21 @@ export default {
   name: 'Footer',
   data(){
      return{
-         year: new Date().getFullYear()
+         loggedIn: null,
+         year: new Date().getFullYear(),
      }
   },
   components:{
 
   },
   computed:{
-
+  
   },
-  methods: {
+   mounted(){
+    console.log('logged in footer', this.$store.getters.getUser)
+    if(this.$store.getters.getUser){
+        this.loggedIn = true;
+    }
   }
 }
 </script>
