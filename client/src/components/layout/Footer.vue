@@ -52,7 +52,6 @@ export default {
   
   },
    mounted(){
-    console.log('logged in footer', this.$store.getters.getUser)
     if(this.$store.getters.getUser){
         this.loggedIn = true;
     }

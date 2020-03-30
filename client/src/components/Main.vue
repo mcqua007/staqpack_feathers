@@ -1,27 +1,28 @@
 <template>
   <div>
     <TopBar></TopBar>
-    <div class="container">
+    <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar>
+    <div class="container margin-tb-50">
       <Forms></Forms>
     </div>
     <h1>This is restricted to logged in users only </h1>
     <button @click="$store.dispatch('logout')">Logout</button>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
 //import feathersClient from '@/feathers-client-config.js'
 import TopBar from '@/components/layout/TopBar.vue'
+import SideBar from '@/components/layout/SideBar.vue'
 import Forms from '@/components/layout/Forms.vue'
-//import Footer from '@/components/layout/Footer.vue'
+
 
 export default {
   name: 'Main',
   components:{
     TopBar,
-    Forms,
-    // Footer,
+    SideBar,
+    Forms
   },
 }
 </script>

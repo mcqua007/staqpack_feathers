@@ -15,3 +15,10 @@ a:hover,[role="link"]:hover {
 button:hover{
     cursor: pointer;
 }
+*:focus{
+    outline: none !important;
+}
+.margin-tb-50{
+    margin-top:50px;
+    margin-bottom: 50px;
+}

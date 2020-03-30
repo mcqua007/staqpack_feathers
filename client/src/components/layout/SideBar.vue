@@ -1,22 +1,23 @@
 <template lang="html">
+<!-- eslint-disable -->
   <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}" style="margin-top: -11px;">
-     <nav v-bind:class="{'nav':true, 'flex-column':true, 'collapsed':($store.getters.sideBarState == false)} " id="menu-list" style="">
+   <!-- <nav v-bind:class="{'nav':true, 'flex-column':true, 'collapsed':($store.getters.sideBarState == false)} " id="menu-list" style=""> -->
       <div class="nav-link" role="link" tabindex="0" @click="toggleUserMenu()" id="sidebar-username"><i class="fas fa-user-circle"></i>&nbsp; {{ userName }} </div>
       <div v-show="userMenuState">
         <div class="bordertop"></div> <!-- Border Top - To Show Active -->
         <div class="" id="user-menu" data-collapsed="false">
             <div class="m-left-10">
-               <a class="nav-link" role="link"  @click="logout()"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
+               <a class="nav-link" role="link"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
                <!-- Might not do it this way if i want to go to a new page -->
                <!-- <a class="nav-link" role="link"  @click="toggleGitSettings()"> <i class="fab fa-github"></i>&nbsp; Git Settings</a> -->
                <!-- <router-link to="/gitsettings">Git Settings</router-link> -->
             </div>
        </div>
       </div>
-       <div class="navItem">
+       <!-- <div class="navItem">
          <div role="link" tabindex="0" @click="toggleProjectMenu()" class="navItemLink link nav-link"> <i class="fa fa-folder"></i>&nbsp; Your Projects</div>
              <div v-show="projectMenuState" id="user-project-menu" >
-                <div class="bordertop"></div> <!-- Border Top - To Show Active -->
+                <div class="bordertop"></div>
                <div class="user-menu-items" id="user-projects-menu-items">
                 <ul style="">
                    <li role="link" class="m-top-8" v-for="project in projects" @click="openProject(project.projectId, project.projectName)"	v-bind:data-title="project.projectName" v-bind:data-id="project.projectId">
@@ -25,8 +26,8 @@
                 </ul>
               </div>
             </div>
-         </div>
-         <div class="navItem">
+         </div> -->
+         <!-- <div class="navItem">
            <div role="link" tabindex="0" @click="toggleTeamMenu()"  class="navItemLink link nav-link"> <i class="fa fa-users"></i>&nbsp; Your Teams</div>
            <div  v-show="teamMenuState" class="" id="team-menu">
              <div class="bordertop"></div>
@@ -48,9 +49,9 @@
                 </div>
              </div>
            </div>
-        <div class="navItem nav-link">
+        <!-- <div class="navItem nav-link">
           <div class="" role="link" @click="openAllTasks()"> <i class="fa fa-tasks"></i>&nbsp; View All Tasks</div>
-        </div>
+        </div>  -->
     </nav>
   </div>
 </template>
@@ -70,7 +71,7 @@ General - need to load a project once project
 is clicked
 
 ============================================*/
-import Router from 'vue-router'
+// import Router from 'vue-router'
 
 export default {
   name: 'SideBar',
@@ -89,60 +90,58 @@ export default {
     }
   },
   methods: {
-    openAllTasks(){
-      console.log("in opentask sidebar");
-      this.$emit('loadAllTasks');
-    },
-    toggleGitSettings(){
-      //Toggle Project to true if is is not visible
-      if(this.$store.getters.projectState == true){
-        this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-      }
-      //Toggle git settings
-      this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-   },
+  //   openAllTasks(){
+  //     console.log("in opentask sidebar");
+  //     this.$emit('loadAllTasks');
+  //   },
+  //   toggleGitSettings(){
+  //     //Toggle Project to true if is is not visible
+  //     if(this.$store.getters.projectState == true){
+  //       this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+  //     }
+  //     //Toggle git settings
+  //     this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
+  //  },
    toggleUserMenu(){
      this.userMenuState = !this.userMenuState;
    },
-   toggleProjectMenu(){
-     this.projectMenuState = !this.projectMenuState;
-   },
-   toggleTeamMenu(){
-     this.teamMenuState = !this.teamMenuState;
-   },
-   toggleTeamProjectMenu(id){
-     this.teamProjectMenuState = !this.teamProjectMenuState;
-     if(this.teamProjectMenuState == true){
-        this.teamId = id; //may not be needded ?
-        //Search teams array
-        for(var i in this.teamProjectsData){      
-          if(this.teamProjectsData[i].teamId == id){
-            this.teamProjects = this.teamProjectsData[i].data.projects;
-          }
-       }
-     }
-     else {     
-       this.teamProjects = null; //Set team projects to null , if not displaying
-     }
-   },
+  //  toggleProjectMenu(){
+  //    this.projectMenuState = !this.projectMenuState;
+  //  },
+  //  toggleTeamMenu(){
+  //    this.teamMenuState = !this.teamMenuState;
+  //  },
+  //  toggleTeamProjectMenu(id){
+  //    this.teamProjectMenuState = !this.teamProjectMenuState;
+  //    if(this.teamProjectMenuState == true){
+  //       this.teamId = id; //may not be needded ?
+  //       //Search teams array
+  //       for(var i in this.teamProjectsData){      
+  //         if(this.teamProjectsData[i].teamId == id){
+  //           this.teamProjects = this.teamProjectsData[i].data.projects;
+  //         }
+  //      }
+  //    }
+  //    else {     
+  //      this.teamProjects = null; //Set team projects to null , if not displaying
+  //    }
+  //  },
    logout(){
-      feathersClient.logout();
       //alert('You are Logged out!');
-      this.$store.commit('destroyUser');
-      this.$router.push({name: 'Home'}); //once logged out
+      this.$store.dispatch('logout');
     },
-   openProject(projectId, projectName){
-     this.$emit('projectOpen', projectId, projectName);
+  //  openProject(projectId, projectName){
+  //    this.$emit('projectOpen', projectId, projectName);
 
-     //Hide Git Settings if it is open
-     if(this.$store.getters.gitSettingsState == true){
-       this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-     }
-    //Toggle Project to true if is is not visible
-    if(this.$store.getters.projectState == false){
-      this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-    }
-  },
+  //    //Hide Git Settings if it is open
+  //    if(this.$store.getters.gitSettingsState == true){
+  //      this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
+  //    }
+  //   //Toggle Project to true if is is not visible
+  //   if(this.$store.getters.projectState == false){
+  //     this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+  //   }
+  // },
   // buildTeamProjects(teamData){
   //   var that = this;
   //   var promises = [];
