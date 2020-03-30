@@ -57,7 +57,7 @@
     //   }
      login(){
         if(this.email && this.password){ 
-            this.$store.dispatch('authenticateUser', {
+            this.$store.dispatch('login', {
               strategy: 'local',
               email: this.email,
               password: this.password

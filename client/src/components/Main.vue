@@ -5,29 +5,24 @@
       <Forms></Forms>
     </div>
     <h1>This is restricted to logged in users only </h1>
-    <button @click="logout">Logout</button>
+    <button @click="$store.dispatch('logout')">Logout</button>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
-import feathersClient from '@/feathers-client-config.js'
+//import feathersClient from '@/feathers-client-config.js'
 import TopBar from '@/components/layout/TopBar.vue'
 import Forms from '@/components/layout/Forms.vue'
+//import Footer from '@/components/layout/Footer.vue'
 
 export default {
   name: 'Main',
   components:{
     TopBar,
     Forms,
+    // Footer,
   },
-  methods: {
-    logout(){
-      feathersClient.logout();
-      //alert('You are Logged out!');
-      this.$store.commit('destroyUser');
-      this.$router.push({name: 'Home'}); //once logged out
-    }
-  }
 }
 </script>
 

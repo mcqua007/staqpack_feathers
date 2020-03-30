@@ -8,7 +8,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: null,
-    isLoggedIn: false,
     projectFormVisible: false,
     sideBarVisible: false,
   },
@@ -30,15 +29,15 @@ export default new Vuex.Store({
 
   },
   actions: {
-  //  setUser (context, data) {
-  //     context.commit('setUser', data);
-  //   },
-    authenticateUser(context, data){
-      console.log(data);
+   logout(context) {
+      feathersClient.logout();
+      context.commit('destroyUser');
+      router.push({name: 'Home'}); //once logged out
+    },
+    login(context, data){
      feathersClient.authenticate(data)
      .then((res) => {
         // Logged in
-        console.log(res);
         context.commit('setUser', res.user);
         router.push({name: 'Main'}) //once logged route to login
       }).catch(e => {
@@ -48,7 +47,6 @@ export default new Vuex.Store({
     authenticate(context){
       return new Promise((resolve, reject) => {
       feathersClient.reAuthenticate().then((res) => {
-       console.log("auth res", res);
        context.commit('setUser', res.user);
        resolve();
      }).catch((e) => {
@@ -56,8 +54,8 @@ export default new Vuex.Store({
             console.error('Authentication error', e);
         reject();
      });
-      })
-    }
+    })
+   }
   },
   getters: {
     getUser(state){
