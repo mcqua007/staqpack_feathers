@@ -27,7 +27,7 @@
 </template>
 <script>
 //import axios from 'axios';
-//import feathersClient from '../../../feathers-client-config.js'
+
   export default {
     name: 'Login',
     data(){
