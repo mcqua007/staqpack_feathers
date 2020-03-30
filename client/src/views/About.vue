@@ -30,5 +30,8 @@ export default {
   width:100%;
   margin: 25px 0;
 }
+.logo-font{
+    font-size: 42px;
+}
 
 </style>

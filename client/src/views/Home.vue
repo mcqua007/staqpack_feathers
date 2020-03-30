@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <img alt="checklist" src="../assets/checklist.svg">
-     <h1> Welcome to staqpack</h1>
+     <h1> Welcome to <span class="logo-font">Staqpack</span></h1>
      <Footer></Footer>
   </div>
 </template>
@@ -22,5 +22,7 @@ export default {
   width:100%;
   margin: 25px 0;
 }
-
+.logo-font{
+  font-size: 45px;
+}
 </style>
