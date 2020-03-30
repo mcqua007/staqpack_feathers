@@ -33,9 +33,6 @@
 </template>
 
 <script>
-
-//import feathersClient from '../../../feathers-client-config.js'
-
 import axios from 'axios';
 
 export default {
