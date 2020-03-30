@@ -7,7 +7,7 @@ import Main from '@/components/Main'
 import SignUp from '@/components/auth/SignUp'
 import Login from '@/components/auth/Login'
 import store from '../store'
-//import feathersClient from '@/feathers-client-config.js'
+
 
 Vue.use(VueRouter)
 
