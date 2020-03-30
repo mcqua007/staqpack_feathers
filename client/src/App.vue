@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <!-- <Footer></Footer> -->
   </div>
 </template>
 
 <script>
 //import Main from './components/Main.vue'
-//import Home from './views/Home.vue'
-
+//import Footer from '@/components/layout/Footer.vue'
 
 export default {
   name: 'App',
   components: {
-   // Home,
+   //Footer,
   }
 }
 </script>
