@@ -1,9 +1,6 @@
 /* App wide css goes here */
-.logo-style{
-  margin-top: -30px;
-  color: #fff;
+.logo-font{
   font-family: 'Leckerli One', cursive;
-  font-size: 25px;
 }
 a,[role="link"]{
     color: #007bff;

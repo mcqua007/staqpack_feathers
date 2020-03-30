@@ -1,6 +1,6 @@
 <template>
   <div class="about container">
-     <h1> About Staqpack </h1>
+     <h1> About <span class="logo-font">Staqpack</span></h1>
      <div class="row">
          <div class="col-12 text-center">
              <img src="https://woobro.design/thumbnails/26/development-illustration-5de17f18abc70.png"/>

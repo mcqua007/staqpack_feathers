@@ -4,7 +4,7 @@
     <hr>
         <div class="row">
       <div class="col-12 text-center">
-          <span class="logo-style">Staqpack</span>
+          <span class="logo-style logo-font">Staqpack</span>
       </div>
     </div>
     <div class="row">
@@ -77,7 +77,7 @@ hr{
 .footer-nav .link-wrap:not(:last-child){
     border-right: 1px solid #ccc;
 }
-.logo-style{
+.logo-font{
     color: #007bff;
     font-size: 24px;
 }
