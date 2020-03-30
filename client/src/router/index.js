@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+import Contact from '../views/Contact.vue'
 import Main from '@/components/Main'
 import SignUp from '@/components/auth/SignUp'
 import Login from '@/components/auth/Login'
 import store from '../store'
-
+//import feathersClient from '@/feathers-client-config.js'
 
 Vue.use(VueRouter)
 
@@ -16,16 +18,22 @@ const routes = [
     component: Home
   },
   {
-    path: '/app*',
-    redirect: '/login'
+    path: '/about',
+    name: 'About',
+    component: About
   },
   {
-      path: '/app',
-      name: 'Main',
-      component: Main,
-      meta: {
-        requiresAuth: true
-      }
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
+  },
+  {
+    path: '/app',
+    name: 'Main',
+    component: Main,
+    meta: {
+      requiresAuth: true
+    }
    },
    {
      path: '/signup',
@@ -44,19 +52,17 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const currentUser = store.state.user
+  console.log("app current:", currentUser);
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  const currentUser = store.getters.getUser; //firebase.auth().currentUser;
-  console.log("current user in router: ", currentUser);
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-  if(requiresAuth && !currentUser){
-    next('login');
-  }
-  else if (!requiresAuth && currentUser){
-    next('main');
-  }
-  else{
-    next();
+  if (requiresAuth && !currentUser) {
+    console.log("in next login");
+    next('login')
+  } 
+  else {
+    console.log("in next");
+    next()
   }
 })
 
