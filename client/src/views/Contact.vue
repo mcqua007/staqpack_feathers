@@ -14,7 +14,7 @@
      </form>
      </div>
    </div>
-   <Footer></Footer>
+  <Footer></Footer>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ import Footer from '@/components/layout/Footer.vue'
 export default {
   name: 'Contact',
   components: {
-    Footer
+   Footer
   }
 }
 </script>
