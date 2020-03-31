@@ -1,7 +1,8 @@
 /* App wide css goes here */
-.logo-font{
-  font-family: 'Leckerli One', cursive;
+*:focus{
+    outline: none !important;
 }
+/* anchors & buttons */
 a,[role="link"]{
     color: #007bff;
     text-decoration: none;
@@ -10,15 +11,18 @@ a,[role="link"]{
 a:hover,[role="link"]:hover {
     color: #0056b3;
     text-decoration: underline;
+}
+button:hover, 
+[role="link"]:hover, 
+[role="button"]:hover{
     cursor: pointer;
 }
-button:hover{
-    cursor: pointer;
-}
-*:focus{
-    outline: none !important;
-}
+/* margin utility */
 .margin-tb-50{
     margin-top:50px;
     margin-bottom: 50px;
+}
+/* logo font */
+.logo-font{
+  font-family: 'Leckerli One', cursive;
 }
