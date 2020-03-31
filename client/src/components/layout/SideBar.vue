@@ -1,6 +1,6 @@
 <template lang="html">
 <!-- eslint-disable -->
-  <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}" style="margin-top: -11px;">
+  <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}">
    <!-- <nav v-bind:class="{'nav':true, 'flex-column':true, 'collapsed':($store.getters.sideBarState == false)} " id="menu-list" style=""> -->
       <div class="nav-link" role="link" tabindex="0" @click="toggleUserMenu()" id="sidebar-username"><i class="fas fa-user-circle"></i>&nbsp; {{ userName }} </div>
       <div v-show="userMenuState">
@@ -219,13 +219,13 @@ export default {
 .sidebar-nav {
   width: 0px;
   position: fixed;
-  z-index: 200000000;
+  z-index: 2;
   left: 0;
   opacity: .5;
   overflow: hidden;
-  margin-top: -20px;
+  margin-top: -2px;
   min-width: 0px;
-    max-width: 325px;
+  max-width: 325px;
   transition: all .45s linear;
   height:100%;
 }
@@ -247,11 +247,9 @@ margin-left: 10px;
  margin-top:8px;
 }
 ul {
-
   list-style-type: none;
 }
 .bordertop {
-
   margin-top: 10px;
   border-top: 2px solid #007BFF;
 }
