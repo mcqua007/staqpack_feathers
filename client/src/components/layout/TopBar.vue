@@ -1,19 +1,16 @@
 <template lang="html">
-<div class="top-bar-bg">
-  <div class="menu-icon">
-   <div v-if="$store.getters.sideBarState == true" >
+  <div class="top-bar">
+    <div class="menu-icon" v-if="$store.getters.sideBarState == true" >
       <i class="fa fa-times menu-icon-style" id="menu-icon-close" @click="toggleSideBar()"></i>
     </div>
-     <div v-if="$store.getters.sideBarState == false" >
+     <div class="menu-icon" v-if="$store.getters.sideBarState == false" >
       <i @click="toggleSideBar()" class="fa fa-bars menu-icon-style" id="menu-icon" ></i>
     </div>
-  </div>
-    <center><h3 class="logo-font logo-style">Staqpack</h3></center>
+    <div class="logo-font top-bar-logo">Staqpack</div>
     <div class="btn-group btn-group-style">
-    <button class="add-btn-menu"  type="button" id="btnGroupDrop1" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false" >
-      <i class="fa fa-plus  m-right-5 c-white" id="add-task-icon"></i>
-      <span class="add-task-text c-white"> Add </span></button>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1" data-dropdown-task-id="">
+    <button class="add-btn-menu c-white"  @click="toggleDropdown()" id="btnGroupDrop1" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false" >
+      <i class="fa fa-plus  m-right-5" id="add-task-icon"></i> Add </button>
+     <div  v-if="dropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1" data-dropdown-task-id="">
       <!-- <button class="dropdown-item"   type="button" data-showfront-btn-id="" @click="toggleTaskForm()" > Task </button> -->
       <button class="dropdown-item"   type="button" data-showfront-btn-id="" @click="toggleProjectForm()" > Project</button>
       <!-- <button class="dropdown-item"   type="button" data-complete-btn-id=""  @click="toggleTeamForm()"> Team</button> -->
@@ -25,7 +22,15 @@
 <script>
 export default {
   name: 'TopBar',
+  data(){
+    return{
+      dropdown: false,
+    }
+  },
   methods: {
+    toggleDropdown(){
+      this.dropdown = !this.dropdown;
+    },
     // toggleTaskForm () {
     //   // Hide any other forms open by turning there state to false
 
@@ -82,42 +87,51 @@ export default {
 
 <style lang="css" scoped>
 .add-btn-menu{
-  padding: 7px;
     border-color: transparent;
     background-color: #007bff;
+    padding: 0;
+    text-align: right;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
 }
-.logo-style{
-  margin-top: -30px;
+.dropdown-menu{
+  display:block;
+}
+.add-btn-menu i{
+  font-size: 21px;
+  margin-right: 5px;
+}
+.top-bar-logo{
   color: #fff;
-  font-family: 'Leckerli One', cursive;
   font-size: 25px;
+  margin-left:auto;
 }
 .menu-icon-style{
   color: #fff;
-  padding-top: 7px;
-  padding-left: 6px;
-  margin-bottom: -5px;
-  font-size: 21px;
+  font-size: 22px;
 }
-.top-bar-bg{
+.top-bar{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   background-color: #007bff;
   position: fixed;
-  width: 100%;
-  z-index: 99999;
   top:0px;
+  width:100%;
+  padding: 5px 7.5px;
 }
+
 .btn-group-style{
- float:right;
- padding-right:10px;
- float: right;
- padding-right: 10px;
- position: relative;
- margin-top: -40px;
+ margin-left:auto;
 }
 .c-white{
   color:#fff;
 }
 .menu-icon{
-  width:30px;
+ display:flex;
+ cursor: pointer;
 }
+
 </style>
