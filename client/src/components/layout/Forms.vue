@@ -1,6 +1,6 @@
     <!-- All The Form Componenets -->
 <template>
- <div>
+ <div class="forms">
       <ProjectForm></ProjectForm>
       <!-- <TeamForm></TeamForm>
       <TaskForm v-bind:projectId="projectId" v-on:taskFormInput="emitUp()"></TaskForm> -->
@@ -45,5 +45,8 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.margin-tb-25{
+    margin: 25px 0;
 }
 </style>
