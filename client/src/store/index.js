@@ -26,6 +26,9 @@ export default new Vuex.Store({
     toggleSideBar (state, sideBarState) {
       state.sideBarVisible = !sideBarState
     },
+    // hideProjectForm(state){
+
+    // }
 
   },
   actions: {
