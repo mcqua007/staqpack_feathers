@@ -2,10 +2,10 @@
 <!-- eslint-disable -->
   <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}">
    <!-- <nav v-bind:class="{'nav':true, 'flex-column':true, 'collapsed':($store.getters.sideBarState == false)} " id="menu-list" style=""> -->
-      <div class="nav-link" role="link" tabindex="0" @click="toggleUserMenu()" id="sidebar-username"><i class="fas fa-user-circle"></i>&nbsp; {{ userName }} </div>
+      <div class="nav-link text-left" role="button" tabindex="0" @click="toggleUserMenu()" id="sidebar-username"><i class="fas fa-user-circle"></i>&nbsp; {{ $store.getters.getUser.email}} </div>
       <div v-show="userMenuState">
         <div class="bordertop"></div> <!-- Border Top - To Show Active -->
-        <div class="" id="user-menu" data-collapsed="false">
+        <div class="text-left" id="user-menu" data-collapsed="false">
             <div class="m-left-10">
                <a class="nav-link" role="link"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
                <!-- Might not do it this way if i want to go to a new page -->
@@ -223,7 +223,7 @@ export default {
   left: 0;
   opacity: .5;
   overflow: hidden;
-  margin-top: -2px;
+  margin-top: 0px;
   min-width: 0px;
   max-width: 325px;
   transition: all .45s linear;
