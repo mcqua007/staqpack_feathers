@@ -8,16 +8,19 @@ module.exports = (options = {}) => {
   return async context => {
     
     const { user } = context.params;
-    //console.log('Context: ', context);
+    console.log('query: ', context.params.query);
     //console.log('User: ', user.email);
 
 
     if ((context.method === 'find' || context.method === 'get') && (context.params.query != undefined && !context.params.query.teamId)){
       // if get or find method, and no teamId query is sent then only show results
       // that where created by current logged in user 
-      context.params.query = {
-        createdBy: user._id
-      };
+      // context.params.query = {
+      //   createdBy: user._id
+      // };
+      //us ethis instead in order to also pass in other queries not overide them all as the above code did
+      context.params.query.createdBy = user._id;
+
     }else if((context.params.query != undefined && context.params.query.teamId) || (context.data != undefined  && context.data.teamId)){
       
       let teamId = context.data != undefined  && context.data.teamId  ? context.data.teamId : context.params.query.teamId;
