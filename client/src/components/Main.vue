@@ -1,8 +1,9 @@
 <template>
   <div>
     <TopBar></TopBar>
-    <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar>
-    <div class="container margin-tb-50">
+    <!-- <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar> -->
+    <SideBar></SideBar>
+    <div class="container margin">
       <Forms></Forms>
     </div>
     <h1>This is restricted to logged in users only </h1>
@@ -42,5 +43,9 @@ li {
 }
 a {
   color: #42b983;
+}
+.margin{
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 </style>
