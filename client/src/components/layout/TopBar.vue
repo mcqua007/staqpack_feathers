@@ -9,10 +9,10 @@
     <div class="logo-font top-bar-logo">Staqpack</div>
     <div class="btn-group btn-group-style">
     <button class="add-btn-menu c-white"  @click="toggleDropdown()" id="btnGroupDrop1" data-toggle='dropdown' aria-haspopup="true" aria-expanded="false" >
-      <i class="fa fa-plus  m-right-5" id="add-task-icon"></i> Add </button>
-     <div  v-if="dropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1" data-dropdown-task-id="">
+      <i :class="{'fa':true, 'fa-plus':true, 'active':(dropdownExpanded == true)}" id="add-task-icon"></i></button>
+     <div  v-if="dropdownExpanded" :class="{'dropdown-menu':true,'dropdown-menu-right': true, 'active':(dropdownExpanded == true)}" aria-labelledby="btnGroupDrop1" data-dropdown-task-id="">
       <!-- <button class="dropdown-item"   type="button" data-showfront-btn-id="" @click="toggleTaskForm()" > Task </button> -->
-      <button class="dropdown-item"   type="button" data-showfront-btn-id="" @click="toggleProjectForm()" > Project</button>
+      <button class="dropdown-item"   type="button" data-showfront-btn-id="" @click="toggleProjectForm()" > <i class="fa fa-plus margin-r-5"></i> New Project</button>
       <!-- <button class="dropdown-item"   type="button" data-complete-btn-id=""  @click="toggleTeamForm()"> Team</button> -->
     </div>
   </div>
@@ -24,12 +24,12 @@ export default {
   name: 'TopBar',
   data(){
     return{
-      dropdown: false,
+      dropdownExpanded: false,
     }
   },
   methods: {
     toggleDropdown(){
-      this.dropdown = !this.dropdown;
+      this.dropdownExpanded = !this.dropdownExpanded;
     },
     // toggleTaskForm () {
     //   // Hide any other forms open by turning there state to false
@@ -58,6 +58,7 @@ export default {
       // if form showing/true
       if (this.$store.getters.projectFormState == true) {
         // if in view scroll up to top of page
+        this.toggleDropdown();
         window.scrollTo(0, 0)
       }
     },
@@ -97,10 +98,20 @@ export default {
 }
 .dropdown-menu{
   display:block;
+  margin-top: 12px;
+  border-top: none;
+  border-radius: 0px 0px 5px 5px;
+  box-shadow: 1px 5px 13px -5px #ccc;
+
 }
+
 .add-btn-menu i{
   font-size: 21px;
   margin-right: 5px;
+  transition: transform .35s linear;
+}
+.add-btn-menu i.active{
+  transform: rotate(135deg);
 }
 .top-bar-logo{
   color: #fff;
@@ -117,7 +128,7 @@ export default {
   flex-direction: row;
   align-items: center;
   background-color: #007bff;
-  position: fixed;
+  position: sticky;
   top:0px;
   width:100%;
   padding: 5px 7.5px;
@@ -133,5 +144,7 @@ export default {
  display:flex;
  cursor: pointer;
 }
-
+.margin-r-5{
+  margin-right: 5px;
+}
 </style>
