@@ -3,10 +3,8 @@
     <!-- componenet wrapper -->
     <!-- Project Manager Form -->
     <transition name="fade">
-      <div v-if="$store.getters.projectFormState == true" class="jumbotron" id="task-manager" data-show="false"
-        style=" margin-top:10px;">
-        <i class="fa fa-times" @click="hideProjectForm()"
-          style="float: right;font-size:30px;top: -30px;color: #ccc;position: relative;"></i>
+      <div v-if="$store.getters.projectFormState == true" class="jumbotron" id="task-manager" data-show="false">
+        <i class="fa fa-times close" role="button" @click="$store.commit('toggleProjectForm', $store.getters.projectFormState)"></i>
         <div style="100%" id="task-alert-flash"></div>
         <h3>Add a New Project</h3>
         <form id="project_form" data-project-id="" @submit.prevent>
@@ -77,7 +75,7 @@
     },
     methods: {
       hideProjectForm() {
-        this.$store.commit("hideProjectForm");
+        this.$store.commit('toggleProjectForm', this.$store.getters.projectFormState);
       },
       submitProjectForm() {
         var that = this;
@@ -211,5 +209,12 @@
 <style lang="css" scoped>
   .red-text {
     color: red;
+  }
+  .close{
+    float: right;
+    font-size:30px;
+    top: -30px;
+    color: #ccc;
+    position: relative;
   }
 </style>
