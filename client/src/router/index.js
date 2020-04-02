@@ -53,7 +53,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const currentUser = store.state.user
-  console.log("app current:", currentUser);
+  console.log("router - current user", currentUser);
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
   if (requiresAuth && !currentUser) {
