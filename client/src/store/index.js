@@ -8,7 +8,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: null,
+    projects: null,
     projectFormVisible: false,
+    taskFormVisible: false,
     sideBarVisible: false,
   },
   mutations: {
@@ -20,15 +22,23 @@ export default new Vuex.Store({
        state.user = null;
        sessionStorage.removeItem('current-user')
     },
+    setProjects(state, data){
+      state.projects = data;
+    },
     toggleProjectForm (state, formState) {
       state.projectFormVisible = !formState
     },
+    toggleTaskForm (state, formState) {
+      state.taskFormVisible = !formState
+    },
+    hideAllForms(state){
+      state.taskFormVisible = false;
+      state.projectFormVisible = false;
+      //state.teamFormVisible = false;
+    },
     toggleSideBar (state, sideBarState) {
       state.sideBarVisible = !sideBarState
-    },
-    // hideProjectForm(state){
-
-    // }
+    }
 
   },
   actions: {
@@ -55,9 +65,21 @@ export default new Vuex.Store({
      }).catch((e) => {
        // show login page
             console.error('Authentication error', e);
-        reject();
+        reject(e);
      });
     })
+   },
+   fetchProjects(context, query){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('projects').find(query).then((res) =>{
+          console.log("Veux - Fetch Projects", res);
+          context.commit('setProjects', res);
+          resolve(res);
+      }).catch((e) =>{
+         console.error('Feath Projects error', e);
+        reject(e);
+      });
+     });
    }
   },
   getters: {
@@ -67,8 +89,14 @@ export default new Vuex.Store({
     projectFormState (state) {
       return state.projectFormVisible
     },
+    taskFormState (state) {
+      return state.taskFormVisible
+    },
     sideBarState (state) {
       return state.sideBarVisible
+    },
+    getProjects(state){
+      return state.projects;
     }
   },
   modules: {
