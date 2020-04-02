@@ -12,6 +12,8 @@ export default new Vuex.Store({
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
+    projectVisible: false,
+    loading: true,
   },
   mutations: {
     setUser (state, data) {
@@ -38,6 +40,12 @@ export default new Vuex.Store({
     },
     toggleSideBar (state, sideBarState) {
       state.sideBarVisible = !sideBarState
+    },
+    toggleProjectState(state, projectState){
+      state.projectVisible = !projectState;
+    },
+    setLoading(state, appLoadState){
+      state.loading = appLoadState;
     }
 
   },
@@ -97,6 +105,12 @@ export default new Vuex.Store({
     },
     getProjects(state){
       return state.projects;
+    },
+    projectState(state){
+      return state.projectVisible;
+    },
+    loadingState(state){
+      return state.loading;
     }
   },
   modules: {
