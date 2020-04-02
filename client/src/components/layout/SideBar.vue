@@ -1,58 +1,53 @@
 <template lang="html">
 <!-- eslint-disable -->
   <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}">
-   <!-- <nav v-bind:class="{'nav':true, 'flex-column':true, 'collapsed':($store.getters.sideBarState == false)} " id="menu-list" style=""> -->
-      <div class="nav-link text-left" role="button" tabindex="0" @click="toggleUserMenu()" id="sidebar-username"><i class="fas fa-user-circle"></i>&nbsp; {{ $store.getters.getUser.email}} </div>
-      <div v-show="userMenuState">
-        <div class="bordertop"></div> <!-- Border Top - To Show Active -->
-        <div class="text-left" id="user-menu" data-collapsed="false">
-            <div class="m-left-10">
-               <a class="nav-link" role="link"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
+   <nav class="text-left">
+     <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()"><i class="fas fa-user-circle"></i> {{ $store.getters.getUser.email}} </div>
+      <div v-show="userMenuState" class="inner-menu">
+        <ul>
+          <li class="m-top-8" role="button"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
                <!-- Might not do it this way if i want to go to a new page -->
                <!-- <a class="nav-link" role="link"  @click="toggleGitSettings()"> <i class="fab fa-github"></i>&nbsp; Git Settings</a> -->
                <!-- <router-link to="/gitsettings">Git Settings</router-link> -->
-            </div>
-       </div>
+       </ul>
       </div>
-       <!-- <div class="navItem">
-         <div role="link" tabindex="0" @click="toggleProjectMenu()" class="navItemLink link nav-link"> <i class="fa fa-folder"></i>&nbsp; Your Projects</div>
-             <div v-show="projectMenuState" id="user-project-menu" >
-                <div class="bordertop"></div>
-               <div class="user-menu-items" id="user-projects-menu-items">
-                <ul style="">
-                   <li role="link" class="m-top-8" v-for="project in projects" @click="openProject(project.projectId, project.projectName)"	v-bind:data-title="project.projectName" v-bind:data-id="project.projectId">
-                     <i class="fas fa-layer-group"></i>&nbsp;   {{ project.projectName }}
-                    </li>
-                </ul>
-              </div>
-            </div>
-         </div> -->
+       <div class="navItem">
+         <div role="button" tabindex="0" @click="toggleProjectMenu()" class="root-nav-item"> 
+           <i class="fa fa-folder"></i> Your Projects
+        </div>
+         <div v-show="projectMenuState" class="inner-menu">
+          <ul>
+           <li role="button" class="m-top-8" v-for="project in projects" @click="openProject(project._id, project.name)">
+             <i class="fas fa-project-diagram"></i> {{ project.name }}
+           </li>
+          </ul>
+        </div>
+      </div>
          <!-- <div class="navItem">
            <div role="link" tabindex="0" @click="toggleTeamMenu()"  class="navItemLink link nav-link"> <i class="fa fa-users"></i>&nbsp; Your Teams</div>
            <div  v-show="teamMenuState" class="" id="team-menu">
              <div class="bordertop"></div>
                 <div class="m-left-10">
                  <!-- For Loop for Team Names -->
-                  <div  v-for="team in teams" class="navItem nav-link">
+                  <!-- <div  v-for="team in teams" class="navItem nav-link">
                     <div role="link" tabindex="0" @click="toggleTeamProjectMenu(team.teamId)" v-bind:data-title="team.teamName" v-bind:data-id="team.teamId"  class="">{{ team.teamName }}</div>
                     <div v-show="teamProjectMenuState == true && teamId == team.teamId" v-bind:data-id="team.teamId">
                       <div class="bordertop"></div>
                          <div v-for="teamProject in teamProjects" class="m-left-10">
                            <!-- For Loop For Team Projects -->
-                           <div class="navItem nav-link" id="sidebar-project-wrap-">
+                           <!-- <div class="navItem nav-link" id="sidebar-project-wrap-">
                              <span role="link" tabindex="0" @click="openProject(teamProject.projectId, teamProject.projectName)"	 v-bind:data-id="teamProject.projectId"  class="">{{ teamProject.projectName }}</span>
                            </div>
-                           <!-- End Team Projects Loop  -->
                          </div>
                       </div>
-                  </div>  <!-- End my teams loop -->
-                </div>
-             </div>
-           </div>
-        <!-- <div class="navItem nav-link">
-          <div class="" role="link" @click="openAllTasks()"> <i class="fa fa-tasks"></i>&nbsp; View All Tasks</div>
-        </div>  -->
-    </nav>
+                  </div>  
+                </div>  -->
+             <!-- </div>
+           </div> -->
+           <div class="root-nav-item">
+          <div class="" role="button" @click="openAllTasks()"> <i class="fa fa-tasks"></i> View All Tasks</div>
+        </div>  
+    </nav> 
   </div>
 </template>
 
@@ -72,6 +67,7 @@ is clicked
 
 ============================================*/
 // import Router from 'vue-router'
+import { mapState } from 'vuex';
 
 export default {
   name: 'SideBar',
@@ -82,9 +78,8 @@ export default {
       teamMenuState: false,
       teamProjectMenuState: false,
       teamId: null,
-      userData: null,
       teamProjects: null,
-      projects: [],
+      projects: null,
       teams: [],
       teamProjectsData: [],
     }
@@ -105,9 +100,9 @@ export default {
    toggleUserMenu(){
      this.userMenuState = !this.userMenuState;
    },
-  //  toggleProjectMenu(){
-  //    this.projectMenuState = !this.projectMenuState;
-  //  },
+   toggleProjectMenu(){
+     this.projectMenuState = !this.projectMenuState;
+   },
   //  toggleTeamMenu(){
   //    this.teamMenuState = !this.teamMenuState;
   //  },
@@ -130,18 +125,18 @@ export default {
       //alert('You are Logged out!');
       this.$store.dispatch('logout');
     },
-  //  openProject(projectId, projectName){
-  //    this.$emit('projectOpen', projectId, projectName);
+   openProject(projectId, projectName){
+     this.$emit('projectOpen', projectId, projectName);
 
-  //    //Hide Git Settings if it is open
-  //    if(this.$store.getters.gitSettingsState == true){
-  //      this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-  //    }
-  //   //Toggle Project to true if is is not visible
-  //   if(this.$store.getters.projectState == false){
-  //     this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-  //   }
-  // },
+     //Hide Git Settings if it is open
+    //  if(this.$store.getters.gitSettingsState == true){
+    //    this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
+    //  }
+    //Toggle Project to true if is is not visible
+    if(this.$store.getters.projectState == false){
+      this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+    }
+  },
   // buildTeamProjects(teamData){
   //   var that = this;
   //   var promises = [];
@@ -178,6 +173,16 @@ export default {
   //  });
   // },
  },
+ computed: mapState(['loading']),
+ watch:{
+    loading(newValue, oldValue){
+       console.log(`Updating from ${oldValue} to ${newValue}`);
+        if (newValue === false) {
+          this.projects =  this.$store.getters.getProjects.data;
+            console.log('task- projects watch', this.projects);
+        }
+      }
+ },
  created(){
   //  this.initializeData();
  },
@@ -202,27 +207,19 @@ export default {
     -webkit-transform: rotate(-360deg);
     transform: rotate(-360deg);
 }
-.sidebar-nav #menu-list{
-  width: 0px;
-  opacity: 1;
-  transition: width .3s linear, opacity .95s ease-out .5s;
+
+.root-nav-item{
+    display: block;
+    padding: .5rem 1rem;
 }
-.sidebar-nav.expanded #menu-list{
+.sidebar-nav> nav{
   width: 100%;
-  opacity:1;
-}
-#menu-list.collapsed{
- display:none;
- opacity: 1;
- width: 0px;
-}
-.sidebar-nav>div{
-  width:20%;
-    min-width: 250px;
+  min-width: 250px;
 }
 .sidebar-nav {
   width: 0px;
   position: fixed;
+  background-color: #fff;
   z-index: 2;
   left: 0;
   opacity: 1;
@@ -230,18 +227,12 @@ export default {
   margin-top: 0px;
   min-width: 0px;
   max-width: 325px;
-  transition: all .45s linear;
+  transition: width .75s ease-in, min-width .75s ease-in;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
   height:100%;
 }
-.user-menu-tems{
-  margin-left:-8px;
-}
 .sidebar-nav.expanded{
-  opacity:1;
-  background-color: #fff;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
   width: 20%;
-  overflow:auto;
   min-width: 250px;
 }
 .m-left-10{
@@ -252,9 +243,13 @@ margin-left: 10px;
 }
 ul {
   list-style-type: none;
+  margin-bottom: 0px;
 }
-.bordertop {
-  margin-top: 10px;
+i{
+  margin-right: 5px;
+}
+.inner-menu{
+  margin-top: 5px;
   border-top: 2px solid #007BFF;
 }
 </style>

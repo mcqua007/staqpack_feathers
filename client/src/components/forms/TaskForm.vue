@@ -8,7 +8,7 @@
         <div class="row">
           <div class="form-group col-md-4">
             <label for="issueDescInput">Task</label>
-            <input type="text" class="form-control" placeholder="Review proposal..." v-model="name">
+            <input type="text" class="form-control" placeholder="Name of new task..." v-model="name">
           </div>
           <div class="form-group col-md-4">
           <label for="issueSeverityInput">Severity</label>
@@ -50,6 +50,7 @@
 <script>
 import feathersClient from '@/feathers-client-config.js'
 //import io from 'socket.io-client'
+import { mapState } from 'vuex';
 
 export default {
   name: 'TaskForm',
@@ -76,7 +77,7 @@ export default {
         let form_data = {
           name: this.name,
           severity: this.severity,
-        //   assignTo: this.assignTo,
+         //assignTo: this.assignTo,
           description: this.description,
           projectId: this.project_id,
         }
@@ -87,11 +88,10 @@ export default {
          this.severity = 'Low';
          //this.assignTo = null;
          this.description = null;
-          this.project_id = null;
+         this.project_id = null;
          //RETURN TASKS
          //Emit event to main down to project d Task that where submitted
-
-           this.$emit('taskFormInput');
+         this.$emit('taskFormInput');
         
       }
        else {
@@ -99,10 +99,27 @@ export default {
         }
     }
   },
+  computed: mapState(['loading']),
+  watch: {
+      loading(newValue, oldValue){
+       console.log(`Updating from ${oldValue} to ${newValue}`);
+        if (newValue === false) {
+          this.projects =  this.$store.getters.getProjects.data;
+            console.log('task- projects watch', this.projects);
+        }
+      }
+  },
+  created(){
+      //this.projects =  this.$store.getters.getProjects.data;
+      console.log('projects', this.projects)
+  },
   mounted(){
-      this.$store.dispatch('fetchProjects').then((res) =>{
-       this.projects = res.data;
-      });
+
+      //shoould i make a ajax /network request evertime mounted to get fresh data ?
+    //   this.$store.dispatch('fetchProjects').then((res) =>{
+    //    this.projects = res.data;
+    //   });
+
 
       //this.$store.dispatch('fetchProjects', { query : {name: 'project 1'}}); //how to query 
       feathersClient.service('tasks').find().then((res) =>{
