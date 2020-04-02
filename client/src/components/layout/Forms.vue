@@ -2,20 +2,20 @@
 <template>
  <div class="forms">
       <ProjectForm></ProjectForm>
-      <!-- <TeamForm></TeamForm>
-      <TaskForm v-bind:projectId="projectId" v-on:taskFormInput="emitUp()"></TaskForm> -->
+      <!-- <TeamForm></TeamForm>-->
+      <TaskForm v-bind:projectId="projectId" v-on:taskFormInput="emitUp()"></TaskForm>
  </div>
 </template>
 
 <script>
-//import TaskForm from '@/components/forms/TaskForm.vue'
+import TaskForm from '@/components/forms/TaskForm.vue'
 import ProjectForm from '@/components/forms/ProjectForm.vue'
 // import TeamForm from '@/components/forms/TeamForm.vue'
 
 export default {
   name: 'Forms',
   components: {
-    //TaskForm,
+    TaskForm,
     ProjectForm,
     //TeamForm
   },
