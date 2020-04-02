@@ -4,7 +4,7 @@
     <!-- <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar> -->
     <SideBar></SideBar>
     <div class="container margin">
-      <Forms></Forms>
+      <Forms v-bind:projectId="currentProjectId"></Forms>
     </div>
     <h1>This is restricted to logged in users only </h1>
     <button @click="$store.dispatch('logout')">Logout</button>
@@ -20,6 +20,11 @@ import Forms from '@/components/layout/Forms.vue'
 
 export default {
   name: 'Main',
+  data(){
+    return{
+      currentProjectId: null,
+    }
+  },
   components:{
     TopBar,
     SideBar,
