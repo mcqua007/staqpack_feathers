@@ -1,27 +1,24 @@
 <template>
-  <div>
-    <!-- componenet wrapper -->
-    <!-- Project Manager Form -->
+  <div class="project-form">
     <transition name="fade">
-      <div v-if="$store.getters.projectFormState == true" class="jumbotron" id="task-manager" data-show="false">
+      <div v-if="$store.getters.projectFormState == true" class="jumbotron">
         <i class="fa fa-times close" role="button" @click="$store.commit('toggleProjectForm', $store.getters.projectFormState)"></i>
-        <div style="100%" id="task-alert-flash"></div>
         <h3>Add a New Project</h3>
-        <form id="project_form" data-project-id="" @submit.prevent>
+        <form  @submit.prevent>
           <div class="row">
-            <div class="form-group col-md-4" id="project_title_group">
+            <div class="form-group col-md-4">
               <label for="projectDescInput">Title</label>
               <input type="text" class="form-control" id="project_title_input" placeholder="Title..."
                 v-model="projectName">
             </div>
-            <div class="form-group col-md-4" id="project-type">
+            <div class="form-group col-md-4">
               <label for="projetTypeInput">Type</label>
-              <select class="form-control" id="project_type_input" v-model="projectType">
+              <select class="form-control" v-model="projectType">
                 <option value="personal">Personal</option>
                 <option value="team">Team</option>
               </select>
             </div>
-            <div class="form-group col-md-4" id="project_team_group">
+            <div class="form-group col-md-4">
               <div v-show="projectType == 'team'">
                 <label for="projectTeamsInput">Teams</label>
                 <!-- <select class="form-control" v-model="team">
@@ -31,15 +28,15 @@
               </div>
             </div>
           </div>
-          <div class="form-group" id="project_description_group">
+          <div class="form-group">
             <label for="issueDescInput">Project Description</label>
-            <input type="text" class="form-control" id="project_description_input" placeholder="Describe the Project..."
-              v-model="projectDesc">
+            <input type="text" class="form-control"  placeholder="Describe the Project..." v-model="projectDesc">
           </div>
-          <button type="submit" class="btn btn-primary" @click="submitProjectForm()">Add</button>
+          <button class="btn btn-primary" @click="submitProjectForm()">Add</button>
           <div class="alert alert-danger text-center" v-if="feedback"> {{ feedback }} </div>
           <div class="alert alert-primary text-center" v-show="successFeedback" style="margin-top:20px;">
-            {{ successFeedback }} </div>
+            {{ successFeedback }} 
+          </div>
           <div v-if="progress" style="margin-top:20px;">
             <div class="col-12  b-progress">
               <div class="progress">
@@ -54,8 +51,7 @@
   </div> <!-- end componenet wrapper -->
 </template>
 <script>
-  // import db from '@/firebase/init'
-  // import firebase from 'firebase'
+import feathersClient from '@/feathers-client-config.js'
   export default {
     name: 'ProjectForm',
     data() {
@@ -85,59 +81,26 @@
           //show progress bar
           that.progress = true;
           that.updateProgressBar();
-          // let user = firebase.auth().currentUser;
-          // db.collection('projects').add({
-          //   name: this.projectName,
-          //   type: this.projectType,
-          //   team: this.team,
-          //   description: this.projectDesc,
-          //   userId: user.uid,
-          //   gitSync: false,
-          //   open: 1,
-          //   timestamp: Date.now()
-          // }).then(docRef => {
-          //   console.log("Project Created! Project Id:", docRef.id);
-          //   //update team with the project id and project Name
-          //   console.log("Project Name Test:", this.projectName);
-          //  let newElement = {
-          //    projectId: docRef.id,
-          //    projectName: this.projectName,
-          //  }
-          //  //UPDATE EITHER TEAM OR USER OBJECT BASED ON THE TYPE OF PROJECT
-          //      if(that.projectType == 'team'){
-          //        db.collection("teams")
-          //          .doc(that.team)
-          //          .update({
-          //            projects: firebase.firestore.FieldValue.arrayUnion(newElement)
-          //          })
-          //          .catch(err => {
-          //            console.log(err);
-          //            reject(err);
-          //          });
-          //      }
-          //      else if(that.projectType == 'personal'){
-          //        db.collection("users")
-          //          .doc(that.userData.username)
-          //          .update({
-          //            projects: firebase.firestore.FieldValue.arrayUnion(newElement)
-          //          })
-          //          .catch(err => {
-          //            console.log(err);
-          //            reject(err);
-          //          });
-          //      }
-          //      //RESETING FORM VALUES - SINCE 2WAY BOUND
-          //       this.projectName = null;
-          //       this.projectType = 'personal';
-          //       this.team = 'none';
-          //       this.projectDesc = null;
-          //       setTimeout(function(){
-          //       that.progress = false;
-          //       that.alertSuccessFeedback("Your new project has been created!");
-          //       }, 490)
-          // }).catch(err => {
-          //   console.log(err)
-          // })
+         // let user = this.$store.getUser;
+          let form_data = {
+            name: this.projectName,
+            type: this.projectType,
+            //team: this.team,
+            description: this.projectDesc,
+          }
+
+          feathersClient.service('projects').create(form_data);
+
+          //RESETING FORM VALUES - SINCE 2WAY BOUND
+           this.projectName = null;
+           this.projectType = 'personal';
+           //this.team = 'none';
+           this.projectDesc = null;
+           setTimeout(function(){
+           that.progress = false;
+           that.alertSuccessFeedback("Your new project has been created!");
+           }, 490)
+          
           //load new project here using routes
         } else {
           this.alertFeedback("You must fill out all form fields.");
@@ -181,10 +144,8 @@
         var width = 1;
         var identity = setInterval(function () {
           if (width >= 100) {
-            console.log("width: ", width)
             clearInterval(identity);
           } else {
-            console.log("width: ", width)
             width += 10;
             var element = document.getElementById("progressBar");
             element.style.width = width + '%';
@@ -193,16 +154,9 @@
       }
     },
     mounted() {
-      // this.getTeams();
-      // var that = this;
-      // this.getUserData().then(data => {
-      //   console.log("Promise Data ", data);
-      //   //set userData to the user object
-      //   that.userData = data;
-      //   //SET OPTIONS TO TEAM NAMES DATA
-      //   that.options = data.teams;
-      // })
-      // console.log("second con", this.userData);
+      console.log("test socket");
+       //doing nothing just shows new projects created 
+      feathersClient.service('projects').on('created', message => console.log('New projects created:', message));
     }
   }
 </script>
@@ -216,5 +170,15 @@
     top: -30px;
     color: #ccc;
     position: relative;
+  }
+  /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
+   .fade-enter-active, .fade-leave-active {
+     transition: opacity .5s;
+   }
+   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+     opacity: 0;
+   }
+  .form-group{
+    text-align: left;
   }
 </style>
