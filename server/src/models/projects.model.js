@@ -10,7 +10,7 @@ module.exports = function (app) {
     name: { type: String, required: true },
     description: String,
     open: {type: Boolean, required: true, default: true},
-    type: {type: String, enum: ["personal", "team"]},
+    type: {type: String, enum: ['personal', 'team']},
     teamId:  {type: Schema.Types.ObjectId, ref: 'Teams'},
     //memberIds: [{type: Schema.Types.ObjectId, ref: 'Users', Required: true}],
     createdBy: {type: Schema.Types.ObjectId, ref: 'Users'}
