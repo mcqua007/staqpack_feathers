@@ -2,12 +2,28 @@
   <div>
     <TopBar></TopBar>
     <!-- <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar> -->
-    <SideBar></SideBar>
+    <SideBar  v-on:projectOpen="projectOpen" ></SideBar>
     <div class="container margin">
       <Forms v-bind:projectId="currentProjectId"></Forms>
+       <div v-if="$store.getters.projectState == true">
+       <div class="project-header-bar">
+         <div class="project-title">
+          <div v-if="currentProjectName != null">
+            <h3>{{ currentProjectName }}</h3>
+           </div>
+           <div v-else>
+            All Tasks
+         </div>
+       </div>
+        <div v-if="currentProjectId != null" style="margin-left:auto;">
+          <button class="delete-project-btn" @click="deleteProject(currentProjectId)"><i class="fa fa-trash delete-project-icon"></i></button>
+        </div>
+       </div>
+      <hr />
+      <Project></Project>
+     </div>
     </div>
-    <h1>This is restricted to logged in users only </h1>
-    <button @click="$store.dispatch('logout')">Logout</button>
+  
   </div>
 </template>
 
@@ -16,6 +32,7 @@
 import TopBar from '@/components/layout/TopBar.vue'
 import SideBar from '@/components/layout/SideBar.vue'
 import Forms from '@/components/layout/Forms.vue'
+import Project from '@/components/layout/Project.vue'
 
 
 export default {
@@ -23,13 +40,23 @@ export default {
   data(){
     return{
       currentProjectId: null,
+      currentProjectName: null,
     }
   },
   components:{
     TopBar,
     SideBar,
-    Forms
+    Forms,
+    Project
   },
+  methods:{
+     projectOpen (id, name) {
+       console.log("Project Open Main: ", id, name)
+      this.currentProjectId = id
+      this.currentProjectName = name
+      //this.returnTasks('projectId', this.currentProjectId)
+    },
+  }
 }
 </script>
 
