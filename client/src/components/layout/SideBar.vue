@@ -204,7 +204,7 @@ export default {
 }
 .sidebar-nav #menu-list{
   width: 0px;
-  opacity: 0;
+  opacity: 1;
   transition: width .3s linear, opacity .95s ease-out .5s;
 }
 .sidebar-nav.expanded #menu-list{
@@ -213,15 +213,19 @@ export default {
 }
 #menu-list.collapsed{
  display:none;
- opacity: 0;
+ opacity: 1;
  width: 0px;
+}
+.sidebar-nav>div{
+  width:20%;
+    min-width: 250px;
 }
 .sidebar-nav {
   width: 0px;
   position: fixed;
   z-index: 2;
   left: 0;
-  opacity: .5;
+  opacity: 1;
   overflow: hidden;
   margin-top: 0px;
   min-width: 0px;
