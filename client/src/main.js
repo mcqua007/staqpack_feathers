@@ -10,9 +10,17 @@ Vue.config.productionTip = false
 //so user object is availbe, for reloads/refreshes of page
 
 store.dispatch('authenticate')
+
+
+
+
   .catch(() => {})
   // Render the app
   .then(() => {
+      //inita data needed in the beginning here ? 
+      store.dispatch('fetchProjects').then((res) =>{
+       console.log("Called fetchProjects", res);
+      });
     // eslint-disable-next-line no-new
     new Vue({
       router,
