@@ -23,8 +23,8 @@ export default {
     Footer
   },
    mounted(){
-     console.log('home', this.$store.getters.getUser);
-    if(this.$store.getters.getUser){
+     console.log('home', this.$store.getters.user);
+    if(this.$store.getters.user){
         this.loggedIn = true;
     }
   }
