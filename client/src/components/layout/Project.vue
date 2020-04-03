@@ -1,42 +1,81 @@
 <template>
   <div class="project"><!-- componenet wrapper -->
+    <div class="project-header-bar">
+      <div class="project-title">
+          <div class ="text-left" v-if="$store.getters.currentProject.name != null">
+            <h3>{{ $store.getters.currentProject.name }}</h3>
+           </div>
+           <div v-else>
+            <h3>All Tasks</h3>
+         </div>
+       </div>
+        <button  v-if="$store.getters.currentProject.id != null" class="delete-project-btn" @click="deleteProject($store.getters.currentProject.id)"><i class="fa fa-trash delete-project-icon"></i></button>
+       </div>
+      <hr />
     <div class="row">
-        <!-- <template v-for="responses in responseData">
-          <TaskContainer v-bind:response="responses"></TaskContainer>
-        </template> -->
+        <template v-for="task in tasks">
+          <TaskCard v-bind:response="task" :key="task.id"></TaskCard>
+        </template>
     </div>
   </div> <!-- end componenet wrapper -->
 </template>
 
 <script>
-//import TaskContainer from '@/components/layouts/TaskContainer.vue'
+import TaskCard from '@/components/TaskCard.vue'
+//import { mapState } from 'vuex';
 
 export default {
   name: 'Project',
   components: {
-    //TaskContainer
+    TaskCard
   },
-  props: ['responseData'],
+  //props: ['responseData'],
   data(){
     return {
-      title: null,
-      severity: 'Low',
-      assignTo: null,
-      description: null,
-      feedback: null,
+      projectName: null,
+      projectId: null,
+      tasks: null,      
     }
   },
   methods: {
+
+  },
+//   computed: mapState(['tasksLoading']),
+//   watch: {
+//       tasksLoading(newValue, oldValue){
+//        console.log(`Updating from ${oldValue} to ${newValue}`);
+//         if (newValue === false) {
+//           this.tasks =  this.$store.getters.currentProjectTasks;
+//             console.log('current proejct tasks', this.tasks);
+//         }
+//       }
+//   },
+  created(){
+              
   },
   mounted(){
-
+      this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{
+          this.tasks = this.$store.getters.currentProjectTasks.data;
+          console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
+      });
   }
 }
 </script>
 
 <style lang="css" scoped>
-.red-text{
-  color: red;
+
+.project-header-bar{
+    display:inline-flex;
+    align-items: center;
+    width:100%;
+}
+.delete-project-btn{
+    margin-left:auto;
+    font-size:25px;
+    background: transparent;
+    border: none;
+    color: #dc3545;
+
 }
 
 /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
