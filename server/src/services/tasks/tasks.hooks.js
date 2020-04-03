@@ -1,10 +1,11 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { setField } = require('feathers-authentication-hooks');
+const restrictToProjectId = require('../../hooks/restrict-to-project-id');
 
- const setCreatedById = setField({
-   from: 'params.user._id',
-   as: 'data.createdBy'
- });
+const setCreatedById = setField({
+  from: 'params.user._id',
+  as: 'data.createdBy'
+});
 
 module.exports = {
   before: {
@@ -12,11 +13,11 @@ module.exports = {
     find: [],
     get: [],
     create: [
-     setCreatedById 
+      setCreatedById 
     ],
     update: [],
-    patch: [],
-    remove: []
+    patch: [restrictToProjectId()],
+    remove: [restrictToProjectId()]
   },
 
   after: {
