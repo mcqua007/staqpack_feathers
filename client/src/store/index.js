@@ -9,45 +9,16 @@ export default new Vuex.Store({
   state: {
     user: null,
     projects: null,
+    currentProject: null,
+    currentProjectTasks: null,
+    currentProjectName: null,
+    currentProjectId: null,
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
     projectVisible: false,
     loading: true,
-  },
-  mutations: {
-    setUser (state, data) {
-      state.user = data;
-      sessionStorage.setItem('current-user', JSON.stringify(state.user))
-    },
-    destroyUser(state){
-       state.user = null;
-       sessionStorage.removeItem('current-user')
-    },
-    setProjects(state, data){
-      state.projects = data;
-    },
-    toggleProjectForm (state, formState) {
-      state.projectFormVisible = !formState
-    },
-    toggleTaskForm (state, formState) {
-      state.taskFormVisible = !formState
-    },
-    hideAllForms(state){
-      state.taskFormVisible = false;
-      state.projectFormVisible = false;
-      //state.teamFormVisible = false;
-    },
-    toggleSideBar (state, sideBarState) {
-      state.sideBarVisible = !sideBarState
-    },
-    toggleProjectState(state, projectState){
-      state.projectVisible = !projectState;
-    },
-    setLoading(state, appLoadState){
-      state.loading = appLoadState;
-    }
-
+    loadingTasks: null,
   },
   actions: {
    logout(context) {
@@ -84,14 +55,76 @@ export default new Vuex.Store({
           context.commit('setProjects', res);
           resolve(res);
       }).catch((e) =>{
-         console.error('Feath Projects error', e);
+         console.error('FetchProjects error', e);
         reject(e);
       });
-     });
+    });
+   },
+   fetchCurrentProjectTasks(context, query){
+     return new Promise((resolve, reject) =>{
+     context.commit('setTasksLoading', true);
+      feathersClient.service('tasks').find(query).then((res) =>{
+          console.log("Veux - Fetch currentProjectTasks", res);
+          context.commit('setCurrentProjectTasks', res);
+          resolve(res);
+          context.commit('setTasksLoading', false);
+      }).catch((e) =>{
+         console.error('FeathCurrentProjectTasks error', e);
+        reject(e);
+      });
+    });
    }
   },
+  mutations: {
+    setUser (state, data) {
+      state.user = data;
+      sessionStorage.setItem('current-user', JSON.stringify(state.user))
+    },
+    destroyUser(state){
+       state.user = null;
+       sessionStorage.removeItem('current-user')
+    },
+    setProjects(state, data){
+      state.projects = data;
+    },
+    setCurrentProject(state, data){
+      state.currentProject = data;
+      state.currentProjectId= data.id;
+      state.currentProjectName= data.name;
+    },
+    destroyCurrentProject(state){
+      state.currentProject = null;
+    },
+    setCurrentProjectTasks(state, data){
+      state.currentProjectTasks = data
+    },
+    toggleProjectForm (state, formState) {
+      state.projectFormVisible = !formState
+    },
+    toggleTaskForm (state, formState) {
+      state.taskFormVisible = !formState
+    },
+    hideAllForms(state){
+      state.taskFormVisible = false;
+      state.projectFormVisible = false;
+      //state.teamFormVisible = false;
+    },
+    toggleSideBar (state, sideBarState) {
+      state.sideBarVisible = !sideBarState
+    },
+    toggleProjectState(state, projectState){
+      state.projectVisible = !projectState;
+    },
+    setLoading(state, appLoadState){
+      state.loading = appLoadState;
+    },
+    setTasksLoading(state, loadState){
+      state.loadingTasks = loadState;
+    }
+
+  },
   getters: {
-    getUser(state){
+    user(state){
       return state.user;
     },
     projectFormState (state) {
@@ -103,14 +136,29 @@ export default new Vuex.Store({
     sideBarState (state) {
       return state.sideBarVisible
     },
-    getProjects(state){
+    projects(state){
       return state.projects;
     },
     projectState(state){
       return state.projectVisible;
     },
     loadingState(state){
-      return state.loading;
+      return state.loading
+    },
+    currentProject(state){
+      return state.currentProject
+    },
+    currentProjectId(state){
+      return state.currentProjectId
+    },
+    currentProjectName(state){
+      return state.currentProjectName
+    },
+    currentProjectTasks(state){
+      return state.currentProjectTasks
+    },
+    tasksLoadingState(state){
+      return state.loadingTasks
     }
   },
   modules: {
