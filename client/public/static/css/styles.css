@@ -26,3 +26,6 @@ button:hover,
 .logo-font{
   font-family: 'Leckerli One', cursive;
 }
+body{
+    width:100%;
+}
