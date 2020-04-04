@@ -17,9 +17,10 @@ export default new Vuex.Store({
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
+    settingsVisible: false,
     projectVisible: false,
     loading: true,
-    loadingTasks: null,
+    themeColor: localStorage.getItem('theme-color') ? localStorage.getItem('theme-color') : '#343434',
   },
   actions: {
     // Authentication Actions 
@@ -160,8 +161,15 @@ export default new Vuex.Store({
     toggleProjectState(state, projectState){
       state.projectVisible = !projectState;
     },
+    toggleSettingsState(state, settingsState){
+      state.settingsVisible = !settingsState;
+    },
     setLoading(state, appLoadState){
       state.loading = appLoadState;
+    },
+    setThemeColor(state, color){
+      state.themeColor = color;
+      localStorage.setItem('theme-color', color);
     }
   },
   getters: {
@@ -183,6 +191,9 @@ export default new Vuex.Store({
     projectState(state){
       return state.projectVisible;
     },
+    settingsState(state){
+      return state.settingsVisible;
+    },
     loadingState(state){
       return state.loading
     },
@@ -197,6 +208,9 @@ export default new Vuex.Store({
     },
     currentProjectTasks(state){
       return state.currentProjectTasks
+    },
+    themeColor(state){
+      return state.themeColor
     }
   },
   modules: {
