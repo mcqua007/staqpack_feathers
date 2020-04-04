@@ -54,7 +54,7 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'TaskForm',
-  props: ['projectId'],
+  props: ['currentProjectId'],
   data(){
     return {
       name: null,
@@ -104,21 +104,16 @@ export default {
       loading(newValue, oldValue){
        console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
-          this.projects =  this.$store.getters.getProjects.data;
+          this.projects =  this.$store.getters.projects.data;
             console.log('task- projects watch', this.projects);
         }
       }
   },
   created(){
-      //this.projects =  this.$store.getters.getProjects.data;
-      console.log('projects', this.projects)
+      //this.projects =  this.$store.getters.projects.data;
+      console.log('projects', this.projects);
   },
   mounted(){
-
-      //shoould i make a ajax /network request evertime mounted to get fresh data ?
-    //   this.$store.dispatch('fetchProjects').then((res) =>{
-    //    this.projects = res.data;
-    //   });
 
 
       //this.$store.dispatch('fetchProjects', { query : {name: 'project 1'}}); //how to query 
