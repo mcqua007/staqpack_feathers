@@ -3,7 +3,7 @@
  <div class="forms">
       <ProjectForm></ProjectForm>
       <!-- <TeamForm></TeamForm>-->
-      <TaskForm v-bind:projectId="projectId" v-on:taskFormInput="emitUp()"></TaskForm>
+      <TaskForm v-bind:currentProjectId="projectId" v-on:taskFormInput="emitUp()"></TaskForm>
  </div>
 </template>
 
@@ -22,7 +22,6 @@ export default {
   props: ['projectId'],
   data () {
     return {
-      msg: 'Test msg'
     }
   },
   methods: {
