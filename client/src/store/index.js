@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    debug: true,
     user: null,
     projects: null,
     currentProject: null,
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     loadingTasks: null,
   },
   actions: {
+    // Authentication Actions 
    logout(context) {
       feathersClient.logout();
       context.commit('destroyUser');
@@ -33,8 +35,8 @@ export default new Vuex.Store({
         context.commit('setUser', res.user);
         router.push({name: 'Main'}) //once logged route to login
       }).catch(e => {
-        console.error('Authentication error', e);
-      });
+         if(context.state.debug) console.error('Authentication error', e);
+      })
     },
     authenticate(context){
       return new Promise((resolve, reject) => {
@@ -43,37 +45,60 @@ export default new Vuex.Store({
        resolve();
      }).catch((e) => {
        // show login page
-            console.error('Authentication error', e);
+          if(context.state.debug)  console.error('Authentication error', e);
         reject(e);
-     });
+     })
     })
    },
+   //Project CRUD Operations 
    fetchProjects(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('projects').find(query).then((res) =>{
-          console.log("Veux - Fetch Projects", res);
+           if(context.state.debug) console.log("Veux - Fetch Projects", res);
           context.commit('setProjects', res);
           resolve(res);
       }).catch((e) =>{
-         console.error('FetchProjects error', e);
+          if(context.state.debug) console.error('FetchProjects error', e);
         reject(e);
-      });
-    });
+      })
+    })
    },
    fetchCurrentProjectTasks(context, query){
      return new Promise((resolve, reject) =>{
-     context.commit('setTasksLoading', true);
       feathersClient.service('tasks').find(query).then((res) =>{
-          console.log("Veux - Fetch currentProjectTasks", res);
+           if(context.state.debug) console.log("Veux - Fetch currentProjectTasks", res);
           context.commit('setCurrentProjectTasks', res);
           resolve(res);
-          context.commit('setTasksLoading', false);
       }).catch((e) =>{
-         console.error('FeathCurrentProjectTasks error', e);
+          if(context.state.debug) console.error('FetchCurrentProjectTasks error', e);
         reject(e);
-      });
-    });
-   }
+      })
+    })
+   },
+    deleteProject(context, projectId){
+      return new Promise((resolve, reject) =>{
+      feathersClient.service('projects').remove(projectId).then((res) => {
+        context.dispatch('deleteTask', {projectId: projectId}).then((taskRes) => {
+          resolve({'project_msg':res, 'task_msg:': taskRes});
+        });
+        
+      }).catch((e) =>{
+        if(context.state.debug) console.error('deleteProject error', e);
+        reject(e);
+      })
+     })
+    },
+    deleteTask(context, query){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('tasks').remove(null, {query: query}).then((res) => {
+        //remove todos that have this taskID here
+        resolve(res);
+      }).catch((e) =>{
+        if(context.state.debug) console.error('deleteTask error', e);
+        reject(e);
+      })
+     })
+    }
   },
   mutations: {
     setUser (state, data) {
@@ -117,11 +142,7 @@ export default new Vuex.Store({
     },
     setLoading(state, appLoadState){
       state.loading = appLoadState;
-    },
-    setTasksLoading(state, loadState){
-      state.loadingTasks = loadState;
     }
-
   },
   getters: {
     user(state){
@@ -156,9 +177,6 @@ export default new Vuex.Store({
     },
     currentProjectTasks(state){
       return state.currentProjectTasks
-    },
-    tasksLoadingState(state){
-      return state.loadingTasks
     }
   },
   modules: {
