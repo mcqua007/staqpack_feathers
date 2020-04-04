@@ -8,6 +8,7 @@ module.exports = function (app) {
   const todo = new Schema({
     name: { type: String, required: true },
     completed: {type: Boolean, default: false},
+    taskId: {type: Schema.Types.ObjectId, ref: 'tasks'},
     createdBy: {type: Schema.Types.ObjectId, ref: 'Users'}
   }, {
     timestamps: true
