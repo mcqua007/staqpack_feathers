@@ -98,7 +98,27 @@ export default new Vuex.Store({
         reject(e);
       })
      })
-    }
+    },
+    fetchTodos(context, query){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('todo').find({query:query}).then((res) =>{
+          resolve(res);
+      }).catch((e) =>{
+          if(context.state.debug) console.error('FetchTodos error', e);
+        reject(e);
+      })
+    })
+    },
+     postTodo(context, data){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('todo').create(data).then((res) =>{
+          resolve(res);
+      }).catch((e) =>{
+          if(context.state.debug) console.error('postTodos Error:', e);
+        reject(e);
+      })
+    })
+   }
   },
   mutations: {
     setUser (state, data) {

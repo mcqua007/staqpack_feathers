@@ -1,27 +1,25 @@
 <template lang="html">
-  <div class="col-12 col-sm-6 col-lg-4 task-wrap animated" style=" margin-top:10px;" v-bind:data-card-id="response.id">
-    <div v-if="response != null"> <!-- if no resposne display nothing - so no errors are cuased -->
-      <div class='' data-expanded='false' v-bind:data-card-wrap-id="response.id" :responseOpen="!response.completed">
-      <div class='col-xs-12 card card-shadow' v-bind:data-inner-card="response.id">
-        <div class='btn-group' role='group' aria-label='Basic example'>
-        <button type='button' v-bind:class="{'btn':true, 'btn-outline-primary':true}" v-bind:data-btn-audio-id="response.id" :disabled="!response.open"><i class='fa fa-calendar'></i></button>
-        <button type='button' v-bind:class="{'btn':true, 'btn-outline-danger':true}" onclick='showImages(" + response.id +")' v-bind:data-btn-image-id="response.id" :disabled="!response.open"><i class="far fa-images"></i></button>
+  <div class="col-12 col-sm-6 col-lg-4 animated task-wrap">
+    <div v-if="task != null">
+      <div class='col-xs-12 card card-shadow'>
+        <div class='btn-group' role='group'>
+        <button type='button' v-bind:class="{'btn':true, 'btn-outline-primary':true}"  :disabled="task.completed"><i class='fa fa-calendar'></i></button>
+        <button type='button' v-bind:class="{'btn':true, 'btn-outline-danger':true}"  :disabled="task.completed"><i class="far fa-images"></i></button>
       <div class='btn-group'>
-        <button class='btn btn-outline-secondary dropdown-toggle' type='button' id='btnGroupDrop1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' v-bind:data-btn-more-id="response.id"> more </button>
-        <div class='dropdown-menu dropdown-menu-right' aria-labelledby='btnGroupDrop1' data-dropdown-task-id='" + response.id +"'>
-        <button class='dropdown-item' type='button' v-bind:data-showfront-btn-id="response.id" onclick='showFront(" + response.id +")' style='display:none;'> <i class='fa fa-arrow-left' style='margin-right:5px;'></i>Go Back</button>
-       
-         <div v-if="response.completed === false">
-          <button class='dropdown-item' type='button' v-bind:data-complete-btn-id="response.id" @click="completeTask(response.id)"> 
+        <button class='btn btn-outline-secondary'   aria-haspopup='true' @click="toggleDropdown()"> <i :class="{'fa':true, 'fa-angle-down':(!dropdownExpanded), 'fa-angle-up':(dropdownExpanded)}"></i> </button>
+        <div v-if="dropdownExpanded" :class="{'dropdown-menu':true,'dropdown-menu-right': true, 'active':(dropdownExpanded == true)}" >
+        <button class='dropdown-item' type='button' style='display:none;'> <i class='fa fa-arrow-left' style='margin-right:5px;'></i>Go Back</button>  
+         <div v-if="task.completed === false">
+          <button class='dropdown-item' type='button' @click="completeTask(task.id)"> 
            <i class='fa fa-check' style='margin-right:5px;'></i>Completed
           </button>
          </div>
          <div v-else>
-           <button class='dropdown-item' type='button' v-bind:data-complete-btn-id="response.id" @click="reopenTask(response.id)"> 
+           <button class='dropdown-item' type='button'  @click="reopenTask(task.id)"> 
             <i class='fa fa-undo' style='margin-right:5px;'></i>Re-open
           </button>
          </div>  
-        <button class='dropdown-item' type='button' v-bind:data-hide-todo-btn-id="response.id" data-visible='true'  @click='toggleTodoVisibility()'>          
+        <button class='dropdown-item' type='button'  @click='toggleTodoVisibility()'>          
          <div v-if="todosHidden">
           <i class='fa fa-eye' style='margin-right:5px;'></i>Show Todos
          </div>
@@ -29,47 +27,46 @@
            <i class='fa fa-eye-slash' style='margin-right:5px;'></i>Hide Todos
          </div>      
         </button>
-        <button class='dropdown-item' type='button' v-bind:data-delete-btn-id="response.id" @click="deleteTask(response.id)"> <i class='fa fa-trash' style='margin-right:8px;'></i>Delete</button>
-        <!-- <button class='dropdown-item' type='button' v-bind:data-image-upload-btn-id="response.id" onclick='showImageUpload(" + response.id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
+        <button class='dropdown-item' type='button' v-bind:data-delete-btn-id="task.id" @click="deleteTask(task.id)"> <i class='fa fa-trash' style='margin-right:8px;'></i>Delete</button>
+        <!-- <button class='dropdown-item' type='button' v-bind:data-image-upload-btn-id="task.id" onclick='showImageUpload(" + task.id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
         </div>
       </div>
       </div>
-      <div class="text-left" style='width:100%; padding:10px;'  id='todo-title-wrap-" + response.id +"' >
-       <div v-if="response.severity == 1 && response.completed == false">
-         <span class='card-title'>{{ response.name }}</span><span class='badge  badge-success severity-badge'>Low</span>
+      <div class="text-left" style='width:100%; padding:10px;'  id='todo-title-wrap-" + task.id +"' >
+       <div v-if="task.severity == 1 && task.completed == false">
+         <span class='card-title'>{{ task.name }}</span><span class='badge  badge-success severity-badge'>Low</span>
        </div>
-       <div v-else-if="response.severity == 2 && response.completed == false">
-         <span class='card-title'>{{ response.name }}</span><span class='badge  badge-warning severity-badge'>Medium</span>
+       <div v-else-if="task.severity == 2 && task.completed == false">
+         <span class='card-title'>{{ task.name }}</span><span class='badge  badge-warning severity-badge'>Medium</span>
        </div>
-       <div v-else-if="response.severity == 3 && response.completed == false">
-         <span class='card-title'>{{ response.name }}</span><span class='badge  badge-danger severity-badge'>High</span>
+       <div v-else-if="task.severity == 3 && task.completed == false">
+         <span class='card-title'>{{ task.name }}</span><span class='badge  badge-danger severity-badge'>High</span>
        </div>
-       <div v-else-if="response.completed == true">
-         <span class='card-title disabled'>{{ response.name }}</span><span class='badge  badge-secondary severity-badge'>Closed</span>
+       <div v-else-if="task.completed == true">
+         <span class='card-title disabled'>{{ task.name }}</span><span class='badge  badge-secondary severity-badge'>Closed</span>
        </div>
       </div>
       <div class='card-body text-left'>
-        <p class='card-subtitle mb-2 text-muted'>{{ response.description }}</p><hr id='todo-hr-"+ response.id +"'/>
-       <!-- <div v-if="!todosHidden" v-bind:data-todo-wrap="response.id">
-        <div v-for="(todos, index) in todoData">
-          <TodoList v-bind:todoData="todos" v-bind:taskOpen="response.open" v-bind:taskId="response.id" v-bind:key="index"></TodoList>
+        <p class='card-subtitle mb-2 text-muted'>{{ task.description }}</p><hr id='todo-hr-"+ task.id +"'/>
+       <div v-if="!todosHidden">
+        <div v-for="(todo, index) in todos" :key="index">
+          <TodoList v-bind:todo="todo"></TodoList>
         </div>
-      </div> -->
+      </div>
       </div>
       <div class='input-group'  style='padding:10px;'>
         <p class="red-text" v-if="feedback">
           {{ feedback }}
         </p>
-        <input type='text' class='form-control' placeholder='Add to do here...' v-model="todoInput" v-bind:data-todo-input-id="response.id" aria-describedby='button-addon2' :disabled="response.completed">
+        <input type='text' class='form-control' placeholder='Add to do here...' v-model="todoInput" aria-describedby='button-addon2' :disabled="task.completed">
         <div class='input-group-append'>
-          <button class='btn btn-outline-secondary' type='button' v-bind:data-todo-button="response.id" @click='addTodo(response.id)' :disabled="response.completed">
+          <button class='btn btn-outline-secondary'  @click='addTodo(task._id)' :disabled="task.completed">
            <i class='fa fa-plus'></i>
           </button>
         </div>
       </div>
-      <!-- <div class="assigned-to-text">Assigned To: {{ response.assignTo }}</div> -->
-      <div v-bind:data-card-back="response.id" class='' style='display:none;'>
-      </div>
+      <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
+      <div v-bind:data-card-back="task.id" class='' style='display:none;'>
       </div>
       </div>
     </div>
@@ -78,126 +75,63 @@
 
 <script>
 
-//import TodoList from '@/components/layouts/TodoList.vue'
+import TodoList from '@/components/TodoList.vue'
 
 export default {
   name: 'TaskCard',
   components:{
-    //TodoList
+    TodoList
   },
   props:
-    ['response'],
+    ['task'],
   data(){
     return{
+      todos: null,
       todoInput: null,
       feedback: null,
-      todoData: null,
-      todoResponse: null,
-      responseOpen: null,
       completed: false,
       todosHidden: false,
+      dropdownExpanded: false,
     }
+  },
+  computed:{
+    //   todos(){
+    //     return this.$store.getters.taskTodos.data;
+    //   }
   },
   methods: {
     toggleTodoVisibility(){
       this.todosHidden = !this.todosHidden;
     },
-//     completeTask(id){
-//        db.collection("tasks").doc(id).update({
-//          open: false
-//        }).then(function(){
-//          console.log("Task - "+id+": Has been completed!");
-//          this.completed = true;
-//        });
-//     },
-//     deleteTask(id){
-//        db.collection("tasks").doc(id).delete().then(function(){
-//          console.log("Task - "+id+": Has been deleted!");
-//          //notify here or do something else 
-//        });
-//     },
-//     reopenTask(id){
-//        db.collection("tasks").doc(id).update({
-//          open: true
-//        }).then(function(){
-//          console.log("Task - "+id+": Has been completed!");
-//          this.completed = false;
-//        });
-//     },
-//     getTodosByTask(){
-//      console.log("todo - taskId:"+ this.response.id);
-//      var that = this; //have to use this to reference the same object
-//      var stuff = [];
-     
-//      //getTodods from firebase
-//      db.collection("todos").where("taskId", "==", this.response.id).orderBy("timestamp", "desc")
-//      .onSnapshot(function(querySnapshot) {
-//          querySnapshot.forEach(function(doc) {
-//              // doc.data() is never undefined for query doc snapshots
-//              var response = doc.data();
-
-//             var newElement = {
-//                   "id": doc.id,
-//                   "todo": response.todo,
-//                   "open": response.open,
-//                   "timestamp": response.timestamp,
-//                   "taskId": response.taskId,
-//                   "userId": response.userId
-//                 };
-
-//                stuff = stuff.concat(newElement);
-
-//                console.log("<STUFF:>  </STUFF:>", stuff);
-
-//          });
-
-//          that.todoData = stuff;
-
-//      })
-//    },
-//     addTodo(id){
-//       var that = this;
-//       if(this.todoInput){
-//         db.collection('todos').add({
-//           todo: this.todoInput,
-//           taskId: id,
-//           open: true,
-//           userId: this.$store.getters.getUser.uid,
-//           timestamp: Date.now()
-//         }).then(docRef =>{
-//           console.log('Todo Id Created:', docRef.id);
-//           //add todo id to task 
-//          db.collection("teams")
-//            .doc(that.team)
-//            .update({
-//              todos: firebase.firestore.FieldValue.arrayUnion(docRef.id)
-//           })
-//           .catch(err => {
-//             console.log(err);
-//             reject(err);
-//           });
-//         }).catch(err => {
-//           console.log(err)
-//         });
-//         this.todoInput = null; //allow to reset
-//         $('input[type="text"], textarea').val(''); //reset form input to an empty value
-//         this.getTodosByTask();
-
-//       }
-//        else {
-//           this.feedback = "You must fill out to do"
-//         }
-//     }
-
+    toggleDropdown(){
+      this.dropdownExpanded = !this.dropdownExpanded;
+    },
+    addTodo(){
+     var data = {name: this.todoInput, taskId: this.task._id, completed: false}
+      this.$store.dispatch('postTodo', data).then(() => {
+          //if success addTodo to dom
+          this.todos.push(data);
+          this.todoInput = null;
+      })
+    }
   },
   mounted(){
-   //this.getTodosByTask();
+     this.$store.dispatch('fetchTodos', {taskId: this.task._id}).then((res) =>{
+         this.todos = res.data;
+     });
   }
 
 }
 </script>
 
 <style lang="css" scoped>
+.dropdown-menu{
+  display:block;
+  margin-top:-1px;
+  border-radius: 0px 0px 5px 5px;
+  box-shadow: 1px 5px 13px -5px #ccc;
+}
+
 .assigned-to-text{
   color: #ccc;
   padding: 0 5px 5px 5px;
@@ -238,7 +172,7 @@ div.card-shadow:hover{
   transform: scale(1.015 , 1.015);
 }
 .task-wrap{
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .severity-badge{
