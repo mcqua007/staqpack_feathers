@@ -32,32 +32,37 @@ export default {
   //props: ['responseData'],
   data(){
     return {
-      projectName: null,
-      projectId: null,
-      tasks: null,      
+      //projectName: null,
+      //projectId: null,
+      //tasks: null,      
     }
   },
   methods: {
-
+    deleteProject(projectId){
+        let project_name = this.$store.getters.currentProject.name;
+        let confirmed = confirm("Permanently delete '"+project_name+"' and its associated tasks ?");
+        if(confirmed){
+         this.$store.dispatch('deleteProject', projectId).then((res)=>{
+          console.log("Delete Project Res", res);
+          //toggle Project State to be hidden - maybe eventually go back to app hoem/dashboard
+          this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+       });
+      }
+    }
   },
-//   computed: mapState(['tasksLoading']),
-//   watch: {
-//       tasksLoading(newValue, oldValue){
-//        console.log(`Updating from ${oldValue} to ${newValue}`);
-//         if (newValue === false) {
-//           this.tasks =  this.$store.getters.currentProjectTasks;
-//             console.log('current proejct tasks', this.tasks);
-//         }
-//       }
-//   },
+  computed:{
+      tasks(){
+        return this.$store.getters.currentProjectTasks.data;
+      }
+  },
   created(){
               
   },
   mounted(){
-      this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{
-          this.tasks = this.$store.getters.currentProjectTasks.data;
-          console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
-      });
+    //   this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{
+    //       this.tasks = this.$store.getters.currentProjectTasks.data;
+    //       console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
+    //   });
   }
 }
 </script>
