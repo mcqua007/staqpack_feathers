@@ -4,24 +4,8 @@
     <!-- <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar> -->
     <SideBar  v-on:projectOpen="projectOpen" ></SideBar>
     <div class="container margin">
-      <Forms v-bind:projectId="currentProjectId"></Forms>
-       <div v-if="$store.getters.projectState == true">
-       <div class="project-header-bar">
-         <div class="project-title">
-          <div v-if="currentProjectName != null">
-            <h3>{{ currentProjectName }}</h3>
-           </div>
-           <div v-else>
-            All Tasks
-         </div>
-       </div>
-        <div v-if="currentProjectId != null" style="margin-left:auto;">
-          <button class="delete-project-btn" @click="deleteProject(currentProjectId)"><i class="fa fa-trash delete-project-icon"></i></button>
-        </div>
-       </div>
-      <hr />
-      <Project></Project>
-     </div>
+      <Forms :projectId="currentProjectId"></Forms>
+      <Project v-if="$store.getters.projectState == true"></Project>
     </div>
   
   </div>
@@ -52,10 +36,12 @@ export default {
   methods:{
      projectOpen (id, name) {
        console.log("Project Open Main: ", id, name)
-      this.currentProjectId = id
-      this.currentProjectName = name
-      //this.returnTasks('projectId', this.currentProjectId)
+      // this.currentProjectId = id;
+      // this.currentProjectName = name;
     },
+  },
+  mounted(){
+
   }
 }
 </script>
