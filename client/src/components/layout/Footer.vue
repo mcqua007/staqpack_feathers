@@ -52,7 +52,7 @@ export default {
   
   },
    mounted(){
-    if(this.$store.getters.getUser){
+    if(this.$store.getters.user){
         this.loggedIn = true;
     }
   }
