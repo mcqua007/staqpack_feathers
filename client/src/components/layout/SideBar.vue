@@ -2,7 +2,7 @@
 <!-- eslint-disable -->
   <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}">
    <nav class="text-left">
-     <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()"><i class="fas fa-user-circle"></i> {{ $store.getters.getUser.email}} </div>
+     <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()"><i class="fas fa-user-circle"></i> {{ $store.getters.user.email}} </div>
       <div v-show="userMenuState" class="inner-menu">
         <ul>
           <li class="m-top-8" role="button"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
@@ -126,16 +126,21 @@ export default {
       this.$store.dispatch('logout');
     },
    openProject(projectId, projectName){
-     this.$emit('projectOpen', projectId, projectName);
 
-     //Hide Git Settings if it is open
-    //  if(this.$store.getters.gitSettingsState == true){
-    //    this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-    //  }
-    //Toggle Project to true if is is not visible
-    if(this.$store.getters.projectState == false){
-      this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-    }
+     this.$store.commit('setCurrentProject', { id: projectId, name: projectName});
+     this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: projectId}}).then(()=>{
+       
+         //Hide Git Settings if it is open
+        //  if(this.$store.getters.gitSettingsState == true){
+        //    this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
+        //  }
+        //Toggle Project to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.projectState == false){
+          this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+        }
+     });
+
   },
   // buildTeamProjects(teamData){
   //   var that = this;
@@ -157,7 +162,7 @@ export default {
   // },
   // initializeData(){
   //   console.log("Initilize Data Sidebar Function");
-  //   this.$store.dispatch('fetchUserData', this.$store.getters.getUser).then(() =>{
+  //   this.$store.dispatch('fetchUserData', this.$store.getters.user).then(() =>{
 
   //   this.userData = this.$store.getters.getUserData;
   //   this.projects = this.userData.projects;
@@ -178,7 +183,7 @@ export default {
     loading(newValue, oldValue){
        console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
-          this.projects =  this.$store.getters.getProjects.data;
+          this.projects =  this.$store.getters.projects.data;
             console.log('task- projects watch', this.projects);
         }
       }
