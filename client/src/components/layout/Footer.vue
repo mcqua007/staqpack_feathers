@@ -80,11 +80,13 @@ hr{
     color: #007bff;
     font-size: 24px;
 }
+
 .footer{
   padding: 10px 0;
   bottom: 0;
   left: 0;
   position: absolute;
+  margin-top:10px;
   width:100%;
 }
 .copyright-text{
