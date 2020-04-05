@@ -9,6 +9,7 @@ module.exports = function (app) {
     name: { type: String, required: true },
     completed: {type: Boolean, default: false},
     taskId: {type: Schema.Types.ObjectId, ref: 'tasks'},
+    projectId: {type: Schema.Types.ObjectId, ref: 'projects'},
     createdBy: {type: Schema.Types.ObjectId, ref: 'Users'}
   }, {
     timestamps: true
