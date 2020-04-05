@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="top-bar">
+  <div class="top-bar" :style="{backgroundColor: this.$store.getters.themeColor}">
     <div class="menu-icon" v-if="$store.getters.sideBarState == true" >
       <i class="fa fa-times menu-icon-style" @click="toggleSideBar()"></i>
     </div>
@@ -85,7 +85,7 @@ export default {
 <style lang="css" scoped>
 .add-btn-menu{
     border-color: transparent;
-    background-color: #007bff;
+    background-color: transparent;
     padding: 0;
     text-align: right;
     display: inline-flex;
@@ -123,7 +123,8 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: #007bff;
+  /* background-color: #007bff; */
+  background: #343434;
   position: sticky;
   top:0px;
   width:100%;

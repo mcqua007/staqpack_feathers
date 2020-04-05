@@ -3,9 +3,10 @@
   <div v-bind:class="{'sidebar-nav':true, 'expanded':($store.getters.sideBarState == true)}">
    <nav class="text-left">
      <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()"><i class="fas fa-user-circle"></i> {{ $store.getters.user.email}} </div>
-      <div v-show="userMenuState" class="inner-menu">
+      <div v-show="userMenuState" class="inner-menu" :style="{borderTop: '2px solid '+this.$store.getters.themeColor}">
         <ul>
           <li class="m-top-8" role="button"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
+          <li class="m-top-8" role="button" @click="toggleSettings()"><i class="fa fa-cog"></i> Settings</li>
                <!-- Might not do it this way if i want to go to a new page -->
                <!-- <a class="nav-link" role="link"  @click="toggleGitSettings()"> <i class="fab fa-github"></i>&nbsp; Git Settings</a> -->
                <!-- <router-link to="/gitsettings">Git Settings</router-link> -->
@@ -15,7 +16,7 @@
          <div role="button" tabindex="0" @click="toggleProjectMenu()" class="root-nav-item"> 
            <i class="fa fa-folder"></i> Your Projects
         </div>
-         <div v-show="projectMenuState" class="inner-menu">
+         <div v-show="projectMenuState" class="inner-menu" :style="{borderTop: '2px solid '+this.$store.getters.themeColor}">
           <ul>
            <li role="button" class="m-top-8" v-for="project in projects" @click="openProject(project._id, project.name)">
              <i class="fas fa-project-diagram"></i> {{ project.name }}
@@ -97,6 +98,14 @@ export default {
   //     //Toggle git settings
   //     this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
   //  },
+      toggleSettings(){
+      //Toggle Project to true if is is not visible
+      if(this.$store.getters.projectState == true){
+        this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+      }
+      //Toggle git settings
+      this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+   },
    toggleUserMenu(){
      this.userMenuState = !this.userMenuState;
    },
@@ -134,6 +143,9 @@ export default {
         //  if(this.$store.getters.gitSettingsState == true){
         //    this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
         //  }
+         if(this.$store.getters.settingsState == true){
+           this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+         }
         //Toggle Project to True if is is not visible
         // and the data the promise is resolve from the action
         if(this.$store.getters.projectState == false){
@@ -255,6 +267,6 @@ i{
 }
 .inner-menu{
   margin-top: 5px;
-  border-top: 2px solid #007BFF;
+  /*border-top: 2px solid #343434; */
 }
 </style>
