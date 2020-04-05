@@ -14,7 +14,7 @@
       <hr />
     <div class="row">
         <template v-for="task in tasks">
-          <TaskCard v-bind:response="task" :key="task.id"></TaskCard>
+          <TaskCard v-bind:task="task" :key="task.id"></TaskCard>
         </template>
     </div>
   </div> <!-- end componenet wrapper -->
