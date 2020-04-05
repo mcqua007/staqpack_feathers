@@ -6,6 +6,7 @@
     <div class="container margin">
       <Forms :projectId="currentProjectId"></Forms>
       <Project v-if="$store.getters.projectState == true"></Project>
+      <Settings v-if="$store.getters.settingsState == true"></Settings>
     </div>
   
   </div>
@@ -16,6 +17,7 @@
 import TopBar from '@/components/layout/TopBar.vue'
 import SideBar from '@/components/layout/SideBar.vue'
 import Forms from '@/components/layout/Forms.vue'
+import Settings from '@/components/settings/Settings.vue'
 import Project from '@/components/layout/Project.vue'
 
 
@@ -31,7 +33,8 @@ export default {
     TopBar,
     SideBar,
     Forms,
-    Project
+    Project,
+    Settings
   },
   methods:{
      projectOpen (id, name) {
