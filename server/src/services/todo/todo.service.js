@@ -6,7 +6,8 @@ const hooks = require('./todo.hooks');
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate')
+    paginate: app.get('paginate'),
+    multi: [ 'remove', 'patch' ] //added patch, and remove to multiple edits at once, patch incase instead of remove mark as deleted
   };
 
   // Initialize our service with any options it requires
