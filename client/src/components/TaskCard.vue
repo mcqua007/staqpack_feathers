@@ -60,7 +60,7 @@
         </p>
         <input type='text' class='form-control' placeholder='Add to do here...' v-model="todoInput" aria-describedby='button-addon2' :disabled="task.completed">
         <div class='input-group-append'>
-          <button class='btn btn-outline-secondary'  @click='addTodo(task._id)' :disabled="task.completed">
+          <button class='btn btn-outline-secondary'  @click='addTodo(task._id,task.proejctId)' :disabled="task.completed">
            <i class='fa fa-plus'></i>
           </button>
         </div>
@@ -106,9 +106,9 @@ export default {
     toggleDropdown(){
       this.dropdownExpanded = !this.dropdownExpanded;
     },
-    addTodo(){
-     var data = {name: this.todoInput, taskId: this.task._id, completed: false}
-      this.$store.dispatch('postTodo', data).then(() => {
+    addTodo(taskId, projectId){
+     var data = {name: this.todoInput, taskId: taskId, projectId: projectId, completed: false}
+      this.$store.dispatch('createTodo', data).then(() => {
           //if success addTodo to dom
           this.todos.push(data);
           this.todoInput = null;
