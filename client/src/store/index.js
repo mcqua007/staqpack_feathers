@@ -80,7 +80,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) =>{
       feathersClient.service('projects').remove(projectId).then((res) => {
         context.dispatch('deleteTask', {projectId: projectId}).then((taskRes) => {
-          resolve({'project_msg':res, 'task_msg:': taskRes});
+          resolve({'project_msg':res, 'task_msg:': taskRes.taskRes, "todo_msg":taskRes.todoRes});
         });
         
       }).catch((e) =>{
@@ -93,6 +93,9 @@ export default new Vuex.Store({
      return new Promise((resolve, reject) =>{
       feathersClient.service('tasks').remove(null, {query: query}).then((res) => {
         //remove todos that have this taskID here
+        context.dispatch('deleteTodo', {query: query}).then((todoRes) => {
+          resolve({'taskRes': res, 'todoRes': todoRes});
+        });
         resolve(res);
       }).catch((e) =>{
         if(context.state.debug) console.error('deleteTask error', e);
@@ -110,15 +113,35 @@ export default new Vuex.Store({
       })
     })
     },
-     postTodo(context, data){
+    createTodo(context, data){
      return new Promise((resolve, reject) =>{
       feathersClient.service('todo').create(data).then((res) =>{
           resolve(res);
       }).catch((e) =>{
-          if(context.state.debug) console.error('postTodos Error:', e);
+          if(context.state.debug) console.error('createTodo Error:', e);
         reject(e);
       })
     })
+   },
+   deleteTodo(context, data){
+     return new Promise((resolve, reject) =>{
+       feathersClient.service('todo').remove(data).then((res) =>{
+          resolve(res);
+      }).catch((e) =>{
+       if(context.state.debug) console.error('deleteTodo Error:', e);
+        reject(e);
+      })
+     })
+   },
+    patchTodo(context, data){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('todo').patch(data.id, data.update).then((res) =>{
+         resolve(res);
+      }).catch((e) =>{
+       if(context.state.debug) console.error('deleteTodo Error:', e);
+        reject(e);
+      })
+     })
    }
   },
   mutations: {
