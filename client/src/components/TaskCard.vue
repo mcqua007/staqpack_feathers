@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="col-12 col-sm-6 col-lg-4 animated task-wrap">
+  <div class="col-12 col-sm-6 col-lg-4 task-wrap">
     <div v-if="task != null">
-      <div class='col-xs-12 card card-shadow'>
+      <div  :class="{'col-xs-12': true, 'card': true, 'card-shadow':true, 'card-back-active': (backActive)}">
         <div class='btn-group' role='group'>
         <button type='button' v-bind:class="{'btn':true, 'btn-outline-primary':true}"  :disabled="task.completed"><i class='fa fa-calendar'></i></button>
         <button type='button' v-bind:class="{'btn':true, 'btn-outline-danger':true}"  :disabled="task.completed"><i class="far fa-images"></i></button>
@@ -19,6 +19,16 @@
             <i class='fa fa-undo' style='margin-right:5px;'></i>Re-open
           </button>
          </div>  
+         <div v-if="!backActive">
+          <button class='dropdown-item' type='button' @click="toggleBack()"> 
+           Show Back
+          </button>
+         </div>
+         <div v-else>
+         <button class='dropdown-item' type='button' @click="toggleBack()"> 
+           Go Home
+          </button>
+         </div>
         <button class='dropdown-item' type='button'  @click='toggleTodoVisibility()'>          
          <div v-if="todosHidden">
           <i class='fa fa-eye' style='margin-right:5px;'></i>Show Todos
@@ -92,6 +102,7 @@ export default {
       completed: false,
       todosHidden: false,
       dropdownExpanded: false,
+      backActive: false
     }
   },
   computed:{
@@ -100,6 +111,9 @@ export default {
     //   }
   },
   methods: {
+    toggleBack(){
+      this.backActive = !this.backActive;
+    },
     toggleTodoVisibility(){
       this.todosHidden = !this.todosHidden;
     },
@@ -156,9 +170,7 @@ export default {
     border-bottom-right-radius: 0;
 }
 /********************/
-.card{
-  border:none;
-}
+
 *:focus{
   outline: none !important;
 }
@@ -170,6 +182,13 @@ div.card-shadow:hover{
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
   transition: transform 0.3s ease, box-shadow .3s linear;
   transform: scale(1.015 , 1.015);
+}
+div.card.card-shadow{
+  border: none;
+  transition: transform .45s linear;
+}
+div.card.card-shadow.card-back-active{
+  transform: rotateY(180deg);
 }
 .task-wrap{
   margin-top: 15px;
