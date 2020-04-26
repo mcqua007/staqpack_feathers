@@ -12,6 +12,7 @@ module.exports = function (app) {
     open: {type: Boolean, required: true, default: true},
     type: {type: String, enum: ['personal', 'team']},
     teamId:  {type: Schema.Types.ObjectId, ref: 'Teams'},
+    dueDate: Date,
     //memberIds: [{type: Schema.Types.ObjectId, ref: 'Users', Required: true}],
     createdBy: {type: Schema.Types.ObjectId, ref: 'Users'}
   }, {

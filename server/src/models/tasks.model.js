@@ -14,6 +14,7 @@ module.exports = function (app) {
     severity: {type: Number, enum: [1,2,3], default: 1},
     assignTo: { type: String },
     order:{type: Number, required: true, default: 0},
+    dueDate: {type: Date},
     createdBy: {type: Schema.Types.ObjectId, ref: 'Users'},
     projectId: {type: Schema.Types.ObjectId, ref: 'Projects', required: true },
   }, {
