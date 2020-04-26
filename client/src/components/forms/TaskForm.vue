@@ -2,8 +2,8 @@
 <div class="task-form"><!-- componenet wrapper -->
   <transition name="fade">
    <div  v-if="$store.getters.taskFormState == true" class="jumbotron" style=" margin-top:10px;">
-     <i class="fa fa-times close-form-icon" role="button" @click="hideTaskForm()"></i>
-      <h3>Add New Task</h3>
+     <i class="fa fa-times close" role="button" @click="hideTaskForm()"></i>
+      <h3 style="margin-bottom: 25px;">Add New Task</h3>
       <form data-project-id="" @submit.prevent>
         <div class="row">
           <div class="form-group col-md-4">
@@ -21,7 +21,7 @@
           <!-- Temporary measure to select proejct name a task will belong too -->
          <div class="form-group col-md-4">
           <label for="issueProjectId">Project</label>
-            <select class="form-control" v-model="project_id">
+            <select class="form-control" v-model="projectId">
                 <option value="null" disabled>[Choose Project]</option>
                 <option  v-for="project in projects" :value="project._id" :key="project.name">{{ project.name }}</option>
             </select>
@@ -33,14 +33,24 @@
            <input type="text" class="form-control" placeholder="Assign To..." v-model="assignTo">
           </div> -->
         </div>
-          <div class="form-group">
-          <label for="issueDescInput">Description</label>
+        <div class="row flex-end">
+          <div class="form-group col-12 col-md-6">
+          <label for="description">Description (optional)</label>
           <input type="text" class="form-control" placeholder="Describe the issue..." v-model="description">
           </div>
-          <p class="red-text" v-if="feedback">
+          <div class="form-group col-12 col-md-3">
+            <label for="dueDate">Due Date (optional)</label>
+            <input type="date" class="form-control" v-model="taskDueDate">
+           </div>
+          <div class="form-group col-12 col-md-3">
+            <button class="btn btn-primary btn-block" @click="submitTaskForm()">Create Task</button>
+          </div>
+        </div>
+        <transition name="fade">
+        <p v-show="feedback" :class="{'alert': true, 'text-center': true, 'alert-danger':(alertType === 'danger'), 'alert-success':(alertType === 'success'), 'alert-warning':(alertType === 'warning'),'alert-primary':(alertType === 'primary'), }">
             {{ feedback }}
-          </p>
-          <button class="btn btn-primary" @click="submitTaskForm()">Add</button>
+         </p>
+        </transition> 
       </form>
     </div> 
   </transition> 
@@ -58,44 +68,61 @@ export default {
   data(){
     return {
       name: null,
+      alertType: null,
       severity: '1',
       assignTo: null,
       description: null,
       feedback: null,
-      project_id: null,
+      projectId: null,
       projects: null,
+      taskDueDate: null,
     }
   },
   methods: {
+    alertFeedback(message, type, time){ 
+      let timeOut = (time != undefined) ? time : 2500;
+      this.feedback = message;
+      this.alertType = type;
+      var that = this;
+      setTimeout(function(){
+        that.feedback = null;
+        this.alertType = null;
+      }, timeOut);
+    },
     hideTaskForm(){
       this.$store.commit('toggleTaskForm', this.$store.getters.taskFormState);
     },
     submitTaskForm(){
-      if(this.name && this.severity  && this.description){
-        console.log("Task Form:{ title: "+ this.title +"| description: "+ this.description+"| severity: "+ this.severity + "| asigned "+ this.assignTo + "| project "+ this.projectId);
+      if(this.name && this.projectId){
 
-        let form_data = {
+        let formData = {
           name: this.name,
           severity: this.severity,
          //assignTo: this.assignTo,
           description: this.description,
-          projectId: this.project_id,
+          projectId: this.projectId,
+          dueDate: this.taskDueDate
         }
-        feathersClient.service('tasks').create(form_data);
-
-        //RESETING FORM VALUES - SINCE 2WAY BOUND
+        console.log('formData: ', formData);
+        feathersClient.service('tasks').create(formData).then(()=>{
+        //RESETING FORM VALUES
          this.name = null;
-         this.severity = 'Low';
+         this.severity = '1';
          //this.assignTo = null;
          this.description = null;
-         this.project_id = null;
-         //RETURN TASKS
+         this.projectId = null;
+         this.taskDueDate = null;
          //Emit event to main down to project d Task that where submitted
          this.$emit('taskFormInput');
-        
+         this.alertFeedback("You new task has been created.", 'primary');
+        }).catch((e) => {
+          this.alertFeedback("Error: "+e, 'danger'); //alert error feedback
+        });
+
+
       }
        else {
-          this.feedback = "You must fill out all form fields."
+          this.alertFeedback("You must have a Task Name and a choose a Project!", 'danger');
         }
     }
   },
@@ -153,12 +180,6 @@ export default {
 .red-text{
   color: red;
 }
-.close-form-icon{
- float: right;
- font-size:30px;
- top: -30px;color: #ccc;
- position: relative;
-}
 
 /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
 .fade-enter-active, .fade-leave-active {
@@ -170,5 +191,17 @@ export default {
 .form-group{
   text-align: left;
 }
+  .jumbotron{
+    padding: 30px 20px;
+  }
+    .close{
+    float: right;
+    font-size:30px;
+    color: #ccc;
+    position: relative;
+  }
+  .flex-end{
+    align-items: flex-end;
+  }
 /*================================*/
 </style>
