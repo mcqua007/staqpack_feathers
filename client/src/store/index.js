@@ -105,7 +105,7 @@ export default new Vuex.Store({
     },
     fetchTodos(context, query){
      return new Promise((resolve, reject) =>{
-      feathersClient.service('todo').find({query:query}).then((res) =>{
+      feathersClient.service('todos').find({query:query}).then((res) =>{
           resolve(res);
       }).catch((e) =>{
           if(context.state.debug) console.error('FetchTodos error', e);
@@ -115,7 +115,7 @@ export default new Vuex.Store({
     },
     createTodo(context, data){
      return new Promise((resolve, reject) =>{
-      feathersClient.service('todo').create(data).then((res) =>{
+      feathersClient.service('todos').create(data).then((res) =>{
           resolve(res);
       }).catch((e) =>{
           if(context.state.debug) console.error('createTodo Error:', e);
@@ -125,7 +125,7 @@ export default new Vuex.Store({
    },
    deleteTodo(context, data){
      return new Promise((resolve, reject) =>{
-       feathersClient.service('todo').remove(data).then((res) =>{
+       feathersClient.service('todos').remove(data).then((res) =>{
           resolve(res);
       }).catch((e) =>{
        if(context.state.debug) console.error('deleteTodo Error:', e);
@@ -135,7 +135,7 @@ export default new Vuex.Store({
    },
     patchTodo(context, data){
      return new Promise((resolve, reject) =>{
-      feathersClient.service('todo').patch(data.id, data.update).then((res) =>{
+      feathersClient.service('todos').patch(data.id, data.update).then((res) =>{
          resolve(res);
       }).catch((e) =>{
        if(context.state.debug) console.error('deleteTodo Error:', e);
