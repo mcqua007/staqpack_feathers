@@ -122,9 +122,10 @@ export default {
     },
     addTodo(taskId, projectId){
      var data = {name: this.todoInput, taskId: taskId, projectId: projectId, completed: false}
-      this.$store.dispatch('createTodo', data).then(() => {
+      this.$store.dispatch('createTodo', data).then((res) => {
+        console.log('Todo creation res: ', res);
           //if success addTodo to dom
-          this.todos.push(data);
+          this.todos.push(res);
           this.todoInput = null;
       })
     }
@@ -165,6 +166,7 @@ export default {
     border-bottom-left-radius: 0;
 }
 .btn-group>.btn-group:not(:first-child)>.btn, .btn-group>.btn:not(:first-child) {
+    border-top-right-radius: 5px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -176,20 +178,21 @@ export default {
 }
 div.card-shadow{
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
-    transition: transform 0.3s ease, box-shadow .3s linear;
+    transition: transform 0.3s ease, box-shadow 0.3s linear;
 }
 div.card-shadow:hover{
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-  transition: transform 0.3s ease, box-shadow .3s linear;
   transform: scale(1.015 , 1.015);
 }
-div.card.card-shadow{
+/* div.card.card-shadow{
   border: none;
   transition: transform .45s linear;
 }
+/* need to use differnet classes or selctors to not overide transform */
+/*
 div.card.card-shadow.card-back-active{
   transform: rotateY(180deg);
-}
+} */
 .task-wrap{
   margin-top: 15px;
 }

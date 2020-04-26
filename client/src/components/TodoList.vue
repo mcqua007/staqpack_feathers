@@ -1,13 +1,13 @@
 <template lang="html">
   <div v-if="todo != null" class="todo" :style="todoStyle">
     <div style='width:100%;'>
-      <div class='form-check' v-if="!editInputState">
+      <div class='form-check' v-show="!editInputState">
             <!-- <input type='checkbox' :checked="!todo.open" data-checked='false'  @change="toggleCheckBox(todo._id)" class="form-check-input" v-bind:disabled="!taskOpen"> -->
-        <input type='checkbox' :checked="todo.completed" data-checked='false'  @change="toggleCheckBox(todo._id)" class="form-check-input">
-        <label class='form-check-label todo-name' v-bind:todo-id="todo._id">{{todo.name}}</label>
-        <i class="fa fa-edit edit-todo" role="button" @click="toggleEditTodo(todo.name)"></i>
+        <input type='checkbox' :checked="todo.completed" data-checked='false' :id="todo._id" @change="toggleCheckBox(todo._id)" class="form-check-input">
+        <label class='form-check-label todo-name' :for="todo._id" v-bind:data-id="todo._id">{{todo.name}}</label>
+        <i class="fa fa-edit edit-todo"  role="button" @click="toggleEditTodo(todo.name)"></i>
       </div>
-      <div class='edit-todo-row' v-else>
+      <div class='edit-todo-row' v-show="editInputState">
         <input class='form-check-label' type="text" v-model="editInput" v-on:keyup="checkChange(todo.name)"/>
         <i :class="{'fa': true, 'fa-check': (todoChange === true), 'fa-times': (!todoChange)}" role="button" @click="saveTodoEdit(todo._id, todo.name)"></i>
         <i class="fa fa-trash edit-todo-delete" role="button" @click="deleteTodo(todo._id)"></i>
@@ -56,10 +56,11 @@ export default {
     saveTodoEdit(id, original_todo){
         if(this.editInput != original_todo){
           //save todo in DB
-          console.log("saave id: ", id);
           this.$store.dispatch('patchTodo', {id: id, update: {name: this.editInput}}).then(()=>{
-              document.querySelector('.todo-name').innerHTML = this.editInput;
+              document.querySelector('.todo-name[data-id="'+id+'"]').innerHTML = this.editInput; //edit current todo
               this.todoChange = false;
+              this.editInputState = false; //close editable state
+              
           });
         }else{
           //toggle todo edit state
