@@ -3,46 +3,46 @@
     <div v-if="task != null">
       <div  :class="{'col-xs-12': true, 'card': true, 'card-shadow':true, 'card-back-active': (backActive)}">
         <div class='btn-group' role='group'>
-        <button type='button' v-bind:class="{'btn':true, 'btn-outline-primary':true}"  :disabled="task.completed"><i class='fa fa-calendar'></i></button>
-        <button type='button' v-bind:class="{'btn':true, 'btn-outline-danger':true}"  :disabled="task.completed"><i class="far fa-images"></i></button>
+        <button v-bind:class="{'btn':true, 'btn-outline-primary':true}"  :disabled="task.completed"><i class='fa fa-calendar'></i></button>
+        <button v-bind:class="{'btn':true, 'btn-outline-danger':true}"  :disabled="task.completed"><i class="far fa-images"></i></button>
       <div class='btn-group'>
         <button class='btn btn-outline-secondary'   aria-haspopup='true' @click="toggleDropdown()"> <i :class="{'fa':true, 'fa-angle-down':(!dropdownExpanded), 'fa-angle-up':(dropdownExpanded)}"></i> </button>
         <div v-if="dropdownExpanded" :class="{'dropdown-menu':true,'dropdown-menu-right': true, 'active':(dropdownExpanded == true)}" >
-        <button class='dropdown-item' type='button' style='display:none;'> <i class='fa fa-arrow-left' style='margin-right:5px;'></i>Go Back</button>  
+        <button class="dropdown-item" style="display:none;"> <i class="fa fa-arrow-left"></i>Go Back</button>  
          <div v-if="task.completed === false">
-          <button class='dropdown-item' type='button' @click="completeTask(task.id)"> 
-           <i class='fa fa-check' style='margin-right:5px;'></i>Completed
+          <button class="dropdown-item" @click="completeTask(task._id)"> 
+           <i class="fa fa-check"></i>Completed
           </button>
          </div>
          <div v-else>
-           <button class='dropdown-item' type='button'  @click="reopenTask(task.id)"> 
-            <i class='fa fa-undo' style='margin-right:5px;'></i>Re-open
+           <button class="dropdown-item"  @click="reopenTask(task._id)"> 
+            <i class="fa fa-undo"></i>Re-open
           </button>
          </div>  
          <div v-if="!backActive">
-          <button class='dropdown-item' type='button' @click="toggleBack()"> 
-           Show Back
+          <button class="dropdown-item" @click="toggleBack()"> 
+           <i class="fa fa-reply"></i>Show Back
           </button>
          </div>
          <div v-else>
-         <button class='dropdown-item' type='button' @click="toggleBack()"> 
+         <button class="dropdown-item" @click="toggleBack()"> 
            Go Home
           </button>
          </div>
-        <button class='dropdown-item' type='button'  @click='toggleTodoVisibility()'>          
+        <button class="dropdown-item"  @click='toggleTodoVisibility()'>          
          <div v-if="todosHidden">
-          <i class='fa fa-eye' style='margin-right:5px;'></i>Show Todos
+          <i class="fa fa-eye"></i>Show Todos
          </div>
          <div v-else>
-           <i class='fa fa-eye-slash' style='margin-right:5px;'></i>Hide Todos
+           <i class="fa fa-eye-slash"></i>Hide Todos
          </div>      
         </button>
-        <button class='dropdown-item' type='button' v-bind:data-delete-btn-id="task.id" @click="deleteTask(task.id)"> <i class='fa fa-trash' style='margin-right:8px;'></i>Delete</button>
-        <!-- <button class='dropdown-item' type='button' v-bind:data-image-upload-btn-id="task.id" onclick='showImageUpload(" + task.id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
+        <button class="dropdown-item" v-bind:data-delete-btn-id="task.id" @click="deleteTask(task.id)"> <i class="fa fa-trash"></i>Delete</button>
+        <!-- <button class="dropdown-item" v-bind:data-image-upload-btn-id="task.id" onclick='showImageUpload(" + task.id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
         </div>
       </div>
       </div>
-      <div class="text-left" style='width:100%; padding:10px;'  id='todo-title-wrap-" + task.id +"' >
+      <div class="text-left" style='width:100%; padding:10px;'>
        <div v-if="task.severity == 1 && task.completed == false">
          <span class='card-title'>{{ task.name }}</span><span class='badge  badge-success severity-badge'>Low</span>
        </div>
@@ -56,22 +56,23 @@
          <span class='card-title disabled'>{{ task.name }}</span><span class='badge  badge-secondary severity-badge'>Closed</span>
        </div>
       </div>
-      <div class='card-body text-left'>
-        <p class='card-subtitle mb-2 text-muted'>{{ task.description }}</p><hr id='todo-hr-"+ task.id +"'/>
+      <div class="card-body text-left">
+        <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
+        <hr/>
        <div v-if="!todosHidden">
         <div v-for="(todo, index) in todos" :key="index">
           <TodoList v-bind:todo="todo"></TodoList>
         </div>
       </div>
       </div>
-      <div class='input-group'  style='padding:10px;'>
+      <div class="input-group"  style="padding:10px;">
         <p class="red-text" v-if="feedback">
           {{ feedback }}
         </p>
-        <input type='text' class='form-control' placeholder='Add to do here...' v-model="todoInput" aria-describedby='button-addon2' :disabled="task.completed">
-        <div class='input-group-append'>
-          <button class='btn btn-outline-secondary'  @click='addTodo(task._id,task.proejctId)' :disabled="task.completed">
-           <i class='fa fa-plus'></i>
+        <input type="text" class="form-control" placeholder="Add to do here..." v-model="todoInput" aria-describedby="button-addtodo" :disabled="task.completed">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary"  @click='addTodo(task._id,task.projectId)' :disabled="task.completed">
+           <i class="fa fa-plus"></i>
           </button>
         </div>
       </div>
@@ -232,7 +233,9 @@ div.card.card-shadow.card-back-active{
   -webkit-animation: rotateY 1s 1 linear;
  animation: rotateY 1s 1 linear;
 }
-
+.dropdown-item i{
+  margin-right: 5px;
+}
 @-webkit-keyframes rotateY {
   to { -webkit-transform: rotateY(180deg); }
 }
