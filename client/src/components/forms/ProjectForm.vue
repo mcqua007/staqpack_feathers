@@ -34,7 +34,7 @@
             <input type="text" class="form-control"  placeholder="Describe the Project..." v-model="projectDesc">
           </div>
            <div class="form-group col-md-3 col-12">
-            <label for="issueDescInput">Due Date (optional)</label>
+            <label for="projectDueDate">Due Date (optional)</label>
             <input type="date" class="form-control" v-model="projectDueDate">
            </div>
            <div class="form-group col-md-3 col-12">
@@ -69,6 +69,7 @@ import feathersClient from '@/feathers-client-config.js'
         projectType: 'personal',
         team: 'none',
         projectDesc: null,
+        projectDueDate: null,
         feedback: null,
         alertType: null,
         projectData: null,
@@ -89,24 +90,24 @@ import feathersClient from '@/feathers-client-config.js'
           this.progress = true;
           this.updateProgressBar();
          // let user = this.$store.getUser;
-          let form_data = {
+          let formData = {
             name: this.projectName,
             type: this.projectType,
             //team: this.team,
             description: this.projectDesc,
+            dueDate: this.projectDueDate
           }
-
-          feathersClient.service('projects').create(form_data).then(()=>{
+           this.$store.dispatch('createProject', formData).then(() =>{
            //RESETING FORM VALUES 
            this.projectName = null;
            this.projectType = 'personal';
            //this.team = 'none';
            this.projectDesc = null;
-           setTimeout(function(){
-           that.progress = false;
-           that.alertFeedback("Your new project has been created!", 'primary');
-           }, 490)
-
+           this.projectDueDate = null;
+            setTimeout(function(){
+              that.progress = false;
+             that.alertFeedback("Your new project has been created!", 'primary');
+            }, 490);
           }).catch((e) => {
            this.alertFeedback("Error: "+e, 'danger'); //alert error feedback
           });  
@@ -140,7 +141,6 @@ import feathersClient from '@/feathers-client-config.js'
       }
     },
     mounted() {
-      console.log("test socket");
        //doing nothing just shows new projects created 
       feathersClient.service('projects').on('created', message => console.log('New projects created:', message));
     }

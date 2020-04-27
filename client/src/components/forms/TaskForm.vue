@@ -104,7 +104,7 @@ export default {
           dueDate: this.taskDueDate
         }
         console.log('formData: ', formData);
-        feathersClient.service('tasks').create(formData).then(()=>{
+        this.$store.dispatch('createTask', formData).then(() =>{
         //RESETING FORM VALUES
          this.name = null;
          this.severity = '1';
@@ -118,8 +118,6 @@ export default {
         }).catch((e) => {
           this.alertFeedback("Error: "+e, 'danger'); //alert error feedback
         });
-
-
       }
        else {
           this.alertFeedback("You must have a Task Name and a choose a Project!", 'danger');
@@ -131,7 +129,7 @@ export default {
       loading(newValue, oldValue){
        console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
-          this.projects =  this.$store.getters.projects.data;
+          this.projects =  this.$store.getters.projects;
             console.log('task- projects watch', this.projects);
         }
       }
