@@ -22,6 +22,7 @@
 
 <script>
 import TaskCard from '@/components/TaskCard.vue'
+import feathersClient from '@/feathers-client-config.js'
 //import { mapState } from 'vuex';
 
 export default {
@@ -55,8 +56,11 @@ export default {
         return this.$store.getters.currentProjectTasks.data;
       }
   },
-  created(){
-              
+  created(){     
+     feathersClient.service('tasks').on('created', (newTask) => {
+       if(this.$store.getters.currentProject.id === newTask.projectId)
+         this.tasks.push(newTask);
+     });
   },
   mounted(){
     //   this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{

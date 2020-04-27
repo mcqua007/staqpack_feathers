@@ -9,11 +9,12 @@ export default new Vuex.Store({
   state: {
     debug: true,
     user: null,
-    projects: null,
+    projects: [],
     currentProject: null,
     currentProjectTasks: null,
     currentProjectName: null,
     currentProjectId: null,
+    tasks: [],
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
@@ -55,7 +56,7 @@ export default new Vuex.Store({
    fetchProjects(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('projects').find(query).then((res) =>{
-           if(context.state.debug) console.log("Veux - Fetch Projects", res);
+          if(context.state.debug) console.log("Veux - Fetch Projects", res);
           context.commit('setProjects', res);
           resolve(res);
       }).catch((e) =>{
@@ -64,11 +65,25 @@ export default new Vuex.Store({
       })
     })
    },
+   createProject(context, data){
+    return new Promise((resolve, reject) =>{
+     feathersClient.service('projects').create(data).then((res)=>{
+        if(context.state.debug) console.log("Veux - Create Project", res);
+         context.commit('addProject', res);
+         resolve(res);
+     }).catch((e)=>{
+        if(context.state.debug) console.error('createProject error', e);
+        reject(e);
+     })
+    })
+   },
+   //Get All Data For Current Project
    fetchCurrentProjectTasks(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('tasks').find(query).then((res) =>{
            if(context.state.debug) console.log("Veux - Fetch currentProjectTasks", res);
           context.commit('setCurrentProjectTasks', res);
+          context.commit('setTasks', res);
           resolve(res);
       }).catch((e) =>{
           if(context.state.debug) console.error('FetchCurrentProjectTasks error', e);
@@ -76,7 +91,7 @@ export default new Vuex.Store({
       })
     })
    },
-    deleteProject(context, projectId){
+  deleteProject(context, projectId){
       return new Promise((resolve, reject) =>{
       feathersClient.service('projects').remove(projectId).then((res) => {
         context.dispatch('deleteTask', {projectId: projectId}).then((taskRes) => {
@@ -89,7 +104,20 @@ export default new Vuex.Store({
       })
      })
     },
-    deleteTask(context, query){
+   //Tasks CRUD Actions
+   createTask(context, data){
+    return new Promise((resolve, reject) =>{
+     feathersClient.service('tasks').create(data).then((res)=>{
+        if(context.state.debug) console.log("Veux - Create Task", res);
+         context.commit('addTask', res);
+         resolve(res);
+     }).catch((e)=>{
+        if(context.state.debug) console.error('createTask error', e);
+        reject(e);
+     })
+    })
+   },
+   deleteTask(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('tasks').remove(null, {query: query}).then((res) => {
         //remove todos that have this taskID here
@@ -103,6 +131,7 @@ export default new Vuex.Store({
       })
      })
     },
+    // this todos crud 
     fetchTodos(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('todos').find({query:query}).then((res) =>{
@@ -145,16 +174,21 @@ export default new Vuex.Store({
    }
   },
   mutations: {
-    setUser (state, data) {
-      state.user = data;
+    //User Mutations
+    setUser (state, payload) {
+      state.user = payload;
       sessionStorage.setItem('current-user', JSON.stringify(state.user))
     },
     destroyUser(state){
        state.user = null;
        sessionStorage.removeItem('current-user')
     },
-    setProjects(state, data){
-      state.projects = data;
+    //Project Mutations
+    setProjects(state, payload){
+      state.projects = payload.data;
+    },
+    addProject(state, payload){
+      state.projects.push(payload);
     },
     setCurrentProject(state, data){
       state.currentProject = data;
@@ -167,6 +201,16 @@ export default new Vuex.Store({
     setCurrentProjectTasks(state, data){
       state.currentProjectTasks = data
     },
+    setTasks(state, payload){
+      payload.data.forEach((item)=>{
+        state.tasks[item._id]= item;
+      });
+      console.log('Tasks: ', state.tasks);
+    },
+    addTask(state, payload){
+      state.tasks.push(payload);
+    },
+    //State/Visibility Mutations
     toggleProjectForm (state, formState) {
       state.projectFormVisible = !formState
     },
@@ -190,6 +234,7 @@ export default new Vuex.Store({
     setLoading(state, appLoadState){
       state.loading = appLoadState;
     },
+    //Settings Mutations 
     setThemeColor(state, color){
       state.themeColor = color;
       localStorage.setItem('theme-color', color);
@@ -237,5 +282,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
+
   }
 })

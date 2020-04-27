@@ -76,13 +76,13 @@ export default {
     return{
       userMenuState: false,
       projectMenuState: false,
-      teamMenuState: false,
-      teamProjectMenuState: false,
-      teamId: null,
-      teamProjects: null,
       projects: null,
-      teams: [],
-      teamProjectsData: [],
+      //teamMenuState: false,
+      //teamProjectMenuState: false,
+      //teamId: null,
+      //teamProjects: null,
+      //teams: [],
+      //teamProjectsData: [],
     }
   },
   methods: {
@@ -195,7 +195,7 @@ export default {
     loading(newValue, oldValue){
        console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
-          this.projects =  this.$store.getters.projects.data;
+          this.projects =  this.$store.getters.projects;
             console.log('task- projects watch', this.projects);
         }
       }
