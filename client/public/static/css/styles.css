@@ -1,0 +1,31 @@
+/* App wide css goes here */
+*:focus{
+    outline: none !important;
+}
+/* anchors & buttons */
+a,[role="link"]{
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+a:hover,[role="link"]:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+button:hover, 
+[role="link"]:hover, 
+[role="button"]:hover{
+    cursor: pointer;
+}
+/* margin utility */
+.margin-tb-50{
+    margin-top:50px;
+    margin-bottom: 50px;
+}
+/* logo font */
+.logo-font{
+  font-family: 'Leckerli One', cursive;
+}
+body{
+    width:100%;
+}
