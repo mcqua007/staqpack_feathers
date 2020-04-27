@@ -129,6 +129,7 @@ export default {
   top:0px;
   width:100%;
   padding: 5px 7.5px;
+  z-index:10;
 }
 
 .btn-group-style{
