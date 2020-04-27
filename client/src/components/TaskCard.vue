@@ -37,8 +37,8 @@
            <i class="fa fa-eye-slash"></i>Hide Todos
          </div>      
         </button>
-        <button class="dropdown-item" v-bind:data-delete-btn-id="task.id" @click="deleteTask(task.id)"> <i class="fa fa-trash"></i>Delete</button>
-        <!-- <button class="dropdown-item" v-bind:data-image-upload-btn-id="task.id" onclick='showImageUpload(" + task.id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
+        <button class="dropdown-item" v-bind:data-delete-btn-id="task._id" @click="deleteTask(task._id)"> <i class="fa fa-trash"></i>Delete</button>
+        <!-- <button class="dropdown-item" v-bind:data-image-upload-btn-id="task._id" onclick='showImageUpload(" + task._id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
         </div>
       </div>
       </div>
@@ -77,7 +77,7 @@
         </div>
       </div>
       <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
-      <div v-bind:data-card-back="task.id" class='' style='display:none;'>
+      <div v-bind:data-card-back="task._id" class='' style='display:none;'>
       </div>
       </div>
     </div>
