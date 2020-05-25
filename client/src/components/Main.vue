@@ -44,7 +44,11 @@ export default {
     },
   },
   mounted(){
-
+        //init data 
+     this.$store.dispatch('fetchProjects').then((res) =>{
+       console.log("App Vue: - Called fetchProjects", res);
+       this.$store.commit('setLoading', false);
+      });
   }
 }
 </script>
