@@ -52,7 +52,7 @@ export default {
        //scroll to top of site
        window.scrollTo(0,0);
       // console.log("Sync Commit URl: ", repos[index].commits_url);
-      // getCommits(repos[index].commits_url, "180a485f9c5151765793a729dfd68b565b50d568");
+      // getCommits(repos[index].commits_url, "GITHUB_TOKEN");
     },
   },
   mounted(){
