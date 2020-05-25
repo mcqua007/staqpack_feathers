@@ -243,7 +243,7 @@ export default {
    },
    saveGithubSettings(){
 
-    //store like theme also in DB, but fo rnow use local storage
+    //store like theme also in DB, but for now use local storage
     localStorage.setItem('githubtoken', this.githubToken);
     localStorage.setItem('githubusername', this.githubUsername);
      // TO DO:
@@ -257,7 +257,7 @@ export default {
      console.log("Sync: ", this.repos[index]);
      console.log("Sync Commit URl: ", this.repos[index].commits_url);
 
-     // getCommits(repos[index].commits_url, "sdfsdfsdffjslfjsdfljfsdfwf");
+     // getCommits(repos[index].commits_url, process.env.VUE_APP_GITHUB_TOKEN));
    },
    addToString(searchNum, num){
       return  searchNum + num;
