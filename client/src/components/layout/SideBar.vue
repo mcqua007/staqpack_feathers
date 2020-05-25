@@ -5,7 +5,7 @@
      <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()"><i class="fas fa-user-circle"></i> {{ $store.getters.user.email}} </div>
       <div v-show="userMenuState" class="inner-menu" :style="{borderTop: '2px solid '+this.$store.getters.themeColor}">
         <ul>
-          <li class="m-top-8" role="button"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
+          <li class="m-top-8" role="button"  @click="$store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
           <li class="m-top-8" role="button" @click="toggleSettings()"><i class="fa fa-cog"></i> Settings</li>
                <!-- Might not do it this way if i want to go to a new page -->
                <!-- <a class="nav-link" role="link"  @click="toggleGitSettings()"> <i class="fab fa-github"></i>&nbsp; Git Settings</a> -->
@@ -67,8 +67,9 @@ General - need to load a project once project
 is clicked
 
 ============================================*/
-// import Router from 'vue-router'
+
 import { mapState } from 'vuex';
+
 
 export default {
   name: 'SideBar',
@@ -112,28 +113,6 @@ export default {
    toggleProjectMenu(){
      this.projectMenuState = !this.projectMenuState;
    },
-  //  toggleTeamMenu(){
-  //    this.teamMenuState = !this.teamMenuState;
-  //  },
-  //  toggleTeamProjectMenu(id){
-  //    this.teamProjectMenuState = !this.teamProjectMenuState;
-  //    if(this.teamProjectMenuState == true){
-  //       this.teamId = id; //may not be needded ?
-  //       //Search teams array
-  //       for(var i in this.teamProjectsData){      
-  //         if(this.teamProjectsData[i].teamId == id){
-  //           this.teamProjects = this.teamProjectsData[i].data.projects;
-  //         }
-  //      }
-  //    }
-  //    else {     
-  //      this.teamProjects = null; //Set team projects to null , if not displaying
-  //    }
-  //  },
-   logout(){
-      //alert('You are Logged out!');
-      this.$store.dispatch('logout');
-    },
    openProject(projectId, projectName){
 
      this.$store.commit('setCurrentProject', { id: projectId, name: projectName});
