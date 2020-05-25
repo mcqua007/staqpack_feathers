@@ -9,20 +9,24 @@
                 <i class="fa fa-eye-slash" v-if="!this.themeColorInput"></i>
             </div>
             <input class="form-control" type="text" v-model="themeColorInput" />
-            <button class="btn btn-secondary margin-l-10" @click="changeThemeColor()">save</button>
+            <button class="btn btn-secondary margin-l-10" @click="changeThemeColor()" style="min-width: 140px;">save</button>
           </div>
       </div>
+      <GitSettings ></GitSettings>
   </div>
 </template>
 
 <script>
-
+import GitSettings from '@/components/settings/git//GitSettings.vue'
 export default {
   name: 'Settings',
   data(){
     return {
       themeColorInput: this.$store.getters.themeColor,
     }
+  },
+  components:{
+    GitSettings
   },
   methods: {
       changeThemeColor(){
