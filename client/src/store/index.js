@@ -15,6 +15,7 @@ export default new Vuex.Store({
     currentProjectName: null,
     currentProjectId: null,
     tasks: [],
+    allTasks: [],
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
@@ -117,6 +118,17 @@ export default new Vuex.Store({
      })
     })
    },
+   //TODO: FINSIH A WAY TO FETCH ALL TASKS AND HAVE ONE SOURCE OF TRUTH
+   fetchTasks(context, query){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('tasks').find({query:query}).then((res) =>{
+          resolve(res);
+      }).catch((e) =>{
+          if(context.state.debug) console.error('FetchTasks error', e);
+        reject(e);
+      })
+    })
+    },
    deleteTask(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('tasks').remove(null, {query: query}).then((res) => {
