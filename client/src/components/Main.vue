@@ -47,11 +47,18 @@ export default {
     },
   },
   mounted(){
+
+      //init all task data, then open AllTasks 'Page'
+      this.$store.dispatch('fetchAllTasks').then(() =>{
+        this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState); //open allTasks page
+      });
+
     //init project data 
      this.$store.dispatch('fetchProjects').then((res) =>{
        console.log("App Vue: - Called fetchProjects", res);
        this.$store.commit('setLoading', false);
       });
+
   }
 }
 </script>
