@@ -87,19 +87,27 @@ export default {
     }
   },
   methods: {
-  //   openAllTasks(){
-  //     console.log("in opentask sidebar");
-  //     this.$emit('loadAllTasks');
-  //   },
-  //   toggleGitSettings(){
-  //     //Toggle Project to true if is is not visible
-  //     if(this.$store.getters.projectState == true){
-  //       this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-  //     }
-  //     //Toggle git settings
-  //     this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-  //  },
-      toggleSettings(){
+    openAllTasks(){
+      console.log("in opentask sidebar");
+      this.$store.dispatch('fetchAllTasks', {}).then(() =>{
+        // this.$emit('loadAllTasks');
+         if(this.$store.getters.settingsState === true){
+           this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+         }
+        //Toggle Project to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.projectState === true){
+          this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+        }
+        //Toggle AllTasks to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.allTasksState === false){
+          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        }
+      });
+      
+    },
+   toggleSettings(){
       //Toggle Project to true if is is not visible
       if(this.$store.getters.projectState == true){
         this.$store.commit("toggleProjectState", this.$store.getters.projectState);
@@ -117,17 +125,19 @@ export default {
 
      this.$store.commit('setCurrentProject', { id: projectId, name: projectName});
      this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: projectId}}).then(()=>{
-       
-         //Hide Git Settings if it is open
-        //  if(this.$store.getters.gitSettingsState == true){
-        //    this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-        //  }
-         if(this.$store.getters.settingsState == true){
+
+         
+         if(this.$store.getters.settingsState === true){
            this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
          }
+        //Toggle AllTasks to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.allTasksState === true){
+          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        }
         //Toggle Project to True if is is not visible
         // and the data the promise is resolve from the action
-        if(this.$store.getters.projectState == false){
+        if(this.$store.getters.projectState === false){
           this.$store.commit("toggleProjectState", this.$store.getters.projectState);
         }
      });
