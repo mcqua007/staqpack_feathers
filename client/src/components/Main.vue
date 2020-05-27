@@ -7,6 +7,7 @@
       <Forms :projectId="currentProjectId"></Forms>
       <Project v-if="$store.getters.projectState == true"></Project>
       <Settings v-if="$store.getters.settingsState == true"></Settings>
+      <AllTasks v-if="$store.getters.allTasksState == true"></AllTasks>
     </div>
   
   </div>
@@ -19,6 +20,7 @@ import SideBar from '@/components/layout/SideBar.vue'
 import Forms from '@/components/layout/Forms.vue'
 import Settings from '@/components/settings/Settings.vue'
 import Project from '@/components/layout/Project.vue'
+import AllTasks from '@/components/layout/AllTasks.vue'
 
 
 export default {
@@ -34,7 +36,8 @@ export default {
     SideBar,
     Forms,
     Project,
-    Settings
+    Settings,
+    AllTasks
   },
   methods:{
      projectOpen (id, name) {
@@ -44,7 +47,7 @@ export default {
     },
   },
   mounted(){
-        //init data 
+    //init project data 
      this.$store.dispatch('fetchProjects').then((res) =>{
        console.log("App Vue: - Called fetchProjects", res);
        this.$store.commit('setLoading', false);
