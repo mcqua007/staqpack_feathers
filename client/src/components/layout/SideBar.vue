@@ -89,7 +89,7 @@ export default {
   methods: {
     openAllTasks(){
       console.log("in opentask sidebar");
-      this.$store.dispatch('fetchAllTasks', {}).then(() =>{
+      this.$store.dispatch('fetchAllTasks').then(() =>{
         // this.$emit('loadAllTasks');
          if(this.$store.getters.settingsState === true){
            this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
