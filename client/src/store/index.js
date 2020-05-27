@@ -119,7 +119,7 @@ export default new Vuex.Store({
      })
     })
    },
-   //TODO: FINSIH A WAY TO FETCH ALL TASKS AND HAVE ONE SOURCE OF TRUTH
+   //fetches all tasks and then setsAllTasks array 
    fetchAllTasks(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('tasks').find(query).then((res) =>{
