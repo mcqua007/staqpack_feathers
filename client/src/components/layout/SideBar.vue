@@ -109,9 +109,12 @@ export default {
     },
    toggleSettings(){
       //Toggle Project to true if is is not visible
-      if(this.$store.getters.projectState == true){
+      if(this.$store.getters.projectState === true){
         this.$store.commit("toggleProjectState", this.$store.getters.projectState);
       }
+       if(this.$store.getters.allTasksState === true){
+          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        }
       //Toggle git settings
       this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
    },
