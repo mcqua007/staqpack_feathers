@@ -5,7 +5,7 @@
      <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()"><i class="fas fa-user-circle"></i> {{ $store.getters.user.email}} </div>
       <div v-show="userMenuState" class="inner-menu" :style="{borderTop: '2px solid '+this.$store.getters.themeColor}">
         <ul>
-          <li class="m-top-8" role="button"  @click="store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
+          <li class="m-top-8" role="button"  @click="$store.dispatch('logout')"><i class="fas fa-sign-out-alt"></i> Logout</li>
           <li class="m-top-8" role="button" @click="toggleSettings()"><i class="fa fa-cog"></i> Settings</li>
                <!-- Might not do it this way if i want to go to a new page -->
                <!-- <a class="nav-link" role="link"  @click="toggleGitSettings()"> <i class="fab fa-github"></i>&nbsp; Git Settings</a> -->
@@ -67,8 +67,9 @@ General - need to load a project once project
 is clicked
 
 ============================================*/
-// import Router from 'vue-router'
+
 import { mapState } from 'vuex';
+
 
 export default {
   name: 'SideBar',
@@ -86,23 +87,34 @@ export default {
     }
   },
   methods: {
-  //   openAllTasks(){
-  //     console.log("in opentask sidebar");
-  //     this.$emit('loadAllTasks');
-  //   },
-  //   toggleGitSettings(){
-  //     //Toggle Project to true if is is not visible
-  //     if(this.$store.getters.projectState == true){
-  //       this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-  //     }
-  //     //Toggle git settings
-  //     this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-  //  },
-      toggleSettings(){
+    openAllTasks(){
+      console.log("in opentask sidebar");
+      this.$store.dispatch('fetchAllTasks').then(() =>{
+        // this.$emit('loadAllTasks');
+         if(this.$store.getters.settingsState === true){
+           this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+         }
+        //Toggle Project to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.projectState === true){
+          this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+        }
+        //Toggle AllTasks to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.allTasksState === false){
+          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        }
+      });
+      
+    },
+   toggleSettings(){
       //Toggle Project to true if is is not visible
-      if(this.$store.getters.projectState == true){
+      if(this.$store.getters.projectState === true){
         this.$store.commit("toggleProjectState", this.$store.getters.projectState);
       }
+       if(this.$store.getters.allTasksState === true){
+          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        }
       //Toggle git settings
       this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
    },
@@ -112,43 +124,23 @@ export default {
    toggleProjectMenu(){
      this.projectMenuState = !this.projectMenuState;
    },
-  //  toggleTeamMenu(){
-  //    this.teamMenuState = !this.teamMenuState;
-  //  },
-  //  toggleTeamProjectMenu(id){
-  //    this.teamProjectMenuState = !this.teamProjectMenuState;
-  //    if(this.teamProjectMenuState == true){
-  //       this.teamId = id; //may not be needded ?
-  //       //Search teams array
-  //       for(var i in this.teamProjectsData){      
-  //         if(this.teamProjectsData[i].teamId == id){
-  //           this.teamProjects = this.teamProjectsData[i].data.projects;
-  //         }
-  //      }
-  //    }
-  //    else {     
-  //      this.teamProjects = null; //Set team projects to null , if not displaying
-  //    }
-  //  },
-   logout(){
-      //alert('You are Logged out!');
-      this.$store.dispatch('logout');
-    },
    openProject(projectId, projectName){
 
      this.$store.commit('setCurrentProject', { id: projectId, name: projectName});
      this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: projectId}}).then(()=>{
-       
-         //Hide Git Settings if it is open
-        //  if(this.$store.getters.gitSettingsState == true){
-        //    this.$store.commit("toggleGitSettings", this.$store.getters.gitSettingsState);
-        //  }
-         if(this.$store.getters.settingsState == true){
+
+         
+         if(this.$store.getters.settingsState === true){
            this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
          }
+        //Toggle AllTasks to True if is is not visible
+        // and the data the promise is resolve from the action
+        if(this.$store.getters.allTasksState === true){
+          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        }
         //Toggle Project to True if is is not visible
         // and the data the promise is resolve from the action
-        if(this.$store.getters.projectState == false){
+        if(this.$store.getters.projectState === false){
           this.$store.commit("toggleProjectState", this.$store.getters.projectState);
         }
      });

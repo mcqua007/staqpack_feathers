@@ -14,7 +14,9 @@ export default new Vuex.Store({
     currentProjectTasks: null,
     currentProjectName: null,
     currentProjectId: null,
-    tasks: [],
+    tasks: [], //being used by fetchCurrent Proejct and appends each task by id
+    allTasks: [],
+    allTasksVisible: false,
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
@@ -117,6 +119,18 @@ export default new Vuex.Store({
      })
     })
    },
+   //fetches all tasks and then setsAllTasks array 
+   fetchAllTasks(context, query){
+     return new Promise((resolve, reject) =>{
+      feathersClient.service('tasks').find(query).then((res) =>{
+        context.commit('setAllTasks', res);
+          resolve(res);
+      }).catch((e) =>{
+          if(context.state.debug) console.error('FetchTasks error', e);
+        reject(e);
+      })
+    })
+    },
    deleteTask(context, query){
      return new Promise((resolve, reject) =>{
       feathersClient.service('tasks').remove(null, {query: query}).then((res) => {
@@ -198,6 +212,7 @@ export default new Vuex.Store({
     destroyCurrentProject(state){
       state.currentProject = null;
     },
+    //Task Mutations
     setCurrentProjectTasks(state, data){
       state.currentProjectTasks = data
     },
@@ -209,6 +224,9 @@ export default new Vuex.Store({
     },
     addTask(state, payload){
       state.tasks.push(payload);
+    },
+    setAllTasks(state, payload){
+       state.allTasks = payload.data;
     },
     //State/Visibility Mutations
     toggleProjectForm (state, formState) {
@@ -230,6 +248,9 @@ export default new Vuex.Store({
     },
     toggleSettingsState(state, settingsState){
       state.settingsVisible = !settingsState;
+    },
+    toggleAllTasksState(state, allTasksState){
+      state.allTasksVisible = !allTasksState;
     },
     setLoading(state, appLoadState){
       state.loading = appLoadState;
@@ -262,6 +283,9 @@ export default new Vuex.Store({
     settingsState(state){
       return state.settingsVisible;
     },
+    allTasksState(state){
+      return state.allTasksVisible;
+    },
     loadingState(state){
       return state.loading
     },
@@ -279,6 +303,9 @@ export default new Vuex.Store({
     },
     themeColor(state){
       return state.themeColor
+    },
+    allTasks(state){
+      return state.allTasks;
     }
   },
   modules: {
