@@ -119,7 +119,7 @@
               </div>
             </div>
           </div>
-          <div class="input-group" style="padding:10px;">
+          <div class="input-group todo-input-group">
             <p class="red-text" v-if="feedback">
               {{ feedback }}
             </p>
@@ -256,16 +256,19 @@
     transform: scale(1.015, 1.015);
   }
   /* div.card.card-shadow{
-  border: none;
-  transition: transform .45s linear;
-}
-/* need to use differnet classes or selctors to not overide transform */
+    border: none;
+    transition: transform .45s linear;
+  }
+  /* need to use differnet classes or selctors to not overide transform */
   /*
-div.card.card-shadow.card-back-active{
-  transform: rotateY(180deg);
-} */
+  div.card.card-shadow.card-back-active{
+    transform: rotateY(180deg);
+  } */
   .task-wrap {
     margin-top: 15px;
+  }
+  .todo-input-group {
+    margin: 10px 0 0 0;
   }
 
   .severity-badge {
@@ -278,6 +281,12 @@ div.card.card-shadow.card-back-active{
     float: right;
     width: 35%;
     padding: 6px;
+  }
+  .card-main-wrap {
+    padding: 15px;
+  }
+  .card-body {
+    padding: 0;
   }
   .card-completed {
     position: relative;
@@ -292,6 +301,9 @@ div.card.card-shadow.card-back-active{
     border: 1.5px solid #19b05d;
     border-radius: 0.25rem;
   }
+  /* .input-group {
+    padding: 0;
+  } */
   .card-title {
     width: 70%;
     margin: 0;
@@ -303,7 +315,7 @@ div.card.card-shadow.card-back-active{
     overflow: hidden;
   }
   .card-title-badge-wrap {
-    margin: 10px 0;
+    margin: 0 0 10px 0;
     display: inline-flex;
     width: 100%;
   }
