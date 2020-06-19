@@ -306,7 +306,7 @@
     padding: 0;
   } */
   .card-title {
-    width: 70%;
+    width: 80%;
     margin: 0;
     font-weight: 700;
     font-size: 16px;
