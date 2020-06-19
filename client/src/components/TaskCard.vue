@@ -3,25 +3,25 @@
     <div v-if="task != null">
       <div  :class="{'col-xs-12': true, 'card': true, 'card-shadow':true, 'card-back-active': (backActive)}">
         <div class='btn-group' role='group'>
-        <button v-bind:class="{'btn':true, 'btn-outline-primary':true}"  :disabled="task.completed"><i class='fa fa-calendar'></i></button>
-        <button v-bind:class="{'btn':true, 'btn-outline-danger':true}"  :disabled="task.completed"><i class="far fa-images"></i></button>
+        <button v-bind:class="{'btn':true, 'btn-outline-primary':true}"  :disabled="task.completed"><i class='la la-calendar'></i></button>
+        <button v-bind:class="{'btn':true, 'btn-outline-danger':true}"  :disabled="task.completed"><i class="la la-images"></i></button>
       <div class='btn-group'>
-        <button class='btn btn-outline-secondary'   aria-haspopup='true' @click="toggleDropdown()"> <i :class="{'fa':true, 'fa-angle-down':(!dropdownExpanded), 'fa-angle-up':(dropdownExpanded)}"></i> </button>
+        <button class='btn btn-outline-secondary'   aria-haspopup='true' @click="toggleDropdown()"> <i :class="{'la':true, 'la-angle-down':(!dropdownExpanded), 'la-angle-up':(dropdownExpanded)}"></i> </button>
         <div v-if="dropdownExpanded" :class="{'dropdown-menu':true,'dropdown-menu-right': true, 'active':(dropdownExpanded == true)}" >
-        <button class="dropdown-item" style="display:none;"> <i class="fa fa-arrow-left"></i>Go Back</button>  
+        <button class="dropdown-item" style="display:none;"> <i class="la la-arrow-left"></i>Go Back</button>  
          <div v-if="task.completed === false">
           <button class="dropdown-item" @click="completeTask(task._id)"> 
-           <i class="fa fa-check"></i>Completed
+           <i class="la la-check"></i>Completed
           </button>
          </div>
          <div v-else>
            <button class="dropdown-item"  @click="reopenTask(task._id)"> 
-            <i class="fa fa-undo"></i>Re-open
+            <i class="la la-undo"></i>Re-open
           </button>
          </div>  
          <div v-if="!backActive">
           <button class="dropdown-item" @click="toggleBack()"> 
-           <i class="fa fa-reply"></i>Show Back
+           <i class="la la-reply"></i>Show Back
           </button>
          </div>
          <div v-else>
@@ -31,14 +31,14 @@
          </div>
         <button class="dropdown-item"  @click='toggleTodoVisibility()'>          
          <div v-if="todosHidden">
-          <i class="fa fa-eye"></i>Show Todos
+          <i class="la la-eye"></i>Show Todos
          </div>
          <div v-else>
-           <i class="fa fa-eye-slash"></i>Hide Todos
+           <i class="la la-eye-slash"></i>Hide Todos
          </div>      
         </button>
-        <button class="dropdown-item" v-bind:data-delete-btn-id="task._id" @click="deleteTask(task._id)"> <i class="fa fa-trash"></i>Delete</button>
-        <!-- <button class="dropdown-item" v-bind:data-image-upload-btn-id="task._id" onclick='showImageUpload(" + task._id + ")'> <i class='fa fa-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
+        <button class="dropdown-item" v-bind:data-delete-btn-id="task._id" @click="deleteTask(task._id)"> <i class="la la-trash"></i>Delete</button>
+        <!-- <button class="dropdown-item" v-bind:data-image-upload-btn-id="task._id" onclick='showImageUpload(" + task._id + ")'> <i class='la la-file-image' style=' margin-right:8px;'></i>Upload Images</button> -->
         </div>
       </div>
       </div>
@@ -72,7 +72,7 @@
         <input type="text" class="form-control" placeholder="Add to do here..." v-model="todoInput" aria-describedby="button-addtodo" :disabled="task.completed">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary"  @click='addTodo(task._id,task.projectId)' :disabled="task.completed">
-           <i class="fa fa-plus"></i>
+           <i class="la la-plus"></i>
           </button>
         </div>
       </div>
@@ -85,18 +85,16 @@
 </template>
 
 <script>
-
-import TodoList from '@/components/TodoList.vue'
+import TodoList from "@/components/TodoList.vue";
 
 export default {
-  name: 'TaskCard',
-  components:{
+  name: "TaskCard",
+  components: {
     TodoList
   },
-  props:
-    ['task'],
-  data(){
-    return{
+  props: ["task"],
+  data() {
+    return {
       todos: null,
       todoInput: null,
       feedback: null,
@@ -104,86 +102,93 @@ export default {
       todosHidden: false,
       dropdownExpanded: false,
       backActive: false
-    }
+    };
   },
-  computed:{
+  computed: {
     //   todos(){
     //     return this.$store.getters.taskTodos.data;
     //   }
   },
   methods: {
-    toggleBack(){
+    toggleBack() {
       this.backActive = !this.backActive;
     },
-    toggleTodoVisibility(){
+    toggleTodoVisibility() {
       this.todosHidden = !this.todosHidden;
     },
-    toggleDropdown(){
+    toggleDropdown() {
       this.dropdownExpanded = !this.dropdownExpanded;
     },
-    addTodo(taskId, projectId){
-     var data = {name: this.todoInput, taskId: taskId, projectId: projectId, completed: false}
-      this.$store.dispatch('createTodo', data).then((res) => {
-        console.log('Todo creation res: ', res);
-          //if success addTodo to dom
-          this.todos.push(res);
-          this.todoInput = null;
-      })
+    addTodo(taskId, projectId) {
+      var data = {
+        name: this.todoInput,
+        taskId: taskId,
+        projectId: projectId,
+        completed: false
+      };
+      this.$store.dispatch("createTodo", data).then(res => {
+        console.log("Todo creation res: ", res);
+        //if success addTodo to dom
+        this.todos.push(res);
+        this.todoInput = null;
+      });
     }
   },
-  mounted(){
-     this.$store.dispatch('fetchTodos', {taskId: this.task._id}).then((res) =>{
-         this.todos = res.data;
-     });
+  mounted() {
+    this.$store.dispatch("fetchTodos", { taskId: this.task._id }).then(res => {
+      this.todos = res.data;
+    });
   }
-
-}
+};
 </script>
 
 <style lang="css" scoped>
-.dropdown-menu{
-  display:block;
-  margin-top:-1px;
+.dropdown-menu {
+  display: block;
+  margin-top: -1px;
   border-radius: 0px 0px 5px 5px;
   box-shadow: 1px 5px 13px -5px #ccc;
 }
 
-.assigned-to-text{
+.assigned-to-text {
   color: #ccc;
   padding: 0 5px 5px 5px;
   margin-right: 9px;
-  font-style: italic; 
-  font-size:12px; 
-  position: relative; 
-  text-align:right;
+  font-style: italic;
+  font-size: 12px;
+  position: relative;
+  text-align: right;
 }
 /* CARD BUTTON SHAPE */
-.card-title.disabled{
+.card-title.disabled {
   color: #ccc;
 }
-.btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+.btn-group > .btn-group:not(:last-child) > .btn,
+.btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
-.btn-group>.btn-group:not(:first-child)>.btn, .btn-group>.btn:not(:first-child) {
-    border-top-right-radius: 5px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+.btn-group > .btn-group:not(:first-child) > .btn,
+.btn-group > .btn:not(:first-child) {
+  border-top-right-radius: 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 /********************/
 
-*:focus{
+*:focus {
   outline: none !important;
 }
-div.card-shadow{
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
-    transition: transform 0.3s ease, box-shadow 0.3s linear;
+div.card-shadow {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s linear;
 }
-div.card-shadow:hover{
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-  transform: scale(1.015 , 1.015);
+div.card-shadow:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transform: scale(1.015, 1.015);
 }
 /* div.card.card-shadow{
   border: none;
@@ -194,22 +199,22 @@ div.card-shadow:hover{
 div.card.card-shadow.card-back-active{
   transform: rotateY(180deg);
 } */
-.task-wrap{
+.task-wrap {
   margin-top: 15px;
 }
 
-.severity-badge{
-  float:right;
-  width:20%;
-  padding:5px;
+.severity-badge {
+  float: right;
+  width: 20%;
+  padding: 5px;
 }
 
-.completed-badge{
-  float:right;
-  width:35%;
-  padding:6px;
+.completed-badge {
+  float: right;
+  width: 35%;
+  padding: 6px;
 }
-.card-completed{
+.card-completed {
   position: relative;
   display: -ms-flexbox;
   display: flex;
@@ -219,29 +224,31 @@ div.card.card-shadow.card-back-active{
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1.5px solid #19B05D;
-  border-radius: .25rem;
+  border: 1.5px solid #19b05d;
+  border-radius: 0.25rem;
 }
-.card-title{
-  width:70%;
-  margin:10px;
-  font-weight:700;
-  font-size:16px;
-  text-transform:uppercase;
+.card-title {
+  width: 70%;
+  margin: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
 }
-.rotate180{
+.rotate180 {
   -webkit-animation: rotateY 1s 1 linear;
- animation: rotateY 1s 1 linear;
+  animation: rotateY 1s 1 linear;
 }
-.dropdown-item i{
+.dropdown-item i {
   margin-right: 5px;
 }
 @-webkit-keyframes rotateY {
-  to { -webkit-transform: rotateY(180deg); }
+  to {
+    -webkit-transform: rotateY(180deg);
+  }
 }
 @keyframes rotateY {
-  to { transform: rotateY(180deg); }
+  to {
+    transform: rotateY(180deg);
+  }
 }
-
-
 </style>
