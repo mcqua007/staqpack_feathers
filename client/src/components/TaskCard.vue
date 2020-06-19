@@ -275,6 +275,7 @@
     margin-left: auto;
     width: 20%;
     padding: 5px;
+    line-height: normal;
   }
 
   .completed-badge {
@@ -315,9 +316,10 @@
     overflow: hidden;
   }
   .card-title-badge-wrap {
-    margin: 0 0 10px 0;
+    margin: 0 0 1em 0;
     display: inline-flex;
     width: 100%;
+    align-items: flex-end;
   }
   .rotate180 {
     -webkit-animation: rotateY 1s 1 linear;
