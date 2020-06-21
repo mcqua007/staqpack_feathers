@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="col-12 col-sm-6 col-lg-4 task-wrap">
+  <div class="col-12 col-sm-6 col-lg-4 task-wrap" :style="taskStyle">
     <div v-if="task != null">
       <div
         :class="{
@@ -74,7 +74,7 @@
               <button
                 class="dropdown-item"
                 v-bind:data-delete-btn-id="task._id"
-                @click="deleteTask(task._id)"
+                @click="deleteTask(task._id, task.projectId)"
               >
                 <i class="la la-trash"></i>Delete
               </button>
@@ -167,6 +167,7 @@
         todosHidden: false,
         dropdownExpanded: false,
         backActive: false,
+        taskStyle: null,
       };
     },
     computed: {
@@ -175,6 +176,23 @@
       //   }
     },
     methods: {
+      deleteTask(taskId, projectId) {
+        let data = {
+          task: {
+            id: taskId,
+            query: { projectId: projectId },
+          },
+          todo: {
+            id: null,
+            query: { taskId: taskId },
+          },
+        };
+
+        this.$store.dispatch("deleteTasks", data).then((res) => {
+          console.log("Task Deleted res: ", res);
+          this.taskStyle = { display: "none" };
+        });
+      },
       toggleBack() {
         this.backActive = !this.backActive;
       },
@@ -284,7 +302,7 @@
     padding: 6px;
   }
   .card-main-wrap {
-    padding: 15px;
+    padding: 0.9em;
   }
   .card-body {
     padding: 0;
