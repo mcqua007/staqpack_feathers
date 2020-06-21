@@ -27,284 +27,316 @@ export default new Vuex.Store({
   },
   actions: {
     // Authentication Actions 
-   logout(context) {
+    logout(context) {
       feathersClient.logout();
       context.commit('destroyUser');
-      router.push({name: 'Home'}); //once logged out
+      router.push({
+        name: 'Home'
+      }); //once logged out
     },
-    login(context, data){
-     feathersClient.authenticate(data)
-     .then((res) => {
-        // Logged in
-        context.commit('setUser', res.user);
-        router.push({name: 'Main'}) //once logged route to login
-      }).catch(e => {
-         if(context.state.debug) console.error('Authentication error', e);
+    login(context, data) {
+      feathersClient.authenticate(data)
+        .then((res) => {
+          // Logged in
+          context.commit('setUser', res.user);
+          router.push({
+            name: 'Main'
+          }) //once logged route to login
+        }).catch(e => {
+          if (context.state.debug) console.error('Authentication error', e);
+        })
+    },
+    authenticate(context) {
+      return new Promise((resolve, reject) => {
+        feathersClient.reAuthenticate().then((res) => {
+          context.commit('setUser', res.user);
+          resolve();
+        }).catch((e) => {
+          // show login page
+          if (context.state.debug) console.error('Authentication error', e);
+          reject(e);
+        })
       })
     },
-    authenticate(context){
+    //Project CRUD Operations 
+    fetchProjects(context, query) {
       return new Promise((resolve, reject) => {
-      feathersClient.reAuthenticate().then((res) => {
-       context.commit('setUser', res.user);
-       resolve();
-     }).catch((e) => {
-       // show login page
-          if(context.state.debug)  console.error('Authentication error', e);
-        reject(e);
-     })
-    })
-   },
-   //Project CRUD Operations 
-   fetchProjects(context, query){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('projects').find(query).then((res) =>{
-          if(context.state.debug) console.log("Veux - Fetch Projects", res);
+        feathersClient.service('projects').find(query).then((res) => {
+          if (context.state.debug) console.log("Veux - Fetch Projects", res);
           context.commit('setProjects', res);
           resolve(res);
-      }).catch((e) =>{
-          if(context.state.debug) console.error('FetchProjects error', e);
-        reject(e);
+        }).catch((e) => {
+          if (context.state.debug) console.error('FetchProjects error', e);
+          reject(e);
+        })
       })
-    })
-   },
-   createProject(context, data){
-    return new Promise((resolve, reject) =>{
-     feathersClient.service('projects').create(data).then((res)=>{
-        if(context.state.debug) console.log("Veux - Create Project", res);
-         context.commit('addProject', res);
-         resolve(res);
-     }).catch((e)=>{
-        if(context.state.debug) console.error('createProject error', e);
-        reject(e);
-     })
-    })
-   },
-   //Get All Data For Current Project
-   fetchCurrentProjectTasks(context, query){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('tasks').find(query).then((res) =>{
-           if(context.state.debug) console.log("Veux - Fetch currentProjectTasks", res);
+    },
+    createProject(context, data) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('projects').create(data).then((res) => {
+          if (context.state.debug) console.log("Veux - Create Project", res);
+          context.commit('addProject', res);
+          resolve(res);
+        }).catch((e) => {
+          if (context.state.debug) console.error('createProject error', e);
+          reject(e);
+        })
+      })
+    },
+    //Get All Data For Current Project
+    fetchCurrentProjectTasks(context, query) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('tasks').find(query).then((res) => {
+          if (context.state.debug) console.log("Veux - Fetch currentProjectTasks", res);
           context.commit('setCurrentProjectTasks', res);
           context.commit('setTasks', res);
           resolve(res);
-      }).catch((e) =>{
-          if(context.state.debug) console.error('FetchCurrentProjectTasks error', e);
-        reject(e);
+        }).catch((e) => {
+          if (context.state.debug) console.error('FetchCurrentProjectTasks error', e);
+          reject(e);
+        })
       })
-    })
-   },
-  deleteProject(context, projectId){
-      return new Promise((resolve, reject) =>{
-      feathersClient.service('projects').remove(projectId).then((res) => {
-        context.dispatch('deleteTask', {projectId: projectId}).then((taskRes) => {
-          resolve({'project_msg':res, 'task_msg:': taskRes.taskRes, "todo_msg":taskRes.todoRes});
-        });
-        
-      }).catch((e) =>{
-        if(context.state.debug) console.error('deleteProject error', e);
-        reject(e);
-      })
-     })
     },
-   //Tasks CRUD Actions
-   createTask(context, data){
-    return new Promise((resolve, reject) =>{
-     feathersClient.service('tasks').create(data).then((res)=>{
-        if(context.state.debug) console.log("Veux - Create Task", res);
-         context.commit('addTask', res);
-         resolve(res);
-     }).catch((e)=>{
-        if(context.state.debug) console.error('createTask error', e);
-        reject(e);
-     })
-    })
-   },
-   //fetches all tasks and then setsAllTasks array 
-   fetchAllTasks(context, query){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('tasks').find(query).then((res) =>{
-        context.commit('setAllTasks', res);
+    deleteProject(context, projectId) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('projects').remove(projectId).then((res) => {
+          context.dispatch('deleteTasks', {
+            task: {
+              id: null,
+              query: {
+                projectId: projectId
+              },
+            },
+            todo: {
+              id: null,
+              query: {
+                projectId: projectId
+              }
+            }
+          }).then((taskRes) => {
+            resolve({
+              'project_msg': res,
+              'task_msg:': taskRes.taskRes,
+              "todo_msg": taskRes.todoRes
+            });
+          });
+
+        }).catch((e) => {
+          if (context.state.debug) console.error('deleteProject error', e);
+          reject(e);
+        })
+      })
+    },
+    //Tasks CRUD Actions
+    createTask(context, data) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('tasks').create(data).then((res) => {
+          if (context.state.debug) console.log("Veux - Create Task", res);
+          context.commit('addTask', res);
           resolve(res);
-      }).catch((e) =>{
-          if(context.state.debug) console.error('FetchTasks error', e);
-        reject(e);
+        }).catch((e) => {
+          if (context.state.debug) console.error('createTask error', e);
+          reject(e);
+        })
       })
-    })
     },
-   deleteTask(context, query){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('tasks').remove(null, {query: query}).then((res) => {
-        //remove todos that have this taskID here
-        context.dispatch('deleteTodo', {query: query}).then((todoRes) => {
-          resolve({'taskRes': res, 'todoRes': todoRes});
-        });
-        resolve(res);
-      }).catch((e) =>{
-        if(context.state.debug) console.error('deleteTask error', e);
-        reject(e);
+    //fetches all tasks and then setsAllTasks array 
+    fetchAllTasks(context, query) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('tasks').find(query).then((res) => {
+          context.commit('setAllTasks', res);
+          resolve(res);
+        }).catch((e) => {
+          if (context.state.debug) console.error('FetchTasks error', e);
+          reject(e);
+        })
       })
-     })
+    },
+    deleteTasks(context, payload) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('tasks').remove(payload.task.id, {
+          query: payload.task.query
+        }).then((res) => {
+          console.log("Delete Tasks Res: ", res);
+          //remove todos that have this taskID here
+          context.dispatch('deleteTodos', payload).then((todoRes) => {
+            resolve({
+              'taskRes': res,
+              'todoRes': todoRes
+            });
+          });
+          resolve(res);
+        }).catch((e) => {
+          if (context.state.debug) console.error('deleteTasks error', e);
+          reject(e);
+        })
+      })
     },
     // this todos crud 
-    fetchTodos(context, query){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('todos').find({query:query}).then((res) =>{
+    fetchTodos(context, query) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('todos').find({
+          query: query
+        }).then((res) => {
           resolve(res);
-      }).catch((e) =>{
-          if(context.state.debug) console.error('FetchTodos error', e);
-        reject(e);
+        }).catch((e) => {
+          if (context.state.debug) console.error('FetchTodos error', e);
+          reject(e);
+        })
       })
-    })
     },
-    createTodo(context, data){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('todos').create(data).then((res) =>{
+    createTodo(context, data) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('todos').create(data).then((res) => {
           resolve(res);
-      }).catch((e) =>{
-          if(context.state.debug) console.error('createTodo Error:', e);
-        reject(e);
+        }).catch((e) => {
+          if (context.state.debug) console.error('createTodo Error:', e);
+          reject(e);
+        })
       })
-    })
-   },
-   deleteTodo(context, data){
-     return new Promise((resolve, reject) =>{
-       feathersClient.service('todos').remove(data).then((res) =>{
+    },
+    deleteTodos(context, payload) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('todos').remove(payload.todo.id, {
+          query: payload.todo.query
+        }).then((res) => {
           resolve(res);
-      }).catch((e) =>{
-       if(context.state.debug) console.error('deleteTodo Error:', e);
-        reject(e);
+        }).catch((e) => {
+          if (context.state.debug) console.error('deleteTodo Error:', e);
+          reject(e);
+        })
       })
-     })
-   },
-    patchTodo(context, data){
-     return new Promise((resolve, reject) =>{
-      feathersClient.service('todos').patch(data.id, data.update).then((res) =>{
-         resolve(res);
-      }).catch((e) =>{
-       if(context.state.debug) console.error('deleteTodo Error:', e);
-        reject(e);
+    },
+
+    patchTodo(context, data) {
+      return new Promise((resolve, reject) => {
+        feathersClient.service('todos').patch(data.id, data.update).then((res) => {
+          resolve(res);
+        }).catch((e) => {
+          if (context.state.debug) console.error('deleteTodo Error:', e);
+          reject(e);
+        })
       })
-     })
-   }
+    }
   },
   mutations: {
     //User Mutations
-    setUser (state, payload) {
+    setUser(state, payload) {
       state.user = payload;
       sessionStorage.setItem('current-user', JSON.stringify(state.user))
     },
-    destroyUser(state){
-       state.user = null;
-       sessionStorage.removeItem('current-user')
+    destroyUser(state) {
+      state.user = null;
+      sessionStorage.removeItem('current-user')
     },
     //Project Mutations
-    setProjects(state, payload){
+    setProjects(state, payload) {
       state.projects = payload.data;
     },
-    addProject(state, payload){
+    addProject(state, payload) {
       state.projects.push(payload);
     },
-    setCurrentProject(state, data){
+    setCurrentProject(state, data) {
       state.currentProject = data;
-      state.currentProjectId= data.id;
-      state.currentProjectName= data.name;
+      state.currentProjectId = data.id;
+      state.currentProjectName = data.name;
     },
-    destroyCurrentProject(state){
+    destroyCurrentProject(state) {
       state.currentProject = null;
     },
     //Task Mutations
-    setCurrentProjectTasks(state, data){
+    setCurrentProjectTasks(state, data) {
       state.currentProjectTasks = data
     },
-    setTasks(state, payload){
-      payload.data.forEach((item)=>{
-        state.tasks[item._id]= item;
+    setTasks(state, payload) {
+      payload.data.forEach((item) => {
+        state.tasks[item._id] = item;
       });
       console.log('Tasks: ', state.tasks);
     },
-    addTask(state, payload){
+    addTask(state, payload) {
       state.tasks.push(payload);
     },
-    setAllTasks(state, payload){
-       state.allTasks = payload.data;
+    setAllTasks(state, payload) {
+      state.allTasks = payload.data;
     },
     //State/Visibility Mutations
-    toggleProjectForm (state, formState) {
+    toggleProjectForm(state, formState) {
       state.projectFormVisible = !formState
     },
-    toggleTaskForm (state, formState) {
+    toggleTaskForm(state, formState) {
       state.taskFormVisible = !formState
     },
-    hideAllForms(state){
+    hideAllForms(state) {
       state.taskFormVisible = false;
       state.projectFormVisible = false;
       //state.teamFormVisible = false;
     },
-    toggleSideBar (state, sideBarState) {
+    toggleSideBar(state, sideBarState) {
       state.sideBarVisible = !sideBarState
     },
-    toggleProjectState(state, projectState){
+    toggleProjectState(state, projectState) {
       state.projectVisible = !projectState;
     },
-    toggleSettingsState(state, settingsState){
+    toggleSettingsState(state, settingsState) {
       state.settingsVisible = !settingsState;
     },
-    toggleAllTasksState(state, allTasksState){
+    toggleAllTasksState(state, allTasksState) {
       state.allTasksVisible = !allTasksState;
     },
-    setLoading(state, appLoadState){
+    setLoading(state, appLoadState) {
       state.loading = appLoadState;
     },
     //Settings Mutations 
-    setThemeColor(state, color){
+    setThemeColor(state, color) {
       state.themeColor = color;
       localStorage.setItem('theme-color', color);
     }
   },
   getters: {
-    user(state){
+    user(state) {
       return state.user;
     },
-    projectFormState (state) {
+    projectFormState(state) {
       return state.projectFormVisible
     },
-    taskFormState (state) {
+    taskFormState(state) {
       return state.taskFormVisible
     },
-    sideBarState (state) {
+    sideBarState(state) {
       return state.sideBarVisible
     },
-    projects(state){
+    projects(state) {
       return state.projects;
     },
-    projectState(state){
+    projectState(state) {
       return state.projectVisible;
     },
-    settingsState(state){
+    settingsState(state) {
       return state.settingsVisible;
     },
-    allTasksState(state){
+    allTasksState(state) {
       return state.allTasksVisible;
     },
-    loadingState(state){
+    loadingState(state) {
       return state.loading
     },
-    currentProject(state){
+    currentProject(state) {
       return state.currentProject
     },
-    currentProjectId(state){
+    currentProjectId(state) {
       return state.currentProjectId
     },
-    currentProjectName(state){
+    currentProjectName(state) {
       return state.currentProjectName
     },
-    currentProjectTasks(state){
+    currentProjectTasks(state) {
       return state.currentProjectTasks
     },
-    themeColor(state){
+    themeColor(state) {
       return state.themeColor
     },
-    allTasks(state){
+    allTasks(state) {
       return state.allTasks;
     }
   },
