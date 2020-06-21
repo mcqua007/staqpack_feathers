@@ -85,13 +85,14 @@
         }
       },
       deleteTodo(id) {
+        let data = { todo: { id: id, query: "" } };
         this.$store
-          .dispatch("deleteTodo", id)
+          .dispatch("deleteTodos", data)
           .then(() => {
             this.todoStyle = { display: "none" };
           })
           .catch((e) => {
-            console.log("Delte Error: ", e);
+            console.log("Delete Todo Error: ", e);
           });
       },
     },
