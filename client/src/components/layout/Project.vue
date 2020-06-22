@@ -29,82 +29,84 @@
 </template>
 
 <script>
-import TaskCard from "@/components/TaskCard.vue";
-import feathersClient from "@/feathers-client-config.js";
-//import { mapState } from 'vuex';
+  import TaskCard from "@/components/TaskCard.vue";
+  import feathersClient from "@/feathers-client-config.js";
+  //import { mapState } from 'vuex';
 
-export default {
-  name: "Project",
-  components: {
-    TaskCard
-  },
-  //props: ['responseData'],
-  data() {
-    return {
-      //projectName: null,
-      //projectId: null,
-      //tasks: null,
-    };
-  },
-  methods: {
-    deleteProject(projectId) {
-      let project_name = this.$store.getters.currentProject.name;
-      let confirmed = confirm(
-        "Permanently delete '" + project_name + "' and its associated tasks ?"
-      );
-      if (confirmed) {
-        this.$store.dispatch("deleteProject", projectId).then(res => {
-          console.log("Delete Project Res", res);
-          //toggle Project State to be hidden - maybe eventually go back to app hoem/dashboard
-          this.$store.commit(
-            "toggleProjectState",
-            this.$store.getters.projectState
-          );
-        });
-      }
-    }
-  },
-  computed: {
-    tasks() {
-      return this.$store.getters.currentProjectTasks.data;
-    }
-  },
-  created() {
-    feathersClient.service("tasks").on("created", newTask => {
-      if (this.$store.getters.currentProject.id === newTask.projectId)
-        this.tasks.push(newTask);
-    });
-  },
-  mounted() {
-    //   this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{
-    //       this.tasks = this.$store.getters.currentProjectTasks.data;
-    //       console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
-    //   });
-  }
-};
+  export default {
+    name: "Project",
+    components: {
+      TaskCard,
+    },
+    //props: ['responseData'],
+    data() {
+      return {
+        //projectName: null,
+        //projectId: null,
+        //tasks: null,
+      };
+    },
+    methods: {
+      deleteProject(projectId) {
+        let project_name = this.$store.getters.currentProject.name;
+        let confirmed = confirm(
+          "Permanently delete '" + project_name + "' and its associated tasks ?"
+        );
+        if (confirmed) {
+          this.$store.dispatch("deleteProject", projectId).then((res) => {
+            console.log("Delete Project Res", res);
+            //toggle Project State to be hidden - maybe eventually go back to app home/dashboard
+            this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+          });
+        }
+      },
+    },
+    computed: {
+      tasks() {
+        // return this.$store.getters.currentProjectTasks.data;
+        return this.$store.getters.currentProjectTasks; //remove .data for the trial of filterLocalTasks rather then calling form server
+      },
+    },
+    created() {
+      feathersClient.service("tasks").on("created", (newTask) => {
+        console.log("On created Task: ", newTask);
+        if (this.$store.getters.currentProject.id === newTask.projectId) this.tasks.push(newTask);
+      });
+      //not doing anything was trying to test
+      feathersClient
+        .service("tasks")
+        .on("removed", (message) => console.log("task removed - message", message));
+    },
+    mounted() {
+      //   this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{
+      //       this.tasks = this.$store.getters.currentProjectTasks.data;
+      //       console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
+      //   });
+    },
+  };
 </script>
 
 <style lang="css" scoped>
-.project-header-bar {
-  display: inline-flex;
-  align-items: center;
-  width: 100%;
-}
-.delete-project-btn {
-  margin-left: auto;
-  font-size: 25px;
-  background: transparent;
-  border: none;
-  color: #dc3545;
-}
+  .project-header-bar {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+  }
+  .delete-project-btn {
+    margin-left: auto;
+    font-size: 25px;
+    background: transparent;
+    border: none;
+    color: #dc3545;
+  }
 
-/* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-/*================================*/
+  /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+  /*================================*/
 </style>
