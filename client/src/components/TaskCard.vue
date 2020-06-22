@@ -188,9 +188,8 @@
           },
         };
 
-        this.$store.dispatch("deleteTasks", data).then((res) => {
-          console.log("Task Deleted res: ", res);
-          this.taskStyle = { display: "none" };
+        this.$store.dispatch("deleteTasks", data).then(() => {
+          this.$store.commit("filterCurrentProjectTasks", projectId); //re-filter the tasks for the current project sincesoem have been deleted
         });
       },
       toggleBack() {
