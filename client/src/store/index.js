@@ -84,22 +84,25 @@ export default new Vuex.Store({
       })
     },
     //Get All Data For Current Project
-    fetchCurrentProjectTasks(context, query) {
-      return new Promise((resolve, reject) => {
-        feathersClient.service('tasks').find(query).then((res) => {
-          if (context.state.debug) console.log("Veux - Fetch currentProjectTasks", res);
-          context.commit('setCurrentProjectTasks', res);
-          context.commit('setTasks', res);
-          resolve(res);
-        }).catch((e) => {
-          if (context.state.debug) console.error('FetchCurrentProjectTasks error', e);
-          reject(e);
-        })
-      })
-    },
+    // fetchCurrentProjectTasks(context, query) {
+    //   return new Promise((resolve, reject) => {
+    //     feathersClient.service('tasks').find(query).then((res) => {
+    //       if (context.state.debug) console.log("Veux - Fetch currentProjectTasks", res);
+    //       context.commit('setCurrentProjectTasks', res);
+    //       context.commit('ADD_TASKS', res.data);
+    //       resolve(res);
+    //     }).catch((e) => {
+    //       if (context.state.debug) console.error('FetchCurrentProjectTasks error', e);
+    //       reject(e);
+    //     })
+    //   })
+    // },
     deleteProject(context, projectId) {
       return new Promise((resolve, reject) => {
         feathersClient.service('projects').remove(projectId).then((res) => {
+
+          context.commit('deleteProject', res._id); //delete project form state projects 
+
           context.dispatch('deleteTasks', {
             task: {
               id: null,
@@ -114,6 +117,8 @@ export default new Vuex.Store({
               }
             }
           }).then((taskRes) => {
+            //project has been deleted 
+
             resolve({
               'project_msg': res,
               'task_msg:': taskRes.taskRes,
@@ -132,7 +137,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         feathersClient.service('tasks').create(data).then((res) => {
           if (context.state.debug) console.log("Veux - Create Task", res);
-          context.commit('addTask', res);
+          context.commit('ADD_TASKS', res);
           resolve(res);
         }).catch((e) => {
           if (context.state.debug) console.error('createTask error', e);
@@ -157,7 +162,8 @@ export default new Vuex.Store({
         feathersClient.service('tasks').remove(payload.task.id, {
           query: payload.task.query
         }).then((res) => {
-          console.log("Delete Tasks Res: ", res);
+          console.log("Action: Delete Tasks Res: ", res);
+          context.commit('DELETE_TASKS', res); //Mutation to delete tasks from state
           //remove todos that have this taskID here
           context.dispatch('deleteTodos', payload).then((todoRes) => {
             resolve({
@@ -200,6 +206,7 @@ export default new Vuex.Store({
         feathersClient.service('todos').remove(payload.todo.id, {
           query: payload.todo.query
         }).then((res) => {
+          console.log('Action - deleteTodos Res:', res);
           resolve(res);
         }).catch((e) => {
           if (context.state.debug) console.error('deleteTodo Error:', e);
@@ -236,6 +243,10 @@ export default new Vuex.Store({
     addProject(state, payload) {
       state.projects.push(payload);
     },
+    deleteProject(state, projectId) {
+      let index = state.projects.findIndex(project => project._id == projectId);
+      state.projects.splice(index, 1);
+    },
     setCurrentProject(state, data) {
       state.currentProject = data;
       state.currentProjectId = data.id;
@@ -245,22 +256,66 @@ export default new Vuex.Store({
       state.currentProject = null;
     },
     //Task Mutations
-    setCurrentProjectTasks(state, data) {
-      state.currentProjectTasks = data
+
+    //this was used when getting tasks form the server
+    // setCurrentProjectTasks(state, data) {
+    //   state.currentProjectTasks = data
+    // },
+    //trying to filter current project here rather then grab from server
+    filterCurrentProjectTasks(state, projectId) {
+      state.currentProjectTasks = state.allTasks.filter(task => task.projectId == projectId);
     },
-    setTasks(state, payload) {
-      payload.data.forEach((item) => {
-        state.tasks[item._id] = item;
-      });
-      console.log('Tasks: ', state.tasks);
-    },
-    addTask(state, payload) {
-      state.tasks.push(payload);
+    //makes the index the task id - same use ass add tasks below
+    // SET_TASKS(state, payload) {
+    //   payload.data.forEach((item) => {
+    //     state.tasks[item._id] = item;
+    //   });
+    //   console.log('Tasks: ', state.tasks);
+    // },
+
+    ADD_TASKS(state, payload) {
+      //if multiple tasks or if just one add differently
+      if (Array.isArray(payload)) {
+        payload.forEach((item) => {
+          state.tasks.push(item);
+        });
+      } else {
+        state.tasks.push(payload);
+      }
+
     },
     setAllTasks(state, payload) {
       state.allTasks = payload.data;
     },
+    DELETE_TASKS(state, taskData) {
+      //Eventually remove all tasks and jsut use tasks for everythign so there is one source of truth
+      if (Array.isArray(taskData)) {
+        taskData.forEach(function (item) {
+          //delte form state.tasks
+          let index = state.tasks.findIndex(task => task._id == item._id); //goes through all removed tasks and delete each one by id
+          state.tasks.splice(index, 1);
+          //delete from state.AllTasks
+          let i = state.allTasks.findIndex(task => task._id == item._id); //goes through all removed tasks and delete each one by id
+          state.allTasks.splice(i, 1);
+        });
+      } else {
+        //delte form state.tasks
+        let index = state.tasks.findIndex(task => task._id == taskData._id); //goes through all removed tasks and delete each one by id
+        state.tasks.splice(index, 1);
+        //delete from state.AllTasks
+        let i = state.allTasks.findIndex(task => task._id == taskData._id); //goes through all removed tasks and delete each one by id
+        state.allTasks.splice(i, 1);
+
+      }
+    },
+
+    // 'todos' mutations
+    // DELETE_TODOS(state, todoData) {
+
+    // },
+    //============================
     //State/Visibility Mutations
+    //============================
     toggleProjectForm(state, formState) {
       state.projectFormVisible = !formState
     },
