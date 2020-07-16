@@ -31,8 +31,8 @@
         <div class="col-12 text-center">
           <span class="copyright-text">
             Made with ❤️ in California <span class="copyright-vr">|</span> Staqpack Inc. &copy;
-            {{ year }}</span
-          >
+            {{ year }}
+          </span>
         </div>
       </div>
     </div>
