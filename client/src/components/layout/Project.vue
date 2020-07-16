@@ -3,11 +3,11 @@
     <!-- componenet wrapper -->
     <div class="project-header-bar">
       <div class="project-title">
-        <div class="text-left" v-if="$store.getters.currentProject.name != null">
-          <h3>{{ $store.getters.currentProject.name }}</h3>
-        </div>
-        <div v-else>
-          <h3>All Tasks</h3>
+        <!-- <div class="text-left" v-if="$store.getters.currentProject.name != null"> -->
+        <div class="text-left">
+          <h3>{{ this.$store.getters.currentProjectName }}</h3>
+          <br />
+          <h3>route: {{ $route.params.id }}</h3>
         </div>
       </div>
       <button
@@ -68,6 +68,8 @@
       },
     },
     created() {
+      console.log("Project Created: ", this.$route.params.id);
+
       feathersClient.service("tasks").on("created", (newTask) => {
         console.log("On created Task: ", newTask);
         if (this.$store.getters.currentProject.id === newTask.projectId) this.tasks.push(newTask);
@@ -82,6 +84,7 @@
       //       this.tasks = this.$store.getters.currentProjectTasks.data;
       //       console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
       //   });
+      console.log("Project Mounted ");
     },
   };
 </script>
