@@ -161,11 +161,6 @@
       },
     },
     created() {
-      //this.projects =  this.$store.getters.projects.data;
-      console.log("projects", this.projects);
-    },
-    mounted() {
-      //this.$store.dispatch('fetchProjects', { query : {name: 'project 1'}}); //how to query
       feathersClient
         .service("tasks")
         .find()
@@ -176,10 +171,20 @@
       feathersClient.service("tasks").on("created", (message) => {
         console.log("New Tasks created:", message);
       });
-
+    },
+    mounted() {
+      //this.$store.dispatch('fetchProjects', { query : {name: 'project 1'}}); //how to query
+      // feathersClient
+      //   .service("tasks")
+      //   .find()
+      //   .then((res) => {
+      //     console.log("Feathers service - task find", res);
+      //   });
+      // feathersClient.service("tasks").on("created", (message) => {
+      //   console.log("New Tasks created:", message);
+      // });
       //can use socket emit in side authenticated like here  used for example
       // const socket = io('http://localhost:3030');
-
       // socket.emit('create', 'authentication', {
       //   strategy: 'local',
       //   email: 'john@test.com',
@@ -193,7 +198,6 @@
       //         console.log('socker error', error);
       //        });
       //    });
-
       //end socket test
     },
   };
