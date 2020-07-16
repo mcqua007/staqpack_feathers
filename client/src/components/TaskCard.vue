@@ -171,9 +171,9 @@
       };
     },
     computed: {
-      //   todos(){
-      //     return this.$store.getters.taskTodos.data;
-      //   }
+      // todos() {
+      //   return this.$store.state.state.allTodos.filter((todo) => todo.taskId == this.task._id);
+      // },
     },
     methods: {
       deleteTask(taskId, projectId) {
@@ -215,11 +215,22 @@
           this.todoInput = null;
         });
       },
+      getTodos() {
+        this.$store.dispatch("fetchTodos", { taskId: this.task._id }).then((res) => {
+          this.todos = res.data;
+        });
+      },
     },
-    mounted() {
-      this.$store.dispatch("fetchTodos", { taskId: this.task._id }).then((res) => {
-        this.todos = res.data;
-      });
+    watch: {
+      $route(to, from) {
+        console.log("TaskCard Watcher -Fired");
+        console.log("To: " + to + " from: " + from);
+        this.getTodos();
+      },
+    },
+    created() {
+      console.log("Created TaskCard -Fired: ", this.task._id);
+      this.getTodos();
     },
   };
 </script>
