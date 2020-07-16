@@ -6,7 +6,7 @@
       <span class="logo-font">Staqpack</span>
     </h1>
     <div v-if="loggedIn">
-      <router-link to="/app">
+      <router-link to="/app/tasks">
         Go To App
         <i class="la la-arrow-right"></i>
       </router-link>
@@ -16,33 +16,33 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Footer from "@/components/layout/Footer.vue";
-export default {
-  name: "Home",
-  data() {
-    return {
-      loggedIn: null
-    };
-  },
-  components: {
-    Footer
-  },
-  mounted() {
-    console.log("home", this.$store.getters.user);
-    if (this.$store.getters.user) {
-      this.loggedIn = true;
-    }
-  }
-};
+  // @ is an alias to /src
+  import Footer from "@/components/layout/Footer.vue";
+  export default {
+    name: "Home",
+    data() {
+      return {
+        loggedIn: null,
+      };
+    },
+    components: {
+      Footer,
+    },
+    created() {
+      console.log("home", this.$store.getters.user);
+      if (this.$store.getters.user) {
+        this.loggedIn = true;
+      }
+    },
+  };
 </script>
 <style scoped>
-img {
-  max-width: 550px;
-  width: 100%;
-  margin: 25px 0;
-}
-.logo-font {
-  font-size: 45px;
-}
+  img {
+    max-width: 550px;
+    width: 100%;
+    margin: 25px 0;
+  }
+  .logo-font {
+    font-size: 45px;
+  }
 </style>
