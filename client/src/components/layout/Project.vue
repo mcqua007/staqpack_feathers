@@ -7,7 +7,7 @@
         <div class="text-left">
           <h3>{{ this.$store.getters.currentProjectName }}</h3>
           <br />
-          <h3>route: {{ $route.params.id }}</h3>
+          <!-- <h3>route: {{ $route.params.id }}</h3> -->
         </div>
       </div>
       <button
