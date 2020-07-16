@@ -89,7 +89,6 @@ is clicked
 ============================================*/
 
   import { mapState } from "vuex";
-
   export default {
     name: "SideBar",
     data() {
@@ -97,44 +96,43 @@ is clicked
         userMenuState: false,
         projectMenuState: false,
         projects: null,
-        //teamMenuState: false,
-        //teamProjectMenuState: false,
-        //teamId: null,
-        //teamProjects: null,
-        //teams: [],
-        //teamProjectsData: [],
       };
     },
     methods: {
       openAllTasks() {
-        console.log("in opentask sidebar");
         this.$store.dispatch("fetchAllTasks").then(() => {
           // this.$emit('loadAllTasks');
-          if (this.$store.getters.settingsState === true) {
-            this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
-          }
-          //Toggle Project to True if is is not visible
-          // and the data the promise is resolve from the action
-          if (this.$store.getters.projectState === true) {
-            this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-          }
-          //Toggle AllTasks to True if is is not visible
-          // and the data the promise is resolve from the action
-          if (this.$store.getters.allTasksState === false) {
-            this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-          }
+          // if (this.$store.getters.settingsState === true) {
+          //   this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+          // }
+          // //Toggle Project to True if is is not visible
+          // // and the data the promise is resolve from the action
+          // if (this.$store.getters.projectState === true) {
+          //   this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+          // }
+          // //Toggle AllTasks to True if is is not visible
+          // // and the data the promise is resolve from the action
+          // if (this.$store.getters.allTasksState === false) {
+          //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+          // }
+          this.$router.push({
+            name: "AllTasks",
+          });
         });
       },
       toggleSettings() {
         //Toggle Project to true if is is not visible
-        if (this.$store.getters.projectState === true) {
-          this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-        }
-        if (this.$store.getters.allTasksState === true) {
-          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-        }
-        //Toggle git settings
-        this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+        // if (this.$store.getters.projectState === true) {
+        //   this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+        // }
+        // if (this.$store.getters.allTasksState === true) {
+        //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        // }
+        // //Toggle git settings
+        // this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+        this.$router.push({
+          name: "Settings",
+        });
       },
       toggleUserMenu() {
         this.userMenuState = !this.userMenuState;
@@ -147,78 +145,30 @@ is clicked
           id: projectId,
           name: projectName,
         });
-        //this is fetching current projects from but could do this on client
-        // this.$store
-        //   .dispatch("fetchCurrentProjectTasks", {
-        //     query: { projectId: projectId },
-        //   })
-        // .then(() => {
-        //   if (this.$store.getters.settingsState === true) {
-        //     this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
-        //   }
-        //   //Toggle AllTasks to True if is is not visible
-        //   // and the data the promise is resolve from the action
-        //   if (this.$store.getters.allTasksState === true) {
-        //     this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-        //   }
-        //   //Toggle Project to True if is is not visible
-        //   // and the data the promise is resolve from the action
-        //   if (this.$store.getters.projectState === false) {
-        //     this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-        //   }
-        // });
 
         //trying to get current project Tasks wihtout calling the server each time, them from allTasks:
+        //below was here to filter out the correct projects
         this.$store.commit("filterCurrentProjectTasks", projectId);
-        if (this.$store.getters.settingsState === true) {
-          this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
-        }
-        //Toggle AllTasks to True if is is not visible
-        // and the data the promise is resolve from the action
-        if (this.$store.getters.allTasksState === true) {
-          this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-        }
-        //Toggle Project to True if is is not visible
-        // and the data the promise is resolve from the action
-        if (this.$store.getters.projectState === false) {
-          this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-        }
+
+        // if (this.$store.getters.settingsState === true) {
+        //   this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
+        // }
+        // //Toggle AllTasks to True if is is not visible
+        // // and the data the promise is resolve from the action
+        // if (this.$store.getters.allTasksState === true) {
+        //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
+        // }
+        // //Toggle Project to True if is is not visible
+        // // and the data the promise is resolve from the action
+        // if (this.$store.getters.projectState === false) {
+        //   this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+        // }
+
+        this.$router.push({
+          params: { id: projectId },
+          name: "Project",
+        });
       },
-      // buildTeamProjects(teamData){
-      //   var that = this;
-      //   var promises = [];
-
-      //  return new Promise((resolve) => {
-
-      //   for(var i in teamData){
-      //     promises.push(
-      //       this.$store.dispatch('fetchTeamData', teamData[i].teamId).then());
-      //    }
-      //    Promise.all(promises).then(function() {
-      //       resolve({success:true});
-      //     },
-      //     function(err){
-      //       resolve({success:false, error_message: err});
-      //    });
-      //  });
-      // },
-      // initializeData(){
-      //   console.log("Initilize Data Sidebar Function");
-      //   this.$store.dispatch('fetchUserData', this.$store.getters.user).then(() =>{
-
-      //   this.userData = this.$store.getters.getUserData;
-      //   this.projects = this.userData.projects;
-      //   this.teams = this.userData.teams;
-
-      //   //build the team projects array
-      //   this.buildTeamProjects(this.teams).then((res) => {
-      //    if(res.success){
-      //     console.log("Finished buildTeamProjects!", this.$store.getters.getTeamProjectData);
-      //     this.teamProjectsData = this.$store.getters.getTeamProjectData;
-      //    }
-      //   });
-      //  });
-      // },
     },
     computed: mapState(["loading"]),
     watch: {
@@ -230,12 +180,8 @@ is clicked
         }
       },
     },
-    created() {
-      //  this.initializeData();
-    },
-    mounted() {
-      //  this.initializeData();
-    },
+    created() {},
+    mounted() {},
   };
 </script>
 
