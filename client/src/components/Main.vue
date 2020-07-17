@@ -3,7 +3,7 @@
     <TopBar></TopBar>
     <SideBar></SideBar>
     <div class="container margin">
-      <Forms :projectId="currentProjectId"></Forms>
+      <Forms></Forms>
       <!-- Commented out because I;'m trying to use router view rather then use if statments - incommented below and remove router-view to go back to how it was-->
       <!-- <Project v-if="$store.getters.projectState == true"></Project> -->
       <!-- <Settings v-if="$store.getters.settingsState == true"></Settings>
