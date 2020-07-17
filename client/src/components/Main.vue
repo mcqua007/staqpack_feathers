@@ -9,7 +9,9 @@
       <!-- <Project v-if="$store.getters.projectState == true"></Project> -->
       <!-- <Settings v-if="$store.getters.settingsState == true"></Settings>
       <AllTasks v-if="$store.getters.allTasksState == true"></AllTasks> -->
-      <router-view></router-view>
+
+      <!-- may be better to not have key and use the watcher on project.vue -->
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
@@ -62,8 +64,9 @@
       //   this.$store.commit("setLoading", false);
       // });
     },
+    beforeMounted() {},
     created() {
-      console.log("Main Created");
+      console.log("Main Created", this.$route.params.id);
       //init all task data, then open AllTasks 'Page'
       console.log;
 
@@ -75,6 +78,10 @@
       this.$store.dispatch("fetchProjects").then((res) => {
         console.log("App Vue: - Called fetchProjects", res);
         this.$store.commit("setLoading", false);
+        console.log("Main - Route: ", this.$route);
+        if (this.$route.name === "project") {
+          this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
+        }
       });
     },
   };
