@@ -1,9 +1,7 @@
 <template>
   <div class="project">
-    <!-- componenet wrapper -->
     <div class="project-header-bar">
       <div class="project-title">
-        <!-- <div class="text-left" v-if="$store.getters.currentProject.name != null"> -->
         <div class="text-left">
           <h3>{{ name }}</h3>
         </div>
