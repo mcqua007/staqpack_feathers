@@ -70,10 +70,15 @@
     created() {
       console.log("Project Created: ", this.$route.params.id);
       //this is not working any more when a new class is created
-      feathersClient.service("tasks").on("created", (newTask) => {
-        console.log("On created Task: ", newTask);
-        if (this.$route.params.id === newTask.projectId) this.tasks.push(newTask);
-      });
+      //probably move some where else. This will see if another user adds a task then would be piped to this project
+
+      // feathersClient.service("tasks").on("created", (newTask) => {
+      //   console.log("On created Task: ", newTask);
+      //   if (this.$route.params.id === newTask.projectId){
+      //     this.tasks.push(newTask);
+      //     this.$store.commit('ADD_TASKS', newTask);
+      //   }
+      // });
       //not doing anything was trying to test
       feathersClient
         .service("tasks")
