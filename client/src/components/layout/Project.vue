@@ -5,16 +5,10 @@
       <div class="project-title">
         <!-- <div class="text-left" v-if="$store.getters.currentProject.name != null"> -->
         <div class="text-left">
-          <h3>{{ this.$store.getters.currentProjectName }}</h3>
-          <br />
-          <!-- <h3>route: {{ $route.params.id }}</h3> -->
+          <h3>{{ name }}</h3>
         </div>
       </div>
-      <button
-        v-if="$store.getters.currentProject.id != null"
-        class="delete-project-btn"
-        @click="deleteProject($store.getters.currentProject.id)"
-      >
+      <button class="delete-project-btn" @click="deleteProject()">
         <i class="la la-trash delete-project-icon"></i>
       </button>
     </div>
@@ -41,50 +35,57 @@
     //props: ['responseData'],
     data() {
       return {
-        //projectName: null,
-        //projectId: null,
-        //tasks: null,
+        //id: this.$route.params.id,
       };
     },
+    //watch: {
+    // $route() {
+    //   console.log("Project -watcher route change");
+    //    this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
+    // },
+    //},
     methods: {
-      deleteProject(projectId) {
-        let project_name = this.$store.getters.currentProject.name;
+      deleteProject() {
+        let project_name = this.$route.params.name;
         let confirmed = confirm(
           "Permanently delete '" + project_name + "' and its associated tasks ?"
         );
         if (confirmed) {
-          this.$store.dispatch("deleteProject", projectId).then((res) => {
-            console.log("Delete Project Res", res);
-            //toggle Project State to be hidden - maybe eventually go back to app home/dashboard
-            this.$store.commit("toggleProjectState", this.$store.getters.projectState);
+          this.$store.dispatch("deleteProject", this.$route.params.id).then(() => {
+            this.$router.push({
+              name: "AllTasks",
+            });
           });
         }
       },
     },
     computed: {
       tasks() {
-        // return this.$store.getters.currentProjectTasks.data;
-        return this.$store.getters.currentProjectTasks; //remove .data for the trial of filterLocalTasks rather then calling form server
+        let currentTasks = this.$store.getters.allTasks.filter(
+          (task) => task.projectId == this.$route.params.id
+        );
+        return currentTasks;
+      },
+      name() {
+        //tried to filter allTasks like above but didn't work
+        // let project = this.$store.getters.projects.filter(
+        //   (project) => project._id == this.$route.params.id
+        // );
+
+        return this.$route.params.name;
       },
     },
     created() {
       console.log("Project Created: ", this.$route.params.id);
-
+      //this is not working any more when a new class is created
       feathersClient.service("tasks").on("created", (newTask) => {
         console.log("On created Task: ", newTask);
-        if (this.$store.getters.currentProject.id === newTask.projectId) this.tasks.push(newTask);
+        if (this.$route.params.id === newTask.projectId) this.tasks.push(newTask);
       });
       //not doing anything was trying to test
       feathersClient
         .service("tasks")
         .on("removed", (message) => console.log("task removed - message", message));
-    },
-    mounted() {
-      //   this.$store.dispatch('fetchCurrentProjectTasks', { query: {projectId: this.$store.getters.currentProject.id}}).then(() =>{
-      //       this.tasks = this.$store.getters.currentProjectTasks.data;
-      //       console.log("CurrentProjectTasks:", this.$store.getters.currentProjectTasks);
-      //   });
-      console.log("Project Mounted ");
     },
   };
 </script>
