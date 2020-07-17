@@ -22,6 +22,7 @@
           type="text"
           v-model="editInput"
           v-on:keyup="checkChange(todo.name)"
+          @keyup.enter.native="saveTodoEdit(todo._id, to)"
         />
         <i
           :class="{ la: true, 'la-check': todoChange === true, 'la-times': !todoChange }"
