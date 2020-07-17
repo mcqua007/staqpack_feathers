@@ -1,8 +1,7 @@
 <template>
   <div>
     <TopBar></TopBar>
-    <!-- <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar> -->
-    <SideBar v-on:projectOpen="projectOpen"></SideBar>
+    <SideBar></SideBar>
     <div class="container margin">
       <Forms :projectId="currentProjectId"></Forms>
       <!-- Commented out because I;'m trying to use router view rather then use if statments - incommented below and remove router-view to go back to how it was-->
