@@ -170,11 +170,7 @@
         taskStyle: null,
       };
     },
-    computed: {
-      // todos() {
-      //   return this.$store.state.state.allTodos.filter((todo) => todo.taskId == this.task._id);
-      // },
-    },
+    computed: {},
     methods: {
       deleteTask(taskId, projectId) {
         let data = {
@@ -221,13 +217,14 @@
         });
       },
     },
-    watch: {
-      $route(to, from) {
-        console.log("TaskCard Watcher -Fired");
-        console.log("To: " + to + " from: " + from);
-        this.getTodos();
-      },
-    },
+    //added key to router-view in main and this seems to make sur ethe ocmponent reloads
+    //if this eventually fails for some reason watch the route chang ebelow worked to fetch the todos
+    // watch: {
+    //   $route() {
+    //     console.log("TaskCard Watcher -Fired");
+    //     this.getTodos();
+    //   },
+    // },
     created() {
       console.log("Created TaskCard -Fired: ", this.task._id);
       this.getTodos();
