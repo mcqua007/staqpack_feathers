@@ -10,25 +10,22 @@ export default new Vuex.Store({
     debug: true,
     user: null,
     projects: [],
-    currentProject: null,
-    currentProjectTasks: null,
-    currentProjectTodos: null,
-    currentProjectName: null,
-    currentProjectId: null,
-    currentTaskTodos: null,
+    // currentProject: null,
+    // currentProjectTasks: null,
+    // currentProjectTodos: null,
+    // currentProjectName: null,
+    // currentProjectId: null,
+    // currentTaskTodos: null,
     todos: [],
     tasks: [], //being used by fetchCurrent Proejct and appends each task by id
     allTasks: [],
-    allTasksVisible: false,
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
-    settingsVisible: false,
-    projectVisible: false,
     loading: true,
     themeColor: localStorage.getItem("theme-color") ?
       localStorage.getItem("theme-color") : "#343434",
-    currentProjectData: null,
+    // currentProjectData: null,
   },
   actions: {
     // Authentication Actions
@@ -374,15 +371,15 @@ export default new Vuex.Store({
     toggleSideBar(state, sideBarState) {
       state.sideBarVisible = !sideBarState;
     },
-    toggleProjectState(state, projectState) {
-      state.projectVisible = !projectState;
-    },
-    toggleSettingsState(state, settingsState) {
-      state.settingsVisible = !settingsState;
-    },
-    toggleAllTasksState(state, allTasksState) {
-      state.allTasksVisible = !allTasksState;
-    },
+    // toggleProjectState(state, projectState) {
+    //   state.projectVisible = !projectState;
+    // },
+    // toggleSettingsState(state, settingsState) {
+    //   state.settingsVisible = !settingsState;
+    // },
+    // toggleAllTasksState(state, allTasksState) {
+    //   state.allTasksVisible = !allTasksState;
+    // },
     setLoading(state, appLoadState) {
       state.loading = appLoadState;
     },
