@@ -141,14 +141,14 @@ is clicked
         this.projectMenuState = !this.projectMenuState;
       },
       openProject(projectId, projectName) {
-        this.$store.commit("setCurrentProject", {
-          id: projectId,
-          name: projectName,
-        });
+        // this.$store.commit("setCurrentProject", {
+        //   id: projectId,
+        //   name: projectName,
+        // });
 
         //trying to get current project Tasks wihtout calling the server each time, them from allTasks:
         //below was here to filter out the correct projects
-        this.$store.commit("filterCurrentProjectTasks", projectId);
+        //this.$store.commit("filterCurrentProjectTasks", projectId);
 
         // if (this.$store.getters.settingsState === true) {
         //   this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
@@ -165,8 +165,8 @@ is clicked
         // }
 
         this.$router.push({
-          params: { id: projectId },
-          name: "Project",
+          params: { id: projectId, name: projectName },
+          name: "Project", //normally would be project but testing reloading
         });
       },
     },
