@@ -161,6 +161,13 @@
       },
     },
     created() {
+      //make taskForm select option the same as the project it is in
+      if (this.$route.name === "Project") {
+        this.projectId = this.$route.params.id; //refering to project id
+      }
+
+      console.log(this.$route);
+      //end make project selected
       feathersClient
         .service("tasks")
         .find()
