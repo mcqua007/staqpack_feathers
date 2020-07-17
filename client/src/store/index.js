@@ -28,6 +28,7 @@ export default new Vuex.Store({
     loading: true,
     themeColor: localStorage.getItem("theme-color") ?
       localStorage.getItem("theme-color") : "#343434",
+    currentProjectData: null,
   },
   actions: {
     // Authentication Actions
@@ -262,6 +263,14 @@ export default new Vuex.Store({
           });
       });
     },
+    //Trying Something - aleady have some action s that od htis
+    getAllCurrentProjectData({
+      commit
+    }, projectId) {
+      commit("filterCurrentProjectTasks", projectId);
+      commit("filterCurrentProjectData", projectId);
+
+    }
   },
   mutations: {
     //User Mutations
@@ -382,6 +391,14 @@ export default new Vuex.Store({
       state.themeColor = color;
       localStorage.setItem("theme-color", color);
     },
+    //end state visiblity mutations
+    //filter project data based on project id
+    // filterCurrentProjectData(state, projectId) {
+    //   state.currentProjectData = state.projects.filter((project) => project._id == projectId);
+    //   console.log('Filter Project Muta.', state.currentProjectData);
+    //   state.currentProjectName = state.currentProjectData[0].name;
+
+    // },
   },
   getters: {
     user(state) {
@@ -432,6 +449,7 @@ export default new Vuex.Store({
     allTasks(state) {
       return state.allTasks;
     },
+
   },
   modules: {},
 });
