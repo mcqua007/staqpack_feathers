@@ -44,32 +44,11 @@
       //Settings,
       //AllTasks,
     },
-    methods: {
-      projectOpen(id, name) {
-        console.log("Project Open Main: ", id, name);
-        // this.currentProjectId = id;
-        // this.currentProjectName = name;
-      },
-    },
-    mounted() {
-      console.log("Main Mounted");
-      //init all task data, then open AllTasks 'Page'
-      // this.$store.dispatch("fetchAllTasks").then(() => {
-      //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState); //open allTasks page
-      // });
-
-      // //init project data
-      // this.$store.dispatch("fetchProjects").then((res) => {
-      //   console.log("App Vue: - Called fetchProjects", res);
-      //   this.$store.commit("setLoading", false);
-      // });
-    },
-    beforeMounted() {},
+    methods: {},
     created() {
-      console.log("Main Created", this.$route.params.id);
-      //init all task data, then open AllTasks 'Page'
-      console.log;
+      console.log("Main Created");
 
+      //init all task data, then open AllTasks 'Page'
       this.$store.dispatch("fetchAllTasks").then(() => {
         //do soemthing here after allTasks load if you want
       });
@@ -78,10 +57,11 @@
       this.$store.dispatch("fetchProjects").then((res) => {
         console.log("App Vue: - Called fetchProjects", res);
         this.$store.commit("setLoading", false);
-        console.log("Main - Route: ", this.$route);
-        if (this.$route.name === "project") {
-          this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
-        }
+
+        //I don't think below worked leaving incase I need it
+        // if (this.$route.name === "project") {
+        //   this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
+        // }
       });
     },
   };

@@ -36,12 +36,6 @@
         //id: this.$route.params.id,
       };
     },
-    //watch: {
-    // $route() {
-    //   console.log("Project -watcher route change");
-    //    this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
-    // },
-    //},
     methods: {
       deleteProject() {
         let project_name = this.$route.params.name;
