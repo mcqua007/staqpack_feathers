@@ -71,7 +71,7 @@
       console.log;
 
       this.$store.dispatch("fetchAllTasks").then(() => {
-        this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState); //open allTasks page
+        //do soemthing here after allTasks load if you want
       });
 
       //init project data
