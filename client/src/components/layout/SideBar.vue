@@ -17,9 +17,6 @@
           <li class="m-top-8" role="button" @click="toggleSettings()">
             <i class="la la-cog"></i> Settings
           </li>
-          <!-- Might not do it this way if i want to go to a new page -->
-          <!-- <a class="nav-link" role="link"  @click="toggleGitSettings()"> <i class="la la-github"></i>&nbsp; Git Settings</a> -->
-          <!-- <router-link to="/gitsettings">Git Settings</router-link> -->
         </ul>
       </div>
       <div class="navItem">
@@ -34,36 +31,18 @@
           <ul>
             <li
               role="button"
-              class="m-top-8"
+              class="m-top-8 project-list-item"
               v-for="project in projects"
               @click="openProject(project._id, project.name)"
             >
               <i class="las la-project-diagram"></i> {{ project.name }}
+              <button class="delete-project-btn" @click="deleteProject(project._id, project.name)">
+                <i class="la la-trash delete-project-icon"></i>
+              </button>
             </li>
           </ul>
         </div>
       </div>
-      <!-- <div class="navItem">
-           <div role="link" tabindex="0" @click="toggleTeamMenu()"  class="navItemLink link nav-link"> <i class="la la-users"></i>&nbsp; Your Teams</div>
-           <div  v-show="teamMenuState" class="" id="team-menu">
-             <div class="bordertop"></div>
-                <div class="m-left-10">
-                 <!-- For Loop for Team Names -->
-      <!-- <div  v-for="team in teams" class="navItem nav-link">
-                    <div role="link" tabindex="0" @click="toggleTeamProjectMenu(team.teamId)" v-bind:data-title="team.teamName" v-bind:data-id="team.teamId"  class="">{{ team.teamName }}</div>
-                    <div v-show="teamProjectMenuState == true && teamId == team.teamId" v-bind:data-id="team.teamId">
-                      <div class="bordertop"></div>
-                         <div v-for="teamProject in teamProjects" class="m-left-10">
-                           <!-- For Loop For Team Projects -->
-      <!-- <div class="navItem nav-link" id="sidebar-project-wrap-">
-                             <span role="link" tabindex="0" @click="openProject(teamProject.projectId, teamProject.projectName)"	 v-bind:data-id="teamProject.projectId"  class="">{{ teamProject.projectName }}</span>
-                           </div>
-                         </div>
-                      </div>
-                  </div>  
-                </div>  -->
-      <!-- </div>
-           </div> -->
       <div class="root-nav-item">
         <div class="" role="button" @click="openAllTasks()">
           <i class="la la-tasks"></i> View All Tasks
@@ -74,20 +53,6 @@
 </template>
 
 <script>
-  /*=============================================
-
-Notes:
-
-team Projects - need to make the team project
-not call the data each time it is clicked to
-View need to call the data before hand and then
-just re display it!
-
-General - need to load a project once project
-is clicked
-
-============================================*/
-
   import { mapState } from "vuex";
   export default {
     name: "SideBar",
@@ -100,16 +65,26 @@ is clicked
     },
     methods: {
       openAllTasks() {
-        this.$store.dispatch("fetchAllTasks").then(() => {
-          this.$router.push({
-            name: "AllTasks",
-          });
+        this.$router.push({
+          name: "AllTasks",
         });
       },
       toggleSettings() {
         this.$router.push({
           name: "Settings",
         });
+      },
+      deleteProject(projectId, projectName) {
+        let confirmed = confirm(
+          "Permanently delete '" + projectName + "' and its associated tasks ?"
+        );
+        if (confirmed) {
+          this.$store.dispatch("deleteProject", projectId).then(() => {
+            this.$router.push({
+              name: "AllTasks",
+            });
+          });
+        }
       },
       toggleUserMenu() {
         this.userMenuState = !this.userMenuState;
@@ -126,11 +101,9 @@ is clicked
     },
     computed: mapState(["loading"]),
     watch: {
-      loading(newValue, oldValue) {
-        console.log(`Updating from ${oldValue} to ${newValue}`);
+      loading(newValue) {
         if (newValue === false) {
           this.projects = this.$store.getters.projects;
-          console.log("sidebar - projects watch", this.projects);
         }
       },
     },
@@ -191,10 +164,28 @@ is clicked
     margin-bottom: 0px;
   }
   i {
-    margin-right: 5px;
+    margin-right: 0.65em;
   }
   .inner-menu {
     margin-top: 5px;
     /*border-top: 2px solid #343434; */
+  }
+  .project-list-item {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+  }
+  .delete-project-btn {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #dc3545;
+    font-size: 1.15em;
+    opacity: 0;
+    transition: opacity 0.225s linear;
+  }
+
+  .project-list-item:hover .delete-project-btn {
+    opacity: 1;
   }
 </style>

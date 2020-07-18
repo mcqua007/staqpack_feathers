@@ -6,9 +6,6 @@
           <h3>{{ name }}</h3>
         </div>
       </div>
-      <button class="delete-project-btn" @click="deleteProject()">
-        <i class="la la-trash delete-project-icon"></i>
-      </button>
     </div>
     <hr />
     <div class="row">
@@ -36,21 +33,7 @@
         //id: this.$route.params.id,
       };
     },
-    methods: {
-      deleteProject() {
-        let project_name = this.$route.params.name;
-        let confirmed = confirm(
-          "Permanently delete '" + project_name + "' and its associated tasks ?"
-        );
-        if (confirmed) {
-          this.$store.dispatch("deleteProject", this.$route.params.id).then(() => {
-            this.$router.push({
-              name: "AllTasks",
-            });
-          });
-        }
-      },
-    },
+    methods: {},
     computed: {
       tasks() {
         console.log("Computed - allTasks Getters: ", this.$store.getters.allTasks);
@@ -94,13 +77,6 @@
     display: inline-flex;
     align-items: center;
     width: 100%;
-  }
-  .delete-project-btn {
-    margin-left: auto;
-    font-size: 25px;
-    background: transparent;
-    border: none;
-    color: #dc3545;
   }
 
   /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
