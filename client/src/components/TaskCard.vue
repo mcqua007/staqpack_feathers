@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="col-12 col-sm-6 col-lg-4 task-wrap" :style="taskStyle">
+  <div class="col-12 col-sm-6 col-lg-4 task-wrap">
     <div v-if="task != null">
       <div
         :class="{
