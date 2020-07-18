@@ -172,6 +172,11 @@
     },
     computed: {},
     methods: {
+      completeTask(taskId) {
+        this.$store.dispatch("patchTask", { id: taskId, update: { completed: true } }).then(() => {
+          //do something here once delete is complete
+        });
+      },
       deleteTask(taskId, projectId) {
         let data = {
           task: {

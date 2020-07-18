@@ -174,6 +174,21 @@ export default new Vuex.Store({
 
       });
     },
+    patchTask(context, data) {
+      return new Promise((resolve, reject) => {
+        feathersClient
+          .service("tasks")
+          .patch(data.id, data.update)
+          .then((res) => {
+            console.log('patchTask: ', res);
+            resolve(res);
+          })
+          .catch((e) => {
+            if (context.state.debug) console.error("patchTask Error:", e);
+            reject(e);
+          });
+      });
+    },
     deleteTasks(context, payload) {
       return new Promise((resolve, reject) => {
         feathersClient
@@ -259,7 +274,7 @@ export default new Vuex.Store({
             resolve(res);
           })
           .catch((e) => {
-            if (context.state.debug) console.error("deleteTodo Error:", e);
+            if (context.state.debug) console.error("patchTodo Error:", e);
             reject(e);
           });
       });
