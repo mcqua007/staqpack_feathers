@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="mainClick">
     <TopBar></TopBar>
     <SideBar></SideBar>
     <div class="container margin">
@@ -43,7 +43,12 @@
       //Settings,
       //AllTasks,
     },
-    methods: {},
+    methods: {
+      mainClick(event) {
+        console.log("MAIN CLICK", event);
+        this.$store.commit("SET_MAIN_CLICK", event);
+      },
+    },
     created() {
       console.log("Main Created");
 
