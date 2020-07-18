@@ -10,15 +10,9 @@ export default new Vuex.Store({
     debug: true,
     user: null,
     projects: [],
-    // currentProject: null,
-    // currentProjectTasks: null,
-    // currentProjectTodos: null,
-    // currentProjectName: null,
-    // currentProjectId: null,
-    // currentTaskTodos: null,
     todos: [],
     tasks: [], //being used by fetchCurrent Proejct and appends each task by id
-    allTasks: [],
+    tasksInitalized: false,
     projectFormVisible: false,
     taskFormVisible: false,
     sideBarVisible: false,
@@ -157,17 +151,27 @@ export default new Vuex.Store({
     },
     fetchAllTasks(context, query) {
       return new Promise((resolve, reject) => {
-        feathersClient
-          .service("tasks")
-          .find(query)
-          .then((res) => {
-            context.commit("setAllTasks", res);
-            resolve(res);
-          })
-          .catch((e) => {
-            if (context.state.debug) console.error("FetchTasks error", e);
-            reject(e);
-          });
+        console.log('context', context.state.tasksInitalized);
+        //tasks inalized being true means the server has already been called
+        if (context.state.tasksInitalized === false) {
+          feathersClient
+            .service("tasks")
+            .find(query)
+            .then((res) => {
+              if (context.state.debug) console.log("Veux - fetchAllTasks", res);
+              context.commit("ADD_TASKS", res.data);
+              context.commit('SET_TASKS_INITALIZED', true); //set that tasks has been initalized 
+              resolve(res);
+
+            })
+            .catch((e) => {
+              if (context.state.debug) console.error("FetchTasks error", e);
+              reject(e);
+            });
+        } else {
+          resolve();
+        }
+
       });
     },
     deleteTasks(context, payload) {
@@ -260,14 +264,6 @@ export default new Vuex.Store({
           });
       });
     },
-    //Trying Something - aleady have some action s that od htis
-    getAllCurrentProjectData({
-      commit
-    }, projectId) {
-      commit("filterCurrentProjectTasks", projectId);
-      commit("filterCurrentProjectData", projectId);
-
-    }
   },
   mutations: {
     //User Mutations
@@ -290,23 +286,15 @@ export default new Vuex.Store({
       let index = state.projects.findIndex((project) => project._id == projectId);
       state.projects.splice(index, 1);
     },
-    setCurrentProject(state, data) {
-      state.currentProject = data;
-      state.currentProjectId = data.id;
-      state.currentProjectName = data.name;
-    },
+    // setCurrentProject(state, data) {
+    //   state.currentProject = data;
+    //   state.currentProjectId = data.id;
+    //   state.currentProjectName = data.name;
+    // },
     destroyCurrentProject(state) {
       state.currentProject = null;
     },
     //Task Mutations
-
-    //trying to filter current project here rather then grab from server
-    filterCurrentProjectTasks(state, projectId) {
-      state.currentProjectTasks = state.allTasks.filter((task) => task.projectId == projectId);
-    },
-    // filterCurrentTaskTodos(state, taskId) {
-    //   state.currentTaskTodos = state.allTodos.filter((todo) => todo.taskId == taskId);
-    // },
     ADD_TASKS(state, payload) {
       //if multiple tasks or if just one add differently
       if (Array.isArray(payload)) {
@@ -317,30 +305,21 @@ export default new Vuex.Store({
         state.tasks.push(payload);
       }
     },
-    setProjectTasks(state, payload) {
-      state.proejctTasks = payload.data;
-    },
-    setAllTasks(state, payload) {
-      state.allTasks = payload.data;
+    SET_TASKS_INITALIZED(state, payload) {
+      state.tasksInitalized = payload;
     },
     DELETE_TASKS(state, taskData) {
       //Eventually remove all tasks and jsut use tasks for everythign so there is one source of truth
       if (Array.isArray(taskData)) {
         taskData.forEach(function (item) {
-          //delte form state.tasks
+          //delte from state.tasks
           let index = state.tasks.findIndex((task) => task._id == item._id); //goes through all removed tasks and delete each one by id
           state.tasks.splice(index, 1);
-          //delete from state.AllTasks
-          let i = state.allTasks.findIndex((task) => task._id == item._id); //goes through all removed tasks and delete each one by id
-          state.allTasks.splice(i, 1);
         });
       } else {
         //delte form state.tasks
         let index = state.tasks.findIndex((task) => task._id == taskData._id); //goes through all removed tasks and delete each one by id
         state.tasks.splice(index, 1);
-        //delete from state.AllTasks
-        let i = state.allTasks.findIndex((task) => task._id == taskData._id); //goes through all removed tasks and delete each one by id
-        state.allTasks.splice(i, 1);
       }
     },
 
@@ -371,15 +350,6 @@ export default new Vuex.Store({
     toggleSideBar(state, sideBarState) {
       state.sideBarVisible = !sideBarState;
     },
-    // toggleProjectState(state, projectState) {
-    //   state.projectVisible = !projectState;
-    // },
-    // toggleSettingsState(state, settingsState) {
-    //   state.settingsVisible = !settingsState;
-    // },
-    // toggleAllTasksState(state, allTasksState) {
-    //   state.allTasksVisible = !allTasksState;
-    // },
     setLoading(state, appLoadState) {
       state.loading = appLoadState;
     },
@@ -388,14 +358,7 @@ export default new Vuex.Store({
       state.themeColor = color;
       localStorage.setItem("theme-color", color);
     },
-    //end state visiblity mutations
-    //filter project data based on project id
-    // filterCurrentProjectData(state, projectId) {
-    //   state.currentProjectData = state.projects.filter((project) => project._id == projectId);
-    //   console.log('Filter Project Muta.', state.currentProjectData);
-    //   state.currentProjectName = state.currentProjectData[0].name;
 
-    // },
   },
   getters: {
     user(state) {
@@ -413,38 +376,17 @@ export default new Vuex.Store({
     projects(state) {
       return state.projects;
     },
-    projectState(state) {
-      return state.projectVisible;
-    },
-    settingsState(state) {
-      return state.settingsVisible;
-    },
-    allTasksState(state) {
-      return state.allTasksVisible;
+    tasksInitalized(state) {
+      return state.tasksInitalized;
     },
     loadingState(state) {
       return state.loading;
-    },
-    currentProject(state) {
-      return state.currentProject;
-    },
-    currentProjectId(state) {
-      return state.currentProjectId;
-    },
-    currentProjectName(state) {
-      return state.currentProjectName;
-    },
-    currentProjectTasks(state) {
-      return state.currentProjectTasks;
-    },
-    currentTaskTodos(state) {
-      return state.currentTaskTodos;
     },
     themeColor(state) {
       return state.themeColor;
     },
     allTasks(state) {
-      return state.allTasks;
+      return state.tasks;
     },
 
   },
