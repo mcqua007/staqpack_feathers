@@ -44,9 +44,6 @@
                 active: dropdownExpanded == true,
               }"
             >
-              <button class="dropdown-item" style="display:none;">
-                <i class="la la-arrow-left"></i>Go Back
-              </button>
               <div v-show="!task.completed">
                 <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
                   <i class="la la-check"></i>Completed
@@ -54,12 +51,12 @@
               </div>
               <div v-show="task.completed">
                 <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
-                  <i class="la la-undo"></i>Re-open
+                  <i class="la la-redo"></i>Re-open
                 </button>
               </div>
               <div v-show="!backActive">
                 <button class="dropdown-item" @click="toggleBack()">
-                  <i class="la la-reply"></i>Show Back
+                  <i class="la la-arrow-left"></i>Show Back
                 </button>
               </div>
               <div v-show="backActive">
