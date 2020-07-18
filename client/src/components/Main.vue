@@ -48,7 +48,12 @@
       console.log("Main Created");
 
       //init all task data, then open AllTasks 'Page'
+      console.log(
+        "================================ \n tasksInit: ",
+        this.$store.getters.tasksInitalized
+      );
       this.$store.dispatch("fetchAllTasks").then(() => {
+        console.log("Main Created - FETCH ALL TASKS");
         //do soemthing here after allTasks load if you want
       });
 
