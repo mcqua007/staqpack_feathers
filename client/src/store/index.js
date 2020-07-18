@@ -329,6 +329,10 @@ export default new Vuex.Store({
         state.tasks.splice(index, 1);
       }
     },
+    TOGGLE_COMPLETED_TASK(state, payload) {
+      let index = state.tasks.findIndex((task) => task._id == payload.taskId)
+      state.tasks[index].completed = payload.updatedVal;
+    },
 
     // 'todos' mutations
     ADD_TODOS(state, payload) {

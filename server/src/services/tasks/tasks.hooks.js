@@ -1,5 +1,9 @@
-const { authenticate } = require('@feathersjs/authentication').hooks;
-const { setField } = require('feathers-authentication-hooks');
+const {
+  authenticate
+} = require('@feathersjs/authentication').hooks;
+const {
+  setField
+} = require('feathers-authentication-hooks');
 const restrictToProjectId = require('../../hooks/restrict-to-project-id');
 
 const setCreatedById = setField({
@@ -9,14 +13,14 @@ const setCreatedById = setField({
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt'),],
+    all: [authenticate('jwt'), ],
     find: [],
     get: [],
     create: [
-      setCreatedById 
+      setCreatedById
     ],
     update: [],
-    patch: [restrictToProjectId()],
+    patch: [],
     remove: [restrictToProjectId()]
   },
 

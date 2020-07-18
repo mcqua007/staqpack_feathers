@@ -172,9 +172,19 @@
     },
     computed: {},
     methods: {
+      //maybe can combine these two below into one function such as toggleCompleted
       completeTask(taskId) {
         this.$store.dispatch("patchTask", { id: taskId, update: { completed: true } }).then(() => {
           //do something here once delete is complete
+          this.$store.commit("TOGGLE_COMPLETED_TASK", { taskId: taskId, updatedVal: true });
+          this.dropdownExpanded = false;
+        });
+      },
+      reopenTask(taskId) {
+        this.$store.dispatch("patchTask", { id: taskId, update: { completed: false } }).then(() => {
+          //do something here once delete is complete
+          this.$store.commit("TOGGLE_COMPLETED_TASK", { taskId: taskId, updatedVal: false });
+          this.dropdownExpanded = false;
         });
       },
       deleteTask(taskId, projectId) {
