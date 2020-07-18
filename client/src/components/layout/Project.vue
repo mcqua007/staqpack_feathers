@@ -13,7 +13,7 @@
     <hr />
     <div class="row">
       <template v-for="task in tasks">
-        <TaskCard v-bind:task="task" :key="task.id"></TaskCard>
+        <TaskCard v-bind:task="task" :key="task._id"></TaskCard>
       </template>
     </div>
   </div>
