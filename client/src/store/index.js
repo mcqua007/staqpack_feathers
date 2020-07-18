@@ -301,14 +301,6 @@ export default new Vuex.Store({
       let index = state.projects.findIndex((project) => project._id == projectId);
       state.projects.splice(index, 1);
     },
-    // setCurrentProject(state, data) {
-    //   state.currentProject = data;
-    //   state.currentProjectId = data.id;
-    //   state.currentProjectName = data.name;
-    // },
-    destroyCurrentProject(state) {
-      state.currentProject = null;
-    },
     //Task Mutations
     ADD_TASKS(state, payload) {
       //if multiple tasks or if just one add differently
