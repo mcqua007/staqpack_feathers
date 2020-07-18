@@ -86,22 +86,28 @@
         </div>
         <div class="card-main-wrap">
           <div
+            role="button"
             class="card-title-badge-wrap text-left"
             v-if="task.severity == 1 && task.completed == false"
+            @click="toggleBadge(task._id)"
           >
             <span class="card-title">{{ task.name }}</span
             ><span class="badge  badge-success severity-badge">Low</span>
           </div>
           <div
+            role="button"
             class="card-title-badge-wrap text-left"
             v-else-if="task.severity == 2 && task.completed == false"
+            @click="toggleBadge(task._id)"
           >
             <span class="card-title">{{ task.name }}</span
             ><span class="badge  badge-warning severity-badge">Medium</span>
           </div>
           <div
+            role="button"
             class="card-title-badge-wrap text-left"
             v-else-if="task.severity == 3 && task.completed == false"
+            @click="toggleBadge(task._id)"
           >
             <span class="card-title">{{ task.name }}</span
             ><span class="badge  badge-danger severity-badge">High</span>
@@ -168,6 +174,7 @@
         dropdownExpanded: false,
         backActive: false,
         taskStyle: null,
+        timer: null,
       };
     },
     computed: {},
@@ -178,12 +185,31 @@
           .dispatch("patchTask", { id: taskId, update: { completed: !this.task.completed } })
           .then(() => {
             //do something here once delete is complete
-            this.$store.commit("TOGGLE_COMPLETED_TASK", {
+            this.$store.commit("UPDATE_TASK_COMPLETED", {
               taskId: taskId,
-              updatedVal: !this.task.completed,
+              newValue: !this.task.completed,
             });
             this.dropdownExpanded = false;
           });
+      },
+      toggleBadge(taskId) {
+        clearTimeout(this.timer);
+        var currentBadge = this.task.severity;
+        if (currentBadge < 3) {
+          this.task.severity++;
+        } else {
+          this.task.severity = 1;
+        }
+        this.timer = setTimeout(() => {
+          this.$store
+            .dispatch("patchTask", { id: taskId, update: { severity: this.task.severity } })
+            .then(() => {
+              this.$store.commit("UPDATE_TASK_BADGE", {
+                taskId: taskId,
+                newValue: this.task.severity,
+              });
+            });
+        }, 2300);
       },
       deleteTask(taskId, projectId) {
         let data = {
@@ -210,6 +236,7 @@
       toggleDropdown() {
         this.dropdownExpanded = !this.dropdownExpanded;
       },
+
       addTodo(taskId, projectId) {
         var data = {
           name: this.todoInput,
@@ -315,6 +342,7 @@
     width: 20%;
     padding: 5px;
     line-height: normal;
+    color: #fff;
   }
 
   .completed-badge {
