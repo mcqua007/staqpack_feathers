@@ -130,7 +130,7 @@ is clicked
         console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
           this.projects = this.$store.getters.projects;
-          console.log("task- projects watch", this.projects);
+          console.log("sidebar - projects watch", this.projects);
         }
       },
     },

@@ -20,7 +20,7 @@
 
 <script>
   import TaskCard from "@/components/TaskCard.vue";
-  import feathersClient from "@/feathers-client-config.js";
+  //import feathersClient from "@/feathers-client-config.js";
   //import { mapState } from 'vuex';
 
   export default {
@@ -39,9 +39,9 @@
       },
     },
     created() {
-      feathersClient.service("tasks").on("created", (newTask) => {
-        this.tasks.push(newTask);
-      });
+      // feathersClient.service("tasks").on("created", (newTask) => {
+      //   this.tasks.push(newTask);
+      // });
     },
     mounted() {},
   };
