@@ -144,6 +144,7 @@
               </button>
             </div>
           </div>
+          <div v-if="task.dueDate" class="text-muted margin-t-8">Due: {{ dueDate }}</div>
         </div>
         <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
         <div v-bind:data-card-back="task._id" class="" style="display:none;"></div>
@@ -173,7 +174,13 @@
         timer: null,
       };
     },
-    computed: {},
+    computed: {
+      dueDate() {
+        //const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+        let date = new Date(this.task.dueDate);
+        return date.toLocaleDateString();
+      },
+    },
     methods: {
       //maybe can combine these two below into one function such as toggleCompleted
       toggleCompletedTask(taskId) {
@@ -276,7 +283,6 @@
     border-radius: 0px 0px 5px 5px;
     box-shadow: 1px 5px 13px -5px #ccc;
   }
-
   .assigned-to-text {
     color: #ccc;
     padding: 0 5px 5px 5px;
