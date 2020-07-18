@@ -173,7 +173,6 @@
         todosHidden: false,
         dropdownExpanded: false,
         backActive: false,
-        taskStyle: null,
         timer: null,
       };
     },
