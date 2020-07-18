@@ -17,6 +17,7 @@ export default new Vuex.Store({
     taskFormVisible: false,
     sideBarVisible: false,
     loading: true,
+    mainClick: null,
     themeColor: localStorage.getItem("theme-color") ?
       localStorage.getItem("theme-color") : "#343434",
     // currentProjectData: null,
@@ -369,6 +370,9 @@ export default new Vuex.Store({
     setLoading(state, appLoadState) {
       state.loading = appLoadState;
     },
+    SET_MAIN_CLICK(state, event) {
+      state.mainClick = event;
+    },
     //Settings Mutations
     setThemeColor(state, color) {
       state.themeColor = color;
@@ -404,6 +408,9 @@ export default new Vuex.Store({
     allTasks(state) {
       return state.tasks;
     },
+    mainClick(state) {
+      return state.mainClick;
+    }
 
   },
   modules: {},
