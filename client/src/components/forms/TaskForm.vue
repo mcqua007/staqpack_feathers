@@ -156,11 +156,18 @@
         console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
           this.projects = this.$store.getters.projects;
-          console.log("task- projects watch", this.projects);
+          console.log("taskform - projects watch", this.projects);
         }
       },
     },
     created() {
+      //make taskForm select option the same as the project it is in
+      if (this.$route.name === "Project") {
+        this.projectId = this.$route.params.id; //refering to project id
+      }
+
+      console.log(this.$route);
+      //end make project selected
       feathersClient
         .service("tasks")
         .find()

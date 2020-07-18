@@ -15,6 +15,7 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
+const history = require('connect-history-api-fallback');
 
 const authentication = require('./authentication');
 
@@ -29,7 +30,9 @@ app.use(helmet());
 app.use(cors());
 app.use(compress());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+  extended: true
+}));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
@@ -39,6 +42,9 @@ app.configure(express.rest());
 app.configure(socketio());
 
 app.configure(mongoose);
+
+//history for vue,js - gets ride of hash enables vue-router history mode
+app.use(history());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
@@ -50,7 +56,9 @@ app.configure(channels);
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
-app.use(express.errorHandler({ logger }));
+app.use(express.errorHandler({
+  logger
+}));
 
 app.hooks(appHooks);
 

@@ -37,7 +37,7 @@
               ></i>
             </button>
             <div
-              v-if="dropdownExpanded"
+              v-show="dropdownExpanded"
               :class="{
                 'dropdown-menu': true,
                 'dropdown-menu-right': true,
@@ -47,29 +47,29 @@
               <button class="dropdown-item" style="display:none;">
                 <i class="la la-arrow-left"></i>Go Back
               </button>
-              <div v-if="task.completed === false">
+              <div v-show="!task.completed">
                 <button class="dropdown-item" @click="completeTask(task._id)">
                   <i class="la la-check"></i>Completed
                 </button>
               </div>
-              <div v-else>
+              <div v-show="task.completed">
                 <button class="dropdown-item" @click="reopenTask(task._id)">
                   <i class="la la-undo"></i>Re-open
                 </button>
               </div>
-              <div v-if="!backActive">
+              <div v-show="!backActive">
                 <button class="dropdown-item" @click="toggleBack()">
                   <i class="la la-reply"></i>Show Back
                 </button>
               </div>
-              <div v-else>
+              <div v-show="backActive">
                 <button class="dropdown-item" @click="toggleBack()">
                   Go Home
                 </button>
               </div>
               <button class="dropdown-item" @click="toggleTodoVisibility()">
-                <div v-if="todosHidden"><i class="la la-eye"></i>Show Todos</div>
-                <div v-else><i class="la la-eye-slash"></i>Hide Todos</div>
+                <div v-show="todosHidden"><i class="la la-eye"></i>Show Todos</div>
+                <div v-show="!todosHidden"><i class="la la-eye-slash"></i>Hide Todos</div>
               </button>
               <button
                 class="dropdown-item"
@@ -113,14 +113,14 @@
           <div class="card-body text-left">
             <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
             <hr />
-            <div v-if="!todosHidden">
+            <div v-show="!todosHidden">
               <div v-for="(todo, index) in todos" :key="index">
                 <TodoList v-bind:todo="todo"></TodoList>
               </div>
             </div>
           </div>
           <div class="input-group todo-input-group">
-            <p class="red-text" v-if="feedback">
+            <p class="red-text" v-show="feedback">
               {{ feedback }}
             </p>
             <input
@@ -170,12 +170,23 @@
         taskStyle: null,
       };
     },
-    computed: {
-      // todos() {
-      //   return this.$store.state.state.allTodos.filter((todo) => todo.taskId == this.task._id);
-      // },
-    },
+    computed: {},
     methods: {
+      //maybe can combine these two below into one function such as toggleCompleted
+      completeTask(taskId) {
+        this.$store.dispatch("patchTask", { id: taskId, update: { completed: true } }).then(() => {
+          //do something here once delete is complete
+          this.$store.commit("TOGGLE_COMPLETED_TASK", { taskId: taskId, updatedVal: true });
+          this.dropdownExpanded = false;
+        });
+      },
+      reopenTask(taskId) {
+        this.$store.dispatch("patchTask", { id: taskId, update: { completed: false } }).then(() => {
+          //do something here once delete is complete
+          this.$store.commit("TOGGLE_COMPLETED_TASK", { taskId: taskId, updatedVal: false });
+          this.dropdownExpanded = false;
+        });
+      },
       deleteTask(taskId, projectId) {
         let data = {
           task: {
@@ -189,7 +200,7 @@
         };
 
         this.$store.dispatch("deleteTasks", data).then(() => {
-          this.$store.commit("filterCurrentProjectTasks", projectId); //re-filter the tasks for the current project sincesoem have been deleted
+          //do something here once delete is complete
         });
       },
       toggleBack() {
@@ -221,13 +232,14 @@
         });
       },
     },
-    watch: {
-      $route(to, from) {
-        console.log("TaskCard Watcher -Fired");
-        console.log("To: " + to + " from: " + from);
-        this.getTodos();
-      },
-    },
+    //added key to router-view in main and this seems to make sur ethe ocmponent reloads
+    //if this eventually fails for some reason watch the route chang ebelow worked to fetch the todos
+    // watch: {
+    //   $route() {
+    //     console.log("TaskCard Watcher -Fired");
+    //     this.getTodos();
+    //   },
+    // },
     created() {
       console.log("Created TaskCard -Fired: ", this.task._id);
       this.getTodos();

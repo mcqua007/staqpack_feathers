@@ -1,15 +1,16 @@
 <template>
   <div>
     <TopBar></TopBar>
-    <!-- <SideBar v-on:projectOpen="projectOpen" v-on:loadAllTasks="loadAllTasks"></SideBar> -->
-    <SideBar v-on:projectOpen="projectOpen"></SideBar>
+    <SideBar></SideBar>
     <div class="container margin">
-      <Forms :projectId="currentProjectId"></Forms>
+      <Forms></Forms>
       <!-- Commented out because I;'m trying to use router view rather then use if statments - incommented below and remove router-view to go back to how it was-->
       <!-- <Project v-if="$store.getters.projectState == true"></Project> -->
       <!-- <Settings v-if="$store.getters.settingsState == true"></Settings>
       <AllTasks v-if="$store.getters.allTasksState == true"></AllTasks> -->
-      <router-view></router-view>
+
+      <!-- may be better to not have key and use the watcher on project.vue -->
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
@@ -42,39 +43,29 @@
       //Settings,
       //AllTasks,
     },
-    methods: {
-      projectOpen(id, name) {
-        console.log("Project Open Main: ", id, name);
-        // this.currentProjectId = id;
-        // this.currentProjectName = name;
-      },
-    },
-    mounted() {
-      console.log("Main Mounted");
-      //init all task data, then open AllTasks 'Page'
-      // this.$store.dispatch("fetchAllTasks").then(() => {
-      //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState); //open allTasks page
-      // });
-
-      // //init project data
-      // this.$store.dispatch("fetchProjects").then((res) => {
-      //   console.log("App Vue: - Called fetchProjects", res);
-      //   this.$store.commit("setLoading", false);
-      // });
-    },
+    methods: {},
     created() {
       console.log("Main Created");
-      //init all task data, then open AllTasks 'Page'
-      console.log;
 
+      //init all task data, then open AllTasks 'Page'
+      console.log(
+        "================================ \n tasksInit: ",
+        this.$store.getters.tasksInitalized
+      );
       this.$store.dispatch("fetchAllTasks").then(() => {
-        this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState); //open allTasks page
+        console.log("Main Created - FETCH ALL TASKS");
+        //do soemthing here after allTasks load if you want
       });
 
       //init project data
       this.$store.dispatch("fetchProjects").then((res) => {
         console.log("App Vue: - Called fetchProjects", res);
         this.$store.commit("setLoading", false);
+
+        //I don't think below worked leaving incase I need it
+        // if (this.$route.name === "project") {
+        //   this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
+        // }
       });
     },
   };

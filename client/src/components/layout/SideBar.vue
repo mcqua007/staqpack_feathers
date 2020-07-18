@@ -101,35 +101,12 @@ is clicked
     methods: {
       openAllTasks() {
         this.$store.dispatch("fetchAllTasks").then(() => {
-          // this.$emit('loadAllTasks');
-          // if (this.$store.getters.settingsState === true) {
-          //   this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
-          // }
-          // //Toggle Project to True if is is not visible
-          // // and the data the promise is resolve from the action
-          // if (this.$store.getters.projectState === true) {
-          //   this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-          // }
-          // //Toggle AllTasks to True if is is not visible
-          // // and the data the promise is resolve from the action
-          // if (this.$store.getters.allTasksState === false) {
-          //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-          // }
           this.$router.push({
             name: "AllTasks",
           });
         });
       },
       toggleSettings() {
-        //Toggle Project to true if is is not visible
-        // if (this.$store.getters.projectState === true) {
-        //   this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-        // }
-        // if (this.$store.getters.allTasksState === true) {
-        //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-        // }
-        // //Toggle git settings
-        // this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
         this.$router.push({
           name: "Settings",
         });
@@ -141,32 +118,9 @@ is clicked
         this.projectMenuState = !this.projectMenuState;
       },
       openProject(projectId, projectName) {
-        this.$store.commit("setCurrentProject", {
-          id: projectId,
-          name: projectName,
-        });
-
-        //trying to get current project Tasks wihtout calling the server each time, them from allTasks:
-        //below was here to filter out the correct projects
-        this.$store.commit("filterCurrentProjectTasks", projectId);
-
-        // if (this.$store.getters.settingsState === true) {
-        //   this.$store.commit("toggleSettingsState", this.$store.getters.settingsState);
-        // }
-        // //Toggle AllTasks to True if is is not visible
-        // // and the data the promise is resolve from the action
-        // if (this.$store.getters.allTasksState === true) {
-        //   this.$store.commit("toggleAllTasksState", this.$store.getters.allTasksState);
-        // }
-        // //Toggle Project to True if is is not visible
-        // // and the data the promise is resolve from the action
-        // if (this.$store.getters.projectState === false) {
-        //   this.$store.commit("toggleProjectState", this.$store.getters.projectState);
-        // }
-
         this.$router.push({
-          params: { id: projectId },
-          name: "Project",
+          params: { id: projectId, name: projectName },
+          name: "Project", //normally would be project but testing reloading
         });
       },
     },
@@ -176,7 +130,7 @@ is clicked
         console.log(`Updating from ${oldValue} to ${newValue}`);
         if (newValue === false) {
           this.projects = this.$store.getters.projects;
-          console.log("task- projects watch", this.projects);
+          console.log("sidebar - projects watch", this.projects);
         }
       },
     },
