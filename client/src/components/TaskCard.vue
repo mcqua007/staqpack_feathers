@@ -48,12 +48,12 @@
                 <i class="la la-arrow-left"></i>Go Back
               </button>
               <div v-show="!task.completed">
-                <button class="dropdown-item" @click="completeTask(task._id)">
+                <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
                   <i class="la la-check"></i>Completed
                 </button>
               </div>
               <div v-show="task.completed">
-                <button class="dropdown-item" @click="reopenTask(task._id)">
+                <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
                   <i class="la la-undo"></i>Re-open
                 </button>
               </div>
@@ -173,19 +173,17 @@
     computed: {},
     methods: {
       //maybe can combine these two below into one function such as toggleCompleted
-      completeTask(taskId) {
-        this.$store.dispatch("patchTask", { id: taskId, update: { completed: true } }).then(() => {
-          //do something here once delete is complete
-          this.$store.commit("TOGGLE_COMPLETED_TASK", { taskId: taskId, updatedVal: true });
-          this.dropdownExpanded = false;
-        });
-      },
-      reopenTask(taskId) {
-        this.$store.dispatch("patchTask", { id: taskId, update: { completed: false } }).then(() => {
-          //do something here once delete is complete
-          this.$store.commit("TOGGLE_COMPLETED_TASK", { taskId: taskId, updatedVal: false });
-          this.dropdownExpanded = false;
-        });
+      toggleCompletedTask(taskId) {
+        this.$store
+          .dispatch("patchTask", { id: taskId, update: { completed: !this.task.completed } })
+          .then(() => {
+            //do something here once delete is complete
+            this.$store.commit("TOGGLE_COMPLETED_TASK", {
+              taskId: taskId,
+              updatedVal: !this.task.completed,
+            });
+            this.dropdownExpanded = false;
+          });
       },
       deleteTask(taskId, projectId) {
         let data = {
@@ -241,6 +239,7 @@
     //   },
     // },
     created() {
+      console.log("taskCompled: ", this.task.completed);
       console.log("Created TaskCard -Fired: ", this.task._id);
       this.getTodos();
     },
