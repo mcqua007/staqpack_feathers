@@ -60,7 +60,6 @@
     data() {
       return {
         dropdownExpanded: false,
-        //mainClick: null,
       };
     },
     methods: {
