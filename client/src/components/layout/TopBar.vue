@@ -102,7 +102,10 @@
     watch: {
       mainClick(newEvent) {
         // console.log("Watch topbar mainClick: ", newEvent.target.className);
-        if (!newEvent.target.className.toString().includes("dropdown-btn")) {
+        if (
+          !newEvent.target.className.toString().includes("dropdown-btn") &&
+          !newEvent.target.className.toString().includes("dropdown-item")
+        ) {
           this.dropdownExpanded = false;
         }
       },

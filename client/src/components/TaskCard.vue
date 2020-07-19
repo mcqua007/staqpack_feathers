@@ -24,12 +24,13 @@
           </button>
           <div class="btn-group">
             <button
-              class="btn btn-outline-secondary"
+              class="btn btn-outline-secondary dropdown-btn"
               aria-haspopup="true"
               @click="toggleDropdown()"
             >
               <i
                 :class="{
+                  'dropdown-btn': true,
                   la: true,
                   'la-angle-down': !dropdownExpanded,
                   'la-angle-up': dropdownExpanded,
@@ -155,6 +156,7 @@
 
 <script>
   import TodoList from "@/components/TodoList.vue";
+  //import { mapState } from "vuex";
 
   export default {
     name: "TaskCard",
@@ -180,6 +182,10 @@
         let date = new Date(this.task.dueDate);
         return date.toLocaleDateString();
       },
+      mainClick() {
+        return this.$store.getters.mainClick;
+      },
+      //mapState(['mainClick']);
     },
     methods: {
       //maybe can combine these two below into one function such as toggleCompleted
@@ -268,6 +274,17 @@
     //     this.getTodos();
     //   },
     // },
+    watch: {
+      //this clicks out of the dropdown if someone clicks somehwere else
+      mainClick(newEvent) {
+        if (
+          !newEvent.target.className.toString().includes("dropdown-btn") &&
+          !newEvent.target.className.toString().includes("dropdown-item")
+        ) {
+          this.dropdownExpanded = false;
+        }
+      },
+    },
     created() {
       console.log("taskCompled: ", this.task.completed);
       console.log("Created TaskCard -Fired: ", this.task._id);
