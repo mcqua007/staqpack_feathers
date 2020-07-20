@@ -9,14 +9,12 @@
             <i class="la la-external-link"></i>
           </a>
         </div>
-        <img class="github-avatar-img" v-bind:src="repoData.avatar_url" />
+        <img class="github-avatar-img" v-bind:src="repoData.avatarUrl" />
         <span style="color: #777;"> &nbsp;{{ repoData.owner }}</span>
         <div class="card-text" v-if="repoData.description">{{ repoData.description }}</div>
         <div class="card-text" v-else>No description available</div>
         <span v-if="repoData.private" class="badge pull-left visibility-badge">Private</span>
-        <span v-if="repoData.private == false" class="badge pull-left visibility-badge"
-          >Public</span
-        >
+        <span v-if="repoData.private == false" class="badge pull-left visibility-badge">Public</span>
         <button
           :class="{ 'btn-secondary': true, 'sync-button': true, active: isSyncing }"
           data-index="key"
@@ -31,8 +29,8 @@
 
 <script>
   export default {
-    name: "GitDefault",
-    props: ["repoData"],
+    name: 'GitDefault',
+    props: ['repoData'],
     data() {
       return {
         confirmSync: null,
@@ -42,10 +40,29 @@
     methods: {
       syncRepo(data) {
         this.isSyncing = true;
-        //eventually allow user to edit thigns before creation
-        this.$store.dispatch("createGithubRepoProject", data).then(() => {
+        console.log('data: ', data); //eventually allow user to edit thigns before creation
+        this.$store.dispatch('createGithubRepoProject', data).then(() => {
           //do something here once done
           // alert("New Project created!");
+          //add webhook
+          const json = {
+            'name': 'web',
+            'active': true,
+            'events': ['push'],
+            'config': {
+              'url': 'http://cacd9cb9cab1.ngrok.io/githubwebhooks/',
+              'content_type': 'json',
+            },
+          };
+          let webhookJson = {
+            json: json,
+            token: process.env.VUE_APP_GITHUB_TOKEN,
+            url: data.hooksUrl,
+          };
+          console.log('webhookJSON: ', webhookJson);
+          this.$store.dispatch('createGithubWebhook', webhookJson).then(() => {
+            //do something after webhook is created
+          });
         });
 
         //this.$store.commit("setCurrentGitFormData", index);
