@@ -43,9 +43,9 @@ module.exports = function (app) {
     // cloneUrl: {
     //   type: String,
     // },
-    // hooksUrl: {
-    //   type: String,
-    // },
+    hooksUrl: {
+      type: String,
+    },
 
   }, {
     timestamps: true
