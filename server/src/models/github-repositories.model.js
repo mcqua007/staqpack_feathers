@@ -34,11 +34,9 @@ module.exports = function (app) {
     },
     cloneUrl: {
       type: String,
-      required: true
     },
     hooksUrl: {
       type: String,
-      required: true
     },
 
   }, {
