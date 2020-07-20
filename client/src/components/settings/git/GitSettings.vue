@@ -132,6 +132,7 @@
               description: data[key].description,
               owner: data[key].owner.login,
               avatarUrl: data[key].owner.avatar_url,
+              hooksUrl: data[key].hooks_url,
               commitsUrl: commitUrl,
               private: data[key].private,
             };
