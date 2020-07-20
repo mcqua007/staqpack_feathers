@@ -32,12 +32,16 @@ module.exports = function (app) {
       type: String,
       required: true
     },
-    cloneUrl: {
+    avatarUrl: {
       type: String,
+      required: true
     },
-    hooksUrl: {
-      type: String,
-    },
+    // cloneUrl: {
+    //   type: String,
+    // },
+    // hooksUrl: {
+    //   type: String,
+    // },
 
   }, {
     timestamps: true
