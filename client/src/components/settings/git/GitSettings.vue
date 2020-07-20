@@ -127,12 +127,12 @@
             that.repos[key] = {
               repoId: data[key].id,
               name: data[key].name,
-              full_name: data[key].full_name,
-              repo_url: data[key].html_url,
+              fullName: data[key].full_name,
+              repoUrl: data[key].html_url,
               description: data[key].description,
               owner: data[key].owner.login,
-              avatar_url: data[key].owner.avatar_url,
-              commits_url: commitUrl,
+              avatarUrl: data[key].owner.avatar_url,
+              commitsUrl: commitUrl,
               private: data[key].private,
             };
           } // END FOR LOOP

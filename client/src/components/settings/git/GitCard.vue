@@ -40,16 +40,18 @@
       };
     },
     methods: {
-      syncRepo(index) {
-        console.log("Sync: ", index);
+      syncRepo(data) {
         this.isSyncing = true;
+        //eventually allow user to edit thigns before creation
+        this.$store.dispatch("createGithubRepoProject", data).then(() => {
+          //do something here once done
+          // alert("New Project created!");
+        });
 
         //this.$store.commit("setCurrentGitFormData", index);
         //this.$store.commit("toggleGitForm", this.$store.getters.gitFormState);
         //scroll to top of site
-        setTimeout(() => {
-          this.isSyncing = false;
-        }, 2100);
+
         window.scrollTo(0, 0);
         // console.log("Sync Commit URl: ", repos[index].commits_url);
         // getCommits(repos[index].commits_url, "GITHUB_TOKEN");
