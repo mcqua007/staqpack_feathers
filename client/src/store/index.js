@@ -60,6 +60,49 @@ export default new Vuex.Store({
           });
       });
     },
+    //Github Repo CRUD
+    createGithubRepoProject(context, data) {
+      return new Promise((resolve, reject) => {
+        feathersClient
+          .service("github-repositories")
+          .create(data)
+          .then((res) => {
+            if (context.state.debug) console.log("Veux - Create Github Repo PRoject", res);
+            let projectData = {
+              name: data.name,
+              type: "personal",
+              //team: this.team,
+              description: data.description,
+              githubSync: res._id,
+            };
+            context.dispatch("createProject", projectData);
+            resolve(res);
+          })
+          .catch((e) => {
+            if (context.state.debug) console.error("createGithubRepoProject error", e);
+            reject(e);
+          });
+      });
+    },
+
+    deleteGithubRepoProject(context, payload) {
+      return new Promise((resolve, reject) => {
+        feathersClient
+          .service("github-repositories")
+          .remove(payload.id, {
+            query: payload.query,
+          })
+          .then((res) => {
+            console.log("Action - deleteGithubRepoProject Res:", res);
+            resolve(res);
+          })
+          .catch((e) => {
+            if (context.state.debug) console.error("deleteGithubRepoProject Error:", e);
+            reject(e);
+          });
+      });
+    },
+
     //Project CRUD Operations
     fetchProjects(context, query) {
       return new Promise((resolve, reject) => {
@@ -77,6 +120,7 @@ export default new Vuex.Store({
           });
       });
     },
+
     createProject(context, data) {
       return new Promise((resolve, reject) => {
         feathersClient
@@ -101,6 +145,12 @@ export default new Vuex.Store({
           .remove(projectId)
           .then((res) => {
             context.commit("deleteProject", res._id); //delete project form state projects
+            //if was syynced to githubRep Detle that info out of the DB
+            if (res.githubSync) {
+              context.dispatch('deleteGithubRepoProject', {
+                id: res.githubSync
+              });
+            }
 
             context
               .dispatch("deleteTasks", {
