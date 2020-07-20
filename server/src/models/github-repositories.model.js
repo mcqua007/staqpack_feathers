@@ -36,6 +36,10 @@ module.exports = function (app) {
       type: String,
       required: true
     },
+    commitsUrl: {
+      type: String,
+      required: true
+    },
     // cloneUrl: {
     //   type: String,
     // },
