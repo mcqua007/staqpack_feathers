@@ -4,9 +4,43 @@
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
-  const { Schema } = mongooseClient;
+  const {
+    Schema
+  } = mongooseClient;
   const githubRepositories = new Schema({
-    text: { type: String, required: true }
+    name: {
+      type: String,
+      required: true
+    },
+    repoId: {
+      type: Number,
+      required: true
+    },
+    fullName: {
+      type: String,
+      required: true
+    },
+    owner: {
+      type: String,
+      required: true
+    },
+    private: {
+      type: Boolean,
+      required: true
+    },
+    repoUrl: {
+      type: String,
+      required: true
+    },
+    cloneUrl: {
+      type: String,
+      required: true
+    },
+    hooksUrl: {
+      type: String,
+      required: true
+    },
+
   }, {
     timestamps: true
   });
