@@ -33,7 +33,7 @@ module.exports = function (app) {
       type: Schema.Types.ObjectId,
       ref: 'Users'
     },
-    gitSync: {
+    githubSync: {
       type: Schema.Types.ObjectId,
       ref: 'Github Repositories'
     }
