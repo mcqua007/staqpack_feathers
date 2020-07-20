@@ -37,9 +37,10 @@
             >
               <i
                 :class="{
-                  las: true,
+                  las: !project.githubSync,
                   'la-project-diagram': !project.githubSync,
-                  'la-code-branch': project.githubSync,
+                  'la-github': project.githubSync,
+                  lab: project.githubSync,
                 }"
               ></i>
               {{ project.name }}
