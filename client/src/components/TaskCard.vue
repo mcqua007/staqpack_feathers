@@ -82,7 +82,7 @@
             </div>
           </div>
         </div>
-        <div class="card-main-wrap">
+        <div :class="{ 'card-main-wrap': true, 'due-date-active': task.dueDate }">
           <div
             role="button"
             class="card-title-badge-wrap text-left"
@@ -145,7 +145,7 @@
               </button>
             </div>
           </div>
-          <div v-if="task.dueDate" class="text-muted margin-t-8">Due: {{ dueDate }}</div>
+          <div v-if="task.dueDate" class="due-date">Due: {{ dueDate }}</div>
         </div>
         <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
         <div v-bind:data-card-back="task._id" class="" style="display:none;"></div>
@@ -371,6 +371,16 @@
   }
   .card-main-wrap {
     padding: 0.9em;
+  }
+  .card-main-wrap.due-date-active {
+    padding-bottom: 0;
+  }
+  .due-date {
+    margin: 0.5em 0 0.2em 0;
+    float: right;
+    font-size: 0.85em;
+    color: #bcbcbc;
+    font-style: italic;
   }
   .card-body {
     padding: 0;
