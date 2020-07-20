@@ -3,21 +3,25 @@
     <!-- Component Wrapper -->
     <div class="card">
       <div class="card-body">
-        <span class="card-title git-title">
+        <div class="card-title git-title">
           {{ repoData.name }}
-          <a href="data" target="_blank" class="pull-right">
+          <a href="data" target="_blank" class="push-right">
             <i class="la la-external-link"></i>
           </a>
-        </span>
-        <br />
+        </div>
         <img class="github-avatar-img" v-bind:src="repoData.avatar_url" />
         <span style="color: #777;"> &nbsp;{{ repoData.owner }}</span>
-        <div class="card-text">{{ shortDesc(repoData.description) }}</div>
+        <div class="card-text" v-if="repoData.description">{{ repoData.description }}</div>
+        <div class="card-text" v-else>No description available</div>
         <span v-if="repoData.private" class="badge pull-left visibility-badge">Private</span>
         <span v-if="repoData.private == false" class="badge pull-left visibility-badge"
           >Public</span
         >
-        <button class="btn-secondary sync-button" data-index="key" @click="syncRepo(repoData)">
+        <button
+          :class="{ 'btn-secondary': true, 'sync-button': true, active: isSyncing }"
+          data-index="key"
+          @click="syncRepo(repoData)"
+        >
           <i class="la la-sync"></i>
         </button>
       </div>
@@ -32,32 +36,20 @@
     data() {
       return {
         confirmSync: null,
+        isSyncing: false,
       };
     },
     methods: {
-      shortDesc(data) {
-        //===========================================
-        // Repo Description - Limiting the Characters
-        //===========================================
-
-        let repoDesc = "";
-        if (data != null) {
-          repoDesc = data;
-          if (repoDesc.length > 40) {
-            repoDesc = repoDesc.substring(0, 35);
-            repoDesc += "...";
-          }
-        } else {
-          repoDesc = "No description available";
-        }
-        return repoDesc;
-      },
       syncRepo(index) {
         console.log("Sync: ", index);
+        this.isSyncing = true;
 
-        this.$store.commit("setCurrentGitFormData", index);
-        this.$store.commit("toggleGitForm", this.$store.getters.gitFormState);
+        //this.$store.commit("setCurrentGitFormData", index);
+        //this.$store.commit("toggleGitForm", this.$store.getters.gitFormState);
         //scroll to top of site
+        setTimeout(() => {
+          this.isSyncing = false;
+        }, 2100);
         window.scrollTo(0, 0);
         // console.log("Sync Commit URl: ", repos[index].commits_url);
         // getCommits(repos[index].commits_url, "GITHUB_TOKEN");
@@ -72,9 +64,19 @@
     font-size: 19.5px;
     font-weight: 600;
     text-transform: capitalize;
+    width: 100%;
+  }
+  .push-right {
+    float: right;
   }
   .card-wrap {
     padding: 7px;
+  }
+  .card-text {
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   .sync-button {
     float: right;
@@ -102,5 +104,26 @@
     margin-bottom: 15px;
     margin-top: 9px;
     margin-right: 5px;
+  }
+  .sync-button.active i {
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+  }
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
   }
 </style>
