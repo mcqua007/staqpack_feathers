@@ -3,6 +3,7 @@ const tasks = require('./tasks/tasks.service.js');
 const projects = require('./projects/projects.service.js');
 const teams = require('./teams/teams.service.js');
 const todos = require('./todos/todos.service.js');
+const githubRepositories = require('./github-repositories/github-repositories.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(users);
@@ -10,4 +11,5 @@ module.exports = function (app) {
   app.configure(projects);
   app.configure(teams);
   app.configure(todos);
+  app.configure(githubRepositories);
 };
