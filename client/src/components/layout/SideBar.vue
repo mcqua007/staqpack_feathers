@@ -35,7 +35,14 @@
               v-for="project in projects"
               @click="openProject(project._id, project.name)"
             >
-              <i class="las la-project-diagram"></i> {{ project.name }}
+              <i
+                :class="{
+                  las: true,
+                  'la-project-diagram': !project.githubSync,
+                  'la-code-branch': project.githubSync,
+                }"
+              ></i>
+              {{ project.name }}
               <button class="delete-project-btn" @click="deleteProject(project._id, project.name)">
                 <i class="la la-trash delete-project-icon"></i>
               </button>
