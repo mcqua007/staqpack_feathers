@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 import feathersClient from "@/feathers-client-config.js";
 import router from "../router";
 
@@ -100,6 +101,24 @@ export default new Vuex.Store({
             if (context.state.debug) console.error("deleteGithubRepoProject Error:", e);
             reject(e);
           });
+      });
+    },
+
+    createGithubWebhook(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: "post",
+          url: payload.url,
+          headers: {
+            "Authorization": "Token " + payload.token
+          },
+          data: JSON.stringify(payload.json)
+        }).then((res) => {
+          if (context.state.debug) console.log('CreateWebhook Res', res);
+        }).catch((e) => {
+          if (context.state.debug) console.error("createWebhook error", e);
+          reject(e);
+        })
       });
     },
 
