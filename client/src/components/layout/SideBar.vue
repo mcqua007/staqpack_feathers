@@ -14,9 +14,7 @@
           <li class="m-top-8" role="button" @click="$store.dispatch('logout')">
             <i class="la la-sign-out-alt"></i> Logout
           </li>
-          <li class="m-top-8" role="button" @click="toggleSettings()">
-            <i class="la la-cog"></i> Settings
-          </li>
+          <li class="m-top-8" role="button" @click="toggleSettings()"><i class="la la-cog"></i> Settings</li>
         </ul>
       </div>
       <div class="navItem">
@@ -52,18 +50,16 @@
         </div>
       </div>
       <div class="root-nav-item">
-        <div class="" role="button" @click="openAllTasks()">
-          <i class="la la-tasks"></i> View All Tasks
-        </div>
+        <div class="" role="button" @click="openAllTasks()"><i class="la la-tasks"></i> View All Tasks</div>
       </div>
     </nav>
   </div>
 </template>
 
 <script>
-  import { mapState } from "vuex";
+  import { mapState } from 'vuex';
   export default {
-    name: "SideBar",
+    name: 'SideBar',
     data() {
       return {
         userMenuState: false,
@@ -74,22 +70,20 @@
     methods: {
       openAllTasks() {
         this.$router.push({
-          name: "AllTasks",
+          name: 'AllTasks',
         });
       },
       toggleSettings() {
         this.$router.push({
-          name: "Settings",
+          name: 'Settings',
         });
       },
       deleteProject(projectId, projectName) {
-        let confirmed = confirm(
-          "Permanently delete '" + projectName + "' and its associated tasks ?"
-        );
+        let confirmed = confirm("Permanently delete '" + projectName + "' and its associated tasks ?");
         if (confirmed) {
-          this.$store.dispatch("deleteProject", projectId).then(() => {
+          this.$store.dispatch('deleteProject', projectId).then(() => {
             this.$router.push({
-              name: "AllTasks",
+              name: 'AllTasks',
             });
           });
         }
@@ -103,11 +97,11 @@
       openProject(projectId, projectName) {
         this.$router.push({
           params: { id: projectId, name: projectName },
-          name: "Project", //normally would be project but testing reloading
+          name: 'Project', //normally would be project but testing reloading
         });
       },
     },
-    computed: mapState(["loading"]),
+    computed: mapState(['loading']),
     watch: {
       loading(newValue) {
         if (newValue === false) {
