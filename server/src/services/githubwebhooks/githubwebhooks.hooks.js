@@ -1,23 +1,7 @@
+const checkGithubCommits = require('../../hooks/check-github-commits');
 module.exports = {
   before: {
-    all: [async (context) => {
-      console.log('Webhook - Context: ', context.data);
-      let query = {
-        repoId: context.data.repository.id
-      };
-
-      let res = await context.app.service('projects').get(null, {
-        query
-      });
-      console.log('Response From Projects', res);
-      //   .then(() => {
-      //   console.log('Response From Projects', res);
-      // });
-
-
-
-
-    }],
+    all: [checkGithubCommits()],
     find: [],
     get: [],
     create: [],
