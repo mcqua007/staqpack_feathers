@@ -15,7 +15,7 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [setCreatedById()],
+    create: [setCreatedById],
     update: [],
     patch: [],
     remove: []
