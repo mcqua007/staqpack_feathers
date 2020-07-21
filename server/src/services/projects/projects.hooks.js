@@ -1,11 +1,12 @@
-const { authenticate } = require('@feathersjs/authentication').hooks;
-const { setField } = require('feathers-authentication-hooks');
+const {
+  authenticate
+} = require('@feathersjs/authentication').hooks;
+
+const {
+  setField
+} = require('feathers-authentication-hooks');
 const restrictToMembers = require('../../hooks/restrict-to-members');
 
-const limitToUser = setField({
-  from: 'params.user._id',
-  as: 'params.query.createdBy'
-});
 
 const setCreatedById = setField({
   from: 'params.user._id',
@@ -16,15 +17,15 @@ const setCreatedById = setField({
 
 module.exports = {
   before: {
-    all:  [authenticate('jwt'), restrictToMembers()],
+    all: [authenticate('jwt'), restrictToMembers()],
     find: [restrictToMembers()],
-    get:  [restrictToMembers()],
+    get: [restrictToMembers()],
     create: [
       setCreatedById,
-      restrictToMembers() 
+      restrictToMembers()
     ],
     update: [restrictToMembers()],
-    patch:  [restrictToMembers()],
+    patch: [restrictToMembers()],
     remove: [restrictToMembers()]
   },
 
