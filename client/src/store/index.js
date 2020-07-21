@@ -69,15 +69,6 @@ export default new Vuex.Store({
           .create(data)
           .then((res) => {
             if (context.state.debug) console.log("Veux - Create Github Repo PRoject", res);
-            let projectData = {
-              name: data.name,
-              type: "personal",
-              //team: this.team,
-              description: data.description,
-              githubSync: res._id,
-              repoId: data.repoId,
-            };
-            context.dispatch("createProject", projectData);
             resolve(res);
           })
           .catch((e) => {
