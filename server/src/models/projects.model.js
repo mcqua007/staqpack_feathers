@@ -34,8 +34,8 @@ module.exports = function (app) {
       ref: 'Users'
     },
     githubSync: {
-      type: Schema.Types.ObjectId,
-      ref: 'Github Repositories'
+      type: Boolean,
+      default: true
     },
     repoId: {
       type: Number,

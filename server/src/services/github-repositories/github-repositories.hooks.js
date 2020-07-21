@@ -12,7 +12,9 @@ const setCreatedById = setField({
 
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
+    all: [async (context) => {
+      console.log('GithubRepos Context: ', context);
+    }],
     find: [],
     get: [],
     create: [setCreatedById],
@@ -22,7 +24,9 @@ module.exports = {
   },
 
   after: {
-    all: [],
+    all: [async (context) => {
+      console.log('After GithubRepos Context: ', context);
+    }],
     find: [],
     get: [],
     create: [],

@@ -16,6 +16,10 @@ module.exports = function (app) {
       type: Number,
       required: true
     },
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Projects'
+    },
     fullName: {
       type: String,
       required: true
