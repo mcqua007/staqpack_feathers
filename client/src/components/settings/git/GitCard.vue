@@ -41,27 +41,36 @@
       syncRepo(data) {
         this.isSyncing = true;
         console.log('data: ', data); //eventually allow user to edit thigns before creation
-        this.$store.dispatch('createGithubRepoProject', data).then(() => {
-          //do something here once done
-          // alert("New Project created!");
-          //add webhook
-          const json = {
-            'name': 'web',
-            'active': true,
-            'events': ['push'],
-            'config': {
-              'url': 'http://cacd9cb9cab1.ngrok.io/githubwebhooks/',
-              'content_type': 'json',
-            },
-          };
-          let webhookJson = {
-            json: json,
-            token: process.env.VUE_APP_GITHUB_TOKEN,
-            url: data.hooksUrl,
-          };
-          console.log('webhookJSON: ', webhookJson);
-          this.$store.dispatch('createGithubWebhook', webhookJson).then(() => {
-            //do something after webhook is created
+        let projectData = {
+          name: data.name,
+          type: 'personal',
+          //team: this.team,
+          description: data.description,
+          repoId: data.repoId,
+        };
+        this.$store.dispatch('createProject', projectData).then((res) => {
+          data.projectId = res._id;
+          console.log('data after poject: ', data);
+          this.$store.dispatch('createGithubRepoProject', data).then(() => {
+            //add webhook
+            const json = {
+              'name': 'web',
+              'active': true,
+              'events': ['push'],
+              'config': {
+                'url': 'http://cacd9cb9cab1.ngrok.io/githubwebhooks/',
+                'content_type': 'json',
+              },
+            };
+            let webhookJson = {
+              json: json,
+              token: process.env.VUE_APP_GITHUB_TOKEN,
+              url: data.hooksUrl,
+            };
+            console.log('webhookJSON: ', webhookJson);
+            this.$store.dispatch('createGithubWebhook', webhookJson).then(() => {
+              //do something after webhook is created
+            });
           });
         });
 
