@@ -36,6 +36,9 @@ module.exports = function (app) {
     githubSync: {
       type: Schema.Types.ObjectId,
       ref: 'Github Repositories'
+    },
+    repoId: {
+      type: Number,
     }
   }, {
     timestamps: true

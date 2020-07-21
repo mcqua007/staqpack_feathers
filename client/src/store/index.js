@@ -75,6 +75,7 @@ export default new Vuex.Store({
               //team: this.team,
               description: data.description,
               githubSync: res._id,
+              repoId: data.repoId,
             };
             context.dispatch("createProject", projectData);
             resolve(res);
