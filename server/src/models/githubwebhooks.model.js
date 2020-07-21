@@ -4,9 +4,11 @@
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
-  const { Schema } = mongooseClient;
+  const {
+    Schema
+  } = mongooseClient;
   const githubwebhooks = new Schema({
-    text: { type: String, required: true }
+    data: String,
   }, {
     timestamps: true
   });
