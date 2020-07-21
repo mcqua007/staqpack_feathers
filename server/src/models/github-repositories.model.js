@@ -40,11 +40,12 @@ module.exports = function (app) {
       type: String,
       required: true
     },
-    // cloneUrl: {
-    //   type: String,
-    // },
     hooksUrl: {
       type: String,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'Users'
     },
 
   }, {
