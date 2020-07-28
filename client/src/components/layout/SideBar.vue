@@ -1,6 +1,6 @@
 <template lang="html">
   <!-- eslint-disable -->
-  <div v-bind:class="{ 'sidebar-nav': true, expanded: $store.getters.sideBarState == true }">
+  <div v-bind:class="{ 'sidebar-nav': true, 'expanded': $store.getters.sideBarState == true }">
     <nav class="text-left">
       <div class="root-nav-item" role="button" tabindex="0" @click="toggleUserMenu()">
         <i class="la la-user-circle"></i> {{ $store.getters.user.email }}
@@ -8,7 +8,7 @@
       <div
         v-show="userMenuState"
         class="inner-menu"
-        :style="{ borderTop: '2px solid ' + this.$store.getters.themeColor }"
+        :style="{ 'border-top': '2px solid ' + this.$store.getters.themeColor }"
       >
         <ul>
           <li class="m-top-8" role="button" @click="$store.dispatch('logout')">
@@ -24,7 +24,7 @@
         <div
           v-show="projectMenuState"
           class="inner-menu"
-          :style="{ borderTop: '2px solid ' + this.$store.getters.themeColor }"
+          :style="{ 'border-top': '2px solid ' + this.$store.getters.themeColor }"
         >
           <ul>
             <li
@@ -35,10 +35,10 @@
             >
               <i
                 :class="{
-                  las: !project.githubSync,
+                  'las': !project.githubSync,
                   'la-project-diagram': !project.githubSync,
                   'la-github': project.githubSync,
-                  lab: project.githubSync,
+                  'lab': project.githubSync,
                 }"
               ></i>
               {{ project.name }}
