@@ -12,9 +12,9 @@ module.exports = (options = {}) => {
     const {
       user
     } = context.params;
-    console.log('query: ', context.params.query);
-    console.log('context: ', context);
-    console.log('User: ', user);
+    // console.log('query: ', context.params.query);
+    // console.log('context: ', context);
+    // console.log('User: ', user);
 
 
     if ((context.method === 'find' || context.method === 'get') && (context.params.query != undefined && !context.params.query.teamId)) {
