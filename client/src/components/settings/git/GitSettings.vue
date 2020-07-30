@@ -10,12 +10,7 @@
         <div class="row margin-top-15">
           <div class="col-sm-4 col-12 margin-top-10">
             <label>Github Username</label>
-            <input
-              type="text"
-              class="form-control"
-              v-model="githubUsername"
-              placeholder="archer51"
-            />
+            <input type="text" class="form-control" v-model="githubUsername" placeholder="archer51" />
           </div>
           <div class="col-sm-6 col-12 margin-top-10">
             <label>Github Token</label>
@@ -64,12 +59,12 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import GitCard from "@/components/settings/git/GitCard.vue";
+  import axios from 'axios';
+  import GitCard from '@/components/settings/git/GitCard.vue';
   // import GitForm from '@/components/settings/GitForm.vue'
 
   export default {
-    name: "GitSettings",
+    name: 'GitSettings',
     data() {
       return {
         sliceStrFeat: null,
@@ -91,7 +86,7 @@
       },
       prepString(str) {
         let newStr = str.toLowerCase();
-        newStr = newStr.replace(/\s/g, "");
+        newStr = newStr.replace(/\s/g, '');
         return newStr;
       },
       getRepos(url, token) {
@@ -101,11 +96,11 @@
         var that = this;
 
         const headers = {
-          "Content-Type": "application/json",
-          Authorization: "Token " + token,
+          'Content-Type': 'application/json',
+          Authorization: 'Token ' + token,
         };
         axios({
-          method: "get",
+          method: 'get',
           url: url,
           headers: headers,
           // auth: { //this works, and auth by token was working but stopped ? -- look into it ?
@@ -113,16 +108,11 @@
           //   password: 'password_here'
           // }
         }).then(function(response) {
-          console.log("Axios Data: ", response.data);
+          console.log('Axios Data: ', response.data);
           let data = response.data;
           that.repos = {};
           for (var key in data) {
-            let commitUrl =
-              "https://api.github.com/repos/" +
-              data[key].owner.login +
-              "/" +
-              data[key].name +
-              "/commits";
+            let commitUrl = 'https://api.github.com/repos/' + data[key].owner.login + '/' + data[key].name + '/commits';
 
             that.repos[key] = {
               repoId: data[key].id,
@@ -138,7 +128,7 @@
             };
           } // END FOR LOOP
 
-          console.log("repo array: ", that.repos);
+          console.log('repo array: ', that.repos);
         });
       },
       async getCommits(commitsUrl, token) {
@@ -149,11 +139,11 @@
         // }
 
         const headers = {
-          Authorization: "Token " + token,
+          Authorization: 'Token ' + token,
         };
         const url = commitsUrl;
         const response = await fetch(url, {
-          method: "GET",
+          method: 'GET',
           headers: headers,
         });
         const result = await response.json();
@@ -162,15 +152,12 @@
         // Testing With Console console.log
         //===================================
 
-        console.log("Commits Response:", JSON.stringify(result));
+        console.log('Commits Response:', JSON.stringify(result));
 
         //  Cycles Through All commits then checks if commit has keywords if so, it slices and lowers the messages to be stored and compared tocard titles(feats) and card todos
 
         for (var i in result) {
-          console.log(
-            "Most Recent Commit Message " + i + " :",
-            JSON.stringify(result[i].commit.message)
-          );
+          console.log('Most Recent Commit Message ' + i + ' :', JSON.stringify(result[i].commit.message));
           // let lastCommit = result[i].commit.message;
 
           this.sliceStrFeat = null; //re-initlize
@@ -179,13 +166,13 @@
           this.commitMessageSearch(result[i].commit.message);
 
           if (this.sliceStrFeat != null) {
-            console.log("PrepString Feat " + i + " : ", this.prepString(this.sliceStrFeat));
+            console.log('PrepString Feat ' + i + ' : ', this.prepString(this.sliceStrFeat));
             //Input Into Feat Array
             this.commitFeatArray.push(this.prepString(this.sliceStrFeat));
           }
 
           if (this.sliceStrTodo != null) {
-            console.log("PrepString Todo " + i + " : ", this.prepString(this.sliceStrTodo));
+            console.log('PrepString Todo ' + i + ' : ', this.prepString(this.sliceStrTodo));
 
             //Input into Todo Array
             this.commitTodoArray.push(this.prepString(this.sliceStrTodo));
@@ -193,23 +180,23 @@
         } //END FOR LOOP
 
         if (this.commitTodoArray) {
-          console.log("Todo Array: ", JSON.stringify(this.commitTodoArray));
+          console.log('Todo Array: ', JSON.stringify(this.commitTodoArray));
         }
         if (this.commitFeatArray) {
-          console.log("Feat Array: ", JSON.stringify(this.commitFeatArray));
+          console.log('Feat Array: ', JSON.stringify(this.commitFeatArray));
         }
         return result;
       },
       commitMessageSearch(commit) {
-        var searchForFeat = commit.search("@feat:");
-        var searchForTodo = commit.search("@todo:");
+        var searchForFeat = commit.search('@feat:');
+        var searchForTodo = commit.search('@todo:');
 
         //=======================================
         // Search for feat in commit Message
         //=======================================
 
         if (searchForFeat != -1 && searchForTodo == -1) {
-          console.log("Match! Feat Position:", searchForFeat);
+          console.log('Match! Feat Position:', searchForFeat);
 
           this.sliceStrFeat = commit.slice(this.addToString(searchForFeat, 6));
         }
@@ -217,31 +204,25 @@
         // Search for todo in commit message
         //=======================================
         else if (searchForTodo != -1 && searchForFeat == -1) {
-          console.log("Match! Todo Position:", searchForTodo);
+          console.log('Match! Todo Position:', searchForTodo);
           this.sliceStrTodo = commit.slice(this.addToString(searchForTodo, 6));
         }
         //=======================================
         // If todo and Feat are in one commit
         //=======================================
         else if (searchForTodo != -1 && searchForFeat != -1) {
-          console.log("Match! Todo Position:", searchForTodo);
-          console.log("Match! Feat Position:", searchForFeat);
+          console.log('Match! Todo Position:', searchForTodo);
+          console.log('Match! Feat Position:', searchForFeat);
 
           // If @todo: comes before @feat:
           if (searchForTodo < searchForFeat) {
             this.sliceStrFeat = commit.slice(this.this.addToString(searchForFeat, 6));
-            this.sliceStrTodo = commit.slice(
-              this.this.addToString(searchForTodo, 6),
-              searchForFeat
-            );
+            this.sliceStrTodo = commit.slice(this.this.addToString(searchForTodo, 6), searchForFeat);
           }
           // If @todo: comes after @feat:
           else {
-            this.sliceStrFeat = commit.slice(
-              this.this.addToString(searchForFeat, 6),
-              searchForTodo
-            );
-            this.sliceStrTodo = commit.slice(this.this.addToString(searchForTodo, 6));
+            this.sliceStrFeat = commit.slice(this.addToString(searchForFeat, 6), searchForTodo);
+            this.sliceStrTodo = commit.slice(this.addToString(searchForTodo, 6));
           }
         }
 
@@ -250,20 +231,20 @@
         //=======================================
 
         if (searchForTodo == -1 && searchForFeat == -1) {
-          var searchForFeat1 = commit.search("@feat");
-          var searchForTodo1 = commit.search("@todo");
+          var searchForFeat1 = commit.search('@feat');
+          var searchForTodo1 = commit.search('@todo');
 
           if (searchForTodo1 != -1 || searchForFeat1 != -1) {
-            console.log("You are missing the, : from @feat: or @todo:");
+            console.log('You are missing the, : from @feat: or @todo:');
           } else {
-            console.log("No Match!");
+            console.log('No Match!');
           }
         }
       },
       saveGithubSettings() {
         //store like theme also in DB, but for now use local storage
-        localStorage.setItem("githubtoken", this.githubToken);
-        localStorage.setItem("githubusername", this.githubUsername);
+        localStorage.setItem('githubtoken', this.githubToken);
+        localStorage.setItem('githubusername', this.githubUsername);
         // TO DO:
         // POST WITH AJAX TO ENDPOINT
         // THEN SHOW REPOS
@@ -271,8 +252,8 @@
         //this.getRepos("https://api.github.com/user/repos?visibility=all", this.githubToken);
       },
       syncRepo(index) {
-        console.log("Sync: ", this.repos[index]);
-        console.log("Sync Commit URl: ", this.repos[index].commits_url);
+        console.log('Sync: ', this.repos[index]);
+        console.log('Sync Commit URl: ', this.repos[index].commits_url);
 
         // getCommits(repos[index].commits_url, process.env.VUE_APP_GITHUB_TOKEN));
       },
@@ -283,10 +264,7 @@
     mounted() {
       //for testing purposes only remove after, and save key or have user sign in using another method
       // this.getRepos("https://api.github.com/user/repos?visibility=all", localStorage.getItem('githubToken'));
-      this.getRepos(
-        "https://api.github.com/user/repos?visibility=all",
-        process.env.VUE_APP_GITHUB_TOKEN
-      );
+      this.getRepos('https://api.github.com/user/repos?visibility=all', process.env.VUE_APP_GITHUB_TOKEN);
     },
   };
 </script>
