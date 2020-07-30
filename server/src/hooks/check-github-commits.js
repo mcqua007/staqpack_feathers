@@ -1,47 +1,58 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
-const {
-  Forbidden
-} = require('@feathersjs/errors');
+// const {
+//   Forbidden
+// } = require('@feathersjs/errors');
 // eslint-disable-next-line no-unused-vars
+
 module.exports = (options = {}) => {
   return async context => {
     console.log('Webhook - Context: ', context.data.commits);
-    let query = {
-      repoId: context.data.repository.id,
-    };
 
-    let res = await context.app.service('github-repositories').find(null, {
-      query
+    // First See if RepoId matches any of the projects (it should since a hook was fired)
+    // Then use projectId to receive that projects tasks
+
+    let res = await context.app.service('github-repositories').find({
+      query: {
+        repoId: context.data.repository.id,
+      }
     });
-    let projectId = res.projectId;
-    let tasks = await context.app.service('tasks').find(null, {
-      projectId: projectId
+    let projectId = res.data[0].projectId;
+    //console.log('Project Id: ', projectId);
+    let tasks = await context.app.service('tasks').find({
+      query: {
+        projectId: projectId
+      }
     });
 
-    console.log('Response From GitHubRepos', res);
-    console.log('TaskData Res: ', tasks);
+    //Cycle through commit messages then push ones that have a keyword in them to array
+    // Compare tasks titles to messages extracted then, mark those tasks as complete
+    // To the same as above with todos
 
     let commits = context.data.commits;
     let feats = [];
-    commits.forEach(function (commit, i) {
-      console.log('InforEach', commit, i);
 
-      //FINE UP TO HERE
-      var searchForFeat = commit.search('@feat:');
-      console.log('Search: ', searchForFeat);
+    commits.forEach(function (commit, i) {
+
+      var searchForFeat = commit.message.toLowerCase().search('@feat:');
       var sliceStrFeat = '';
+
       if (searchForFeat != -1) {
         console.log('Match! Feat Position:', searchForFeat);
-        sliceStrFeat = commit.slice(this.addToString(searchForFeat, 6));
+        sliceStrFeat = commit.message.slice(searchForFeat + 6);
+        feats.push(sliceStrFeat.trim()); //push onto feats array
       }
-
-      console.log('Sliced Str: ', sliceStrFeat.trim().toLowerCase());
-      feats.push(sliceStrFeat.trim().toLowerCase()); //push onto feats array
     });
-    // let userId = res.createdBy;
 
-
+    tasks.data.forEach((task) => {
+      if (feats.includes(task.name.toLowerCase().trim())) {
+        context.app.service('tasks').patch(task._id, {
+          completed: true
+        }).then(function (res) {
+          console.log('Task patch res: ', res);
+        });
+      }
+    });
 
     return context;
   };
