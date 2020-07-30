@@ -18,12 +18,12 @@
 </template>
 
 <script>
-  import TaskCard from "@/components/TaskCard.vue";
-  import feathersClient from "@/feathers-client-config.js";
+  import TaskCard from '@/components/TaskCard.vue';
+  import feathersClient from '@/feathers-client-config.js';
   //import { mapState } from 'vuex';
 
   export default {
-    name: "Project",
+    name: 'Project',
     components: {
       TaskCard,
     },
@@ -36,11 +36,9 @@
     methods: {},
     computed: {
       tasks() {
-        console.log("Computed - allTasks Getters: ", this.$store.getters.allTasks);
-        let currentTasks = this.$store.getters.allTasks.filter(
-          (task) => task.projectId == this.$route.params.id
-        );
-        console.log("Computed curentTasks: ", currentTasks);
+        console.log('Computed - allTasks Getters: ', this.$store.getters.allTasks);
+        let currentTasks = this.$store.getters.allTasks.filter((task) => task.projectId == this.$route.params.id);
+        console.log('Computed curentTasks: ', currentTasks);
         return currentTasks;
       },
       name() {
@@ -53,7 +51,7 @@
       },
     },
     created() {
-      console.log("Project Created: ", this.$route.params.id);
+      console.log('Project Created: ', this.$route.params.id);
       //this is not working any more when a new class is created
       //probably move some where else. This will see if another user adds a task then would be piped to this project
 
@@ -65,9 +63,13 @@
       //   }
       // });
       //not doing anything was trying to test
-      feathersClient
-        .service("tasks")
-        .on("removed", (message) => console.log("task removed - message", message));
+      feathersClient.service('tasks').on('removed', (message) => console.log('task removed - message', message));
+
+      //Must only do this for when completed is toggle form the github hook
+      feathersClient.service('tasks').on('patched', (patchedTask) => {
+        let index = this.$store.getters.allTasks.findIndex((obj) => obj._id == patchedTask._id);
+        this.$store.getters.allTasks.splice(index, index, patchedTask);
+      });
     },
   };
 </script>
