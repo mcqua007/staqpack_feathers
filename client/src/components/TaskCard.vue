@@ -10,24 +10,14 @@
         }"
       >
         <div class="btn-group" role="group">
-          <button
-            v-bind:class="{ btn: true, 'btn-outline-primary': true }"
-            :disabled="task.completed"
-          >
+          <button v-bind:class="{ btn: true, 'btn-outline-primary': true }" :disabled="task.completed">
             <i class="la la-calendar"></i>
           </button>
-          <button
-            v-bind:class="{ btn: true, 'btn-outline-danger': true }"
-            :disabled="task.completed"
-          >
+          <button v-bind:class="{ btn: true, 'btn-outline-danger': true }" :disabled="task.completed">
             <i class="la la-images"></i>
           </button>
           <div class="btn-group">
-            <button
-              class="btn btn-outline-secondary dropdown-btn"
-              aria-haspopup="true"
-              @click="toggleDropdown()"
-            >
+            <button class="btn btn-outline-secondary dropdown-btn" aria-haspopup="true" @click="toggleDropdown()">
               <i
                 :class="{
                   'dropdown-btn': true,
@@ -56,9 +46,7 @@
                 </button>
               </div>
               <div v-show="!backActive">
-                <button class="dropdown-item" @click="toggleBack()">
-                  <i class="la la-arrow-left"></i>Show Back
-                </button>
+                <button class="dropdown-item" @click="toggleBack()"><i class="la la-arrow-left"></i>Show Back</button>
               </div>
               <div v-show="backActive">
                 <button class="dropdown-item" @click="toggleBack()">
@@ -116,8 +104,8 @@
           </div>
           <div class="card-body text-left">
             <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
-            <hr />
             <div v-show="!todosHidden">
+              <hr />
               <div v-for="(todo, index) in todos" :key="index">
                 <TodoList v-bind:todo="todo"></TodoList>
               </div>
@@ -155,15 +143,15 @@
 </template>
 
 <script>
-  import TodoList from "@/components/TodoList.vue";
+  import TodoList from '@/components/TodoList.vue';
   //import { mapState } from "vuex";
 
   export default {
-    name: "TaskCard",
+    name: 'TaskCard',
     components: {
       TodoList,
     },
-    props: ["task"],
+    props: ['task'],
     data() {
       return {
         todos: null,
@@ -190,16 +178,14 @@
     methods: {
       //maybe can combine these two below into one function such as toggleCompleted
       toggleCompletedTask(taskId) {
-        this.$store
-          .dispatch("patchTask", { id: taskId, update: { completed: !this.task.completed } })
-          .then(() => {
-            //do something here once delete is complete
-            this.$store.commit("UPDATE_TASK_COMPLETED", {
-              taskId: taskId,
-              newValue: !this.task.completed,
-            });
-            this.dropdownExpanded = false;
+        this.$store.dispatch('patchTask', { id: taskId, update: { completed: !this.task.completed } }).then(() => {
+          //do something here once delete is complete
+          this.$store.commit('UPDATE_TASK_COMPLETED', {
+            taskId: taskId,
+            newValue: !this.task.completed,
           });
+          this.dropdownExpanded = false;
+        });
       },
       toggleBadge(taskId) {
         clearTimeout(this.timer);
@@ -210,14 +196,12 @@
           this.task.severity = 1;
         }
         this.timer = setTimeout(() => {
-          this.$store
-            .dispatch("patchTask", { id: taskId, update: { severity: this.task.severity } })
-            .then(() => {
-              this.$store.commit("UPDATE_TASK_BADGE", {
-                taskId: taskId,
-                newValue: this.task.severity,
-              });
+          this.$store.dispatch('patchTask', { id: taskId, update: { severity: this.task.severity } }).then(() => {
+            this.$store.commit('UPDATE_TASK_BADGE', {
+              taskId: taskId,
+              newValue: this.task.severity,
             });
+          });
         }, 2300);
       },
       deleteTask(taskId, projectId) {
@@ -232,7 +216,7 @@
           },
         };
 
-        this.$store.dispatch("deleteTasks", data).then(() => {
+        this.$store.dispatch('deleteTasks', data).then(() => {
           //do something here once delete is complete
         });
       },
@@ -253,15 +237,15 @@
           projectId: projectId,
           completed: false,
         };
-        this.$store.dispatch("createTodo", data).then((res) => {
-          console.log("Todo creation res: ", res);
+        this.$store.dispatch('createTodo', data).then((res) => {
+          console.log('Todo creation res: ', res);
           //if success addTodo to dom
           this.todos.push(res);
           this.todoInput = null;
         });
       },
       getTodos() {
-        this.$store.dispatch("fetchTodos", { taskId: this.task._id }).then((res) => {
+        this.$store.dispatch('fetchTodos', { taskId: this.task._id }).then((res) => {
           this.todos = res.data;
         });
       },
@@ -278,16 +262,16 @@
       //this clicks out of the dropdown if someone clicks somehwere else
       mainClick(newEvent) {
         if (
-          !newEvent.target.className.toString().includes("dropdown-btn") &&
-          !newEvent.target.className.toString().includes("dropdown-item")
+          !newEvent.target.className.toString().includes('dropdown-btn') &&
+          !newEvent.target.className.toString().includes('dropdown-item')
         ) {
           this.dropdownExpanded = false;
         }
       },
     },
     created() {
-      console.log("taskCompled: ", this.task.completed);
-      console.log("Created TaskCard -Fired: ", this.task._id);
+      console.log('taskCompled: ', this.task.completed);
+      console.log('Created TaskCard -Fired: ', this.task._id);
       this.getTodos();
     },
   };
@@ -332,8 +316,7 @@
     outline: none !important;
   }
   div.card-shadow {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-      0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     transition: transform 0.3s ease, box-shadow 0.3s linear;
   }
   div.card-shadow:hover {
