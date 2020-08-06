@@ -1,5 +1,7 @@
 // Initializes the `githubwebhooks` service on path `/githubwebhooks`
-const { Githubwebhooks } = require('./githubwebhooks.class');
+const {
+  Githubwebhooks
+} = require('./githubwebhooks.class');
 const createModel = require('../../models/githubwebhooks.model');
 const hooks = require('./githubwebhooks.hooks');
 
@@ -10,10 +12,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/githubwebhooks', new Githubwebhooks(options, app));
+  app.use('/webhooks/github', new Githubwebhooks(options, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('githubwebhooks');
+  const service = app.service('/webhooks/github');
 
   service.hooks(hooks);
 };
