@@ -9,12 +9,7 @@
           <div class="row">
             <div class="form-group col-md-4">
               <label for="issueDescInput">Task</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Name of new task..."
-                v-model="name"
-              />
+              <input type="text" class="form-control" placeholder="Name of new task..." v-model="name" />
             </div>
             <div class="form-group col-md-4">
               <label for="issueSeverityInput">Severity</label>
@@ -29,9 +24,7 @@
               <label for="issueProjectId">Project</label>
               <select class="form-control" v-model="projectId">
                 <option value="null" disabled>[Choose Project]</option>
-                <option v-for="project in projects" :value="project._id" :key="project.name">{{
-                  project.name
-                }}</option>
+                <option v-for="project in projects" :value="project._id" :key="project.name">{{ project.name }}</option>
               </select>
             </div>
             <!-- use v-if project is a team project then allow to assign -->
@@ -44,12 +37,7 @@
           <div class="row flex-end">
             <div class="form-group col-12 col-md-6">
               <label for="description">Description (optional)</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Describe the issue..."
-                v-model="description"
-              />
+              <input type="text" class="form-control" placeholder="Describe the issue..." v-model="description" />
             </div>
             <div class="form-group col-12 col-md-3">
               <label for="dueDate">Due Date (optional)</label>
@@ -83,22 +71,20 @@
 </template>
 
 <script>
-  import feathersClient from "@/feathers-client-config.js";
-  //import io from 'socket.io-client'
-  import { mapState } from "vuex";
+  import { mapState } from 'vuex';
 
   export default {
-    name: "TaskForm",
-    props: ["currentProjectId"],
+    name: 'TaskForm',
+    props: ['currentProjectId'],
     data() {
       return {
         name: null,
         alertType: null,
-        severity: "1",
+        severity: '1',
         assignTo: null,
         description: null,
         feedback: null,
-        projectId: null,
+        projectId: this.$route.name == 'Project' ? this.$route.params.id : null,
         projects: null,
         taskDueDate: null,
       };
@@ -115,7 +101,7 @@
         }, timeOut);
       },
       hideTaskForm() {
-        this.$store.commit("toggleTaskForm", this.$store.getters.taskFormState);
+        this.$store.commit('toggleTaskForm', this.$store.getters.taskFormState);
       },
       submitTaskForm() {
         if (this.name && this.projectId) {
@@ -127,86 +113,51 @@
             projectId: this.projectId,
             dueDate: this.taskDueDate,
           };
-          console.log("formData: ", formData);
+          console.log('formData: ', formData);
           this.$store
-            .dispatch("createTask", formData)
+            .dispatch('createTask', formData)
             .then(() => {
               //RESETING FORM VALUES
               this.name = null;
-              this.severity = "1";
+              this.severity = '1';
               //this.assignTo = null;
               this.description = null;
               this.projectId = null;
               this.taskDueDate = null;
               //Emit event to main down to project d Task that where submitted
-              this.$emit("taskFormInput");
-              this.alertFeedback("You new task has been created.", "primary");
+              this.$emit('taskFormInput');
+              this.alertFeedback('You new task has been created.', 'primary');
             })
             .catch((e) => {
-              this.alertFeedback("Error: " + e, "danger"); //alert error feedback
+              this.alertFeedback('Error: ' + e, 'danger'); //alert error feedback
             });
         } else {
-          this.alertFeedback("You must have a Task Name and a choose a Project!", "danger");
+          this.alertFeedback('You must have a Task Name and a choose a Project!', 'danger');
         }
       },
     },
-    computed: mapState(["loading"]),
+    computed: mapState(['loading']),
     watch: {
-      loading(newValue, oldValue) {
-        console.log(`Updating from ${oldValue} to ${newValue}`);
+      loading(newValue) {
         if (newValue === false) {
           this.projects = this.$store.getters.projects;
-          console.log("taskform - projects watch", this.projects);
+        }
+      },
+      $route() {
+        if (this.$route.name == 'Project') {
+          this.projectId = this.$route.params.id; //refering to project id
         }
       },
     },
     created() {
       //make taskForm select option the same as the project it is in
-      if (this.$route.name === "Project") {
+      if (this.$route.name == 'Project') {
         this.projectId = this.$route.params.id; //refering to project id
       }
 
       console.log(this.$route);
-      //end make project selected
-      feathersClient
-        .service("tasks")
-        .find()
-        .then((res) => {
-          console.log("Feathers service - task find", res);
-        });
-
-      feathersClient.service("tasks").on("created", (message) => {
-        console.log("New Tasks created:", message);
-      });
     },
-    mounted() {
-      //this.$store.dispatch('fetchProjects', { query : {name: 'project 1'}}); //how to query
-      // feathersClient
-      //   .service("tasks")
-      //   .find()
-      //   .then((res) => {
-      //     console.log("Feathers service - task find", res);
-      //   });
-      // feathersClient.service("tasks").on("created", (message) => {
-      //   console.log("New Tasks created:", message);
-      // });
-      //can use socket emit in side authenticated like here  used for example
-      // const socket = io('http://localhost:3030');
-      // socket.emit('create', 'authentication', {
-      //   strategy: 'local',
-      //   email: 'john@test.com',
-      //   password: 'password2'
-      // }, function(error, authResult) {
-      //   console.log(authResult);
-      //   // authResult will be {"accessToken": "your token", "user": user }
-      //   // You can now send authenticated messages to the server
-      //     socket.emit('find', 'tasks', (error, data) => {
-      //         console.log('socket - Found all created tasks', data);
-      //         console.log('socker error', error);
-      //        });
-      //    });
-      //end socket test
-    },
+    mounted() {},
   };
 </script>
 
