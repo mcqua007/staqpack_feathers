@@ -6,12 +6,7 @@
           <h3>{{ name }}</h3>
         </div>
       </div>
-      <select class="form-control sort-select" v-model="sortVal" @change="sortTasks">
-        <option value="new">Newest Tasks</option>
-        <option value="old">Old Tasks</option>
-        <option value="high">Highest Priority</option>
-        <option value="low">Lowest Priority</option>
-      </select>
+      <TaskSort></TaskSort>
     </div>
     <hr />
     <div class="row">
@@ -25,6 +20,7 @@
 
 <script>
   import TaskCard from '@/components/TaskCard.vue';
+  import TaskSort from '@/components/TaskSort.vue';
   import feathersClient from '@/feathers-client-config.js';
   //import { mapState } from 'vuex';
 
@@ -32,42 +28,12 @@
     name: 'Project',
     components: {
       TaskCard,
+      TaskSort,
     },
     data() {
-      return {
-        sortVal: 'new',
-      };
+      return {};
     },
-    methods: {
-      sortTasks() {
-        this.$store.commit('SORT_TASKS', this.sortSwitch(this.sortVal));
-      },
-      sortSwitch(val) {
-        switch (val) {
-          case 'new':
-            return {
-              sortBy: 'createdAt',
-              ascending: false,
-            };
-          case 'old':
-            return {
-              sortBy: 'createdAt',
-              ascending: true,
-            };
-
-          case 'high':
-            return {
-              sortBy: 'severity',
-              ascending: false,
-            };
-          case 'low':
-            return {
-              sortBy: 'severity',
-              ascending: true,
-            };
-        }
-      },
-    },
+    methods: {},
     computed: {
       tasks() {
         let currentTasks = this.$store.getters.allTasks.filter((task) => task.projectId == this.$route.params.id);
@@ -105,10 +71,6 @@
     display: inline-flex;
     align-items: center;
     width: 100%;
-  }
-  .sort-select {
-    max-width: 160px;
-    margin-left: auto;
   }
 
   /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */

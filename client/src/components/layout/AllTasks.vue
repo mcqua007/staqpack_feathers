@@ -7,12 +7,7 @@
           <h3>All Tasks</h3>
         </div>
       </div>
-      <select class="form-control sort-select" v-model="sortVal" @change="sortTasks">
-        <option value="new">Newest Tasks</option>
-        <option value="old">Old Tasks</option>
-        <option value="high">Highest Priority</option>
-        <option value="low">Lowest Priority</option>
-      </select>
+      <TaskSort></TaskSort>
     </div>
     <hr />
     <div class="row">
@@ -26,6 +21,7 @@
 
 <script>
   import TaskCard from '@/components/TaskCard.vue';
+  import TaskSort from '@/components/TaskSort.vue';
   //import feathersClient from "@/feathers-client-config.js";
   //import { mapState } from 'vuex';
 
@@ -33,43 +29,13 @@
     name: 'AllTasks',
     components: {
       TaskCard,
+      TaskSort,
     },
     //props: ['responseData'],
     data() {
-      return {
-        sortVal: 'new',
-      };
+      return {};
     },
-    methods: {
-      sortTasks() {
-        this.$store.commit('SORT_TASKS', this.sortSwitch(this.sortVal));
-      },
-      sortSwitch(val) {
-        switch (val) {
-          case 'new':
-            return {
-              sortBy: 'createdAt',
-              ascending: false,
-            };
-          case 'old':
-            return {
-              sortBy: 'createdAt',
-              ascending: true,
-            };
-
-          case 'high':
-            return {
-              sortBy: 'severity',
-              ascending: false,
-            };
-          case 'low':
-            return {
-              sortBy: 'severity',
-              ascending: true,
-            };
-        }
-      },
-    },
+    methods: {},
     computed: {
       tasks() {
         return this.$store.getters.allTasks;
