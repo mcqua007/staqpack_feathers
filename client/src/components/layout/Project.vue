@@ -35,7 +35,6 @@
     },
     data() {
       return {
-        //id: this.$route.params.id,
         sortVal: 'new',
       };
     },
