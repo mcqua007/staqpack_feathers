@@ -1,5 +1,7 @@
 // Initializes the `tasks` service on path `/tasks`
-const { Tasks } = require('./tasks.class');
+const {
+  Tasks
+} = require('./tasks.class');
 const createModel = require('../../models/tasks.model');
 const hooks = require('./tasks.hooks');
 
@@ -7,7 +9,8 @@ module.exports = function (app) {
   const options = {
     Model: createModel(app),
     paginate: app.get('paginate'),
-    multi: [ 'remove', 'patch' ]  //added to enable multiple, items be deleted at once 
+    multi: ['remove', 'patch'], //added to enable multiple, items be deleted at once 
+    events: ['webhook']
   };
 
   // Initialize our service with any options it requires
