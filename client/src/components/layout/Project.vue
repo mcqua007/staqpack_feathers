@@ -33,7 +33,6 @@
     components: {
       TaskCard,
     },
-    //props: ['responseData'],
     data() {
       return {
         //id: this.$route.params.id,
@@ -72,9 +71,7 @@
     },
     computed: {
       tasks() {
-        console.log('Computed - allTasks Getters: ', this.$store.getters.allTasks);
         let currentTasks = this.$store.getters.allTasks.filter((task) => task.projectId == this.$route.params.id);
-        console.log('Computed curentTasks: ', currentTasks);
         return currentTasks;
       },
       name() {
