@@ -6,6 +6,12 @@
           <h3>{{ name }}</h3>
         </div>
       </div>
+      <select class="form-control sort-select" v-model="sortVal" @change="sortTasks">
+        <option value="new">Newest Tasks</option>
+        <option value="old">Old Tasks</option>
+        <option value="high">Highest Priority</option>
+        <option value="low">Lowest Priority</option>
+      </select>
     </div>
     <hr />
     <div class="row">
@@ -31,9 +37,39 @@
     data() {
       return {
         //id: this.$route.params.id,
+        sortVal: 'new',
       };
     },
-    methods: {},
+    methods: {
+      sortTasks() {
+        this.$store.commit('SORT_TASKS', this.sortSwitch(this.sortVal));
+      },
+      sortSwitch(val) {
+        switch (val) {
+          case 'new':
+            return {
+              sortBy: 'createdAt',
+              ascending: false,
+            };
+          case 'old':
+            return {
+              sortBy: 'createdAt',
+              ascending: true,
+            };
+
+          case 'high':
+            return {
+              sortBy: 'severity',
+              ascending: false,
+            };
+          case 'low':
+            return {
+              sortBy: 'severity',
+              ascending: true,
+            };
+        }
+      },
+    },
     computed: {
       tasks() {
         console.log('Computed - allTasks Getters: ', this.$store.getters.allTasks);
@@ -64,12 +100,20 @@
       // });
       //not doing anything was trying to test
       feathersClient.service('tasks').on('removed', (message) => console.log('task removed - message', message));
-
-      //Must only do this for when completed is toggle form the github hook
-      feathersClient.service('tasks').on('patched', (patchedTask) => {
-        let index = this.$store.getters.allTasks.findIndex((obj) => obj._id == patchedTask._id);
-        this.$store.getters.allTasks.splice(index, index, patchedTask);
+      feathersClient.service('tasks').on('webhook', (data) => {
+        console.log('on webhook', data);
+        this.$store.commit('UPDATE_TASK', {
+          id: data.id,
+          field: data.field,
+          newValue: data.newValue,
+        });
       });
+      //Must only do this for when completed is toggle form the github hook
+      //works but does it for any patch and duplicates tasks
+      // feathersClient.service('tasks').on('patched', (patchedTask) => {
+      //   let index = this.$store.getters.allTasks.findIndex((obj) => obj._id == patchedTask._id);
+      //   this.$store.getters.allTasks.splice(index, index, patchedTask);
+      // });
     },
   };
 </script>
@@ -79,6 +123,10 @@
     display: inline-flex;
     align-items: center;
     width: 100%;
+  }
+  .sort-select {
+    max-width: 160px;
+    margin-left: auto;
   }
 
   /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
