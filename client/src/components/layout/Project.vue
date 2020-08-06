@@ -100,20 +100,6 @@
       // });
       //not doing anything was trying to test
       feathersClient.service('tasks').on('removed', (message) => console.log('task removed - message', message));
-      feathersClient.service('tasks').on('webhook', (data) => {
-        console.log('on webhook', data);
-        this.$store.commit('UPDATE_TASK', {
-          id: data.id,
-          field: data.field,
-          newValue: data.newValue,
-        });
-      });
-      //Must only do this for when completed is toggle form the github hook
-      //works but does it for any patch and duplicates tasks
-      // feathersClient.service('tasks').on('patched', (patchedTask) => {
-      //   let index = this.$store.getters.allTasks.findIndex((obj) => obj._id == patchedTask._id);
-      //   this.$store.getters.allTasks.splice(index, index, patchedTask);
-      // });
     },
   };
 </script>

@@ -16,10 +16,10 @@
 </template>
 
 <script>
-  //import feathersClient from '@/feathers-client-config.js'
-  import TopBar from "@/components/layout/TopBar.vue";
-  import SideBar from "@/components/layout/SideBar.vue";
-  import Forms from "@/components/layout/Forms.vue";
+  import feathersClient from '@/feathers-client-config.js';
+  import TopBar from '@/components/layout/TopBar.vue';
+  import SideBar from '@/components/layout/SideBar.vue';
+  import Forms from '@/components/layout/Forms.vue';
   //Commented out because I;'m trying to use router view rather then use if statments
 
   //import Settings from "@/components/settings/Settings.vue";
@@ -27,7 +27,7 @@
   //import AllTasks from "@/components/layout/AllTasks.vue";
 
   export default {
-    name: "Main",
+    name: 'Main',
     data() {
       return {
         currentProjectId: null,
@@ -45,32 +45,38 @@
     },
     methods: {
       mainClick(event) {
-        console.log("MAIN CLICK", event);
-        this.$store.commit("SET_MAIN_CLICK", event);
+        console.log('MAIN CLICK', event);
+        this.$store.commit('SET_MAIN_CLICK', event);
       },
     },
     created() {
-      console.log("Main Created");
+      console.log('Main Created');
 
       //init all task data, then open AllTasks 'Page'
-      console.log(
-        "================================ \n tasksInit: ",
-        this.$store.getters.tasksInitalized
-      );
-      this.$store.dispatch("fetchAllTasks").then(() => {
-        console.log("Main Created - FETCH ALL TASKS");
+      console.log('================================ \n tasksInit: ', this.$store.getters.tasksInitalized);
+      this.$store.dispatch('fetchAllTasks').then(() => {
+        console.log('Main Created - FETCH ALL TASKS');
         //do soemthing here after allTasks load if you want
       });
 
       //init project data
-      this.$store.dispatch("fetchProjects").then((res) => {
-        console.log("App Vue: - Called fetchProjects", res);
-        this.$store.commit("setLoading", false);
+      this.$store.dispatch('fetchProjects').then((res) => {
+        console.log('App Vue: - Called fetchProjects', res);
+        this.$store.commit('setLoading', false);
 
         //I don't think below worked leaving incase I need it
         // if (this.$route.name === "project") {
         //   this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
         // }
+        //listen for server emitting events
+        feathersClient.service('tasks').on('webhook', (data) => {
+          console.log('on webhook', data);
+          this.$store.commit('UPDATE_TASK', {
+            id: data.id,
+            field: data.field,
+            newValue: data.newValue,
+          });
+        });
       });
     },
   };
