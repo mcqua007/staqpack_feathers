@@ -5,7 +5,7 @@
 // } = require('@feathersjs/errors');
 // eslint-disable-next-line no-unused-vars
 
-module.exports = (options = {}) => {
+module.exports = () => {
   return async context => {
     console.log('Webhook - Context: ', context.data.commits);
 
@@ -32,7 +32,7 @@ module.exports = (options = {}) => {
     let commits = context.data.commits;
     let feats = [];
 
-    commits.forEach(function (commit, i) {
+    commits.forEach(function (commit) {
 
       var searchForFeat = commit.message.toLowerCase().search('@feat:');
       var sliceStrFeat = '';
@@ -50,6 +50,12 @@ module.exports = (options = {}) => {
           completed: true
         }).then(function (res) {
           console.log('Task patch res: ', res);
+          context.app.service('tasks').emit('webhook', {
+            id: res._id,
+            field: 'completed',
+            newValue: true,
+            data: res
+          });
         });
       }
     });
