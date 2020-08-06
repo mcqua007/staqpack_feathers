@@ -180,8 +180,9 @@
       toggleCompletedTask(taskId) {
         this.$store.dispatch('patchTask', { id: taskId, update: { completed: !this.task.completed } }).then(() => {
           //do something here once delete is complete
-          this.$store.commit('UPDATE_TASK_COMPLETED', {
-            taskId: taskId,
+          this.$store.commit('UPDATE_TASK', {
+            id: taskId,
+            field: 'completed',
             newValue: !this.task.completed,
           });
           this.dropdownExpanded = false;
@@ -197,8 +198,9 @@
         }
         this.timer = setTimeout(() => {
           this.$store.dispatch('patchTask', { id: taskId, update: { severity: this.task.severity } }).then(() => {
-            this.$store.commit('UPDATE_TASK_BADGE', {
-              taskId: taskId,
+            this.$store.commit('UPDATE_TASK', {
+              id: taskId,
+              field: 'severity',
               newValue: this.task.severity,
             });
           });
