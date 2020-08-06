@@ -113,7 +113,7 @@
             projectId: this.projectId,
             dueDate: this.taskDueDate,
           };
-          console.log('formData: ', formData);
+
           this.$store
             .dispatch('createTask', formData)
             .then(() => {
@@ -154,10 +154,7 @@
       if (this.$route.name == 'Project') {
         this.projectId = this.$route.params.id; //refering to project id
       }
-
-      console.log(this.$route);
     },
-    mounted() {},
   };
 </script>
 
