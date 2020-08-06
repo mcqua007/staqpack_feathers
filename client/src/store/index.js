@@ -407,15 +407,6 @@ export default new Vuex.Store({
       let index = state.tasks.findIndex((task) => task._id == payload.id);
       state.tasks[index][payload.field] = payload.newValue;
     },
-    UPDATE_TASK_COMPLETED(state, payload) {
-      let index = state.tasks.findIndex((task) => task._id == payload.taskId)
-      state.tasks[index].completed = payload.newValue;
-    },
-    //maybe can combine above and below into one function ?
-    UPDATE_TASK_BADGE(state, payload) {
-      let index = state.tasks.findIndex((task) => task._id == payload.taskId)
-      state.tasks[index].severity = payload.newValue;
-    },
 
     // 'todos' mutations
     ADD_TODOS(state, payload) {
