@@ -10,7 +10,7 @@
           </a>
         </div>
         <img class="github-avatar-img" v-bind:src="repoData.avatarUrl" />
-        <span style="color: #777;"> &nbsp;{{ repoData.owner }}</span>
+        <span class="grey"> &nbsp;{{ repoData.owner }}</span>
         <div class="card-text" v-if="repoData.description">{{ repoData.description }}</div>
         <div class="card-text" v-else>No description available</div>
         <span v-if="repoData.private" class="badge pull-left visibility-badge">Private</span>
@@ -137,6 +137,9 @@
     -webkit-animation: spin 4s linear infinite;
     -moz-animation: spin 4s linear infinite;
     animation: spin 4s linear infinite;
+  }
+  .grey{
+    color: #777;
   }
   @-moz-keyframes spin {
     100% {
