@@ -364,6 +364,18 @@ export default new Vuex.Store({
       state.projects.splice(index, 1);
     },
     //Task Mutations
+    SORT_TASKS(state, payload) {
+      state.tasks.sort((a, b) => {
+        if (payload.sortBy === "createdAt") {
+          let dateA = new Date(a[payload.sortBy]);
+          let dateB = new Date(b[payload.sortBy])
+          return payload.ascending ? dateA - dateB : dateB - dateA;
+        } else {
+          return payload.ascending ? a[payload.sortBy] - b[payload.sortBy] : b[payload.sortBy] - a[payload.sortBy];
+        }
+
+      })
+    },
     ADD_TASKS(state, payload) {
       //if multiple tasks or if just one add differently
       if (Array.isArray(payload)) {
@@ -390,6 +402,10 @@ export default new Vuex.Store({
         let index = state.tasks.findIndex((task) => task._id == taskData._id); //goes through all removed tasks and delete each one by id
         state.tasks.splice(index, 1);
       }
+    },
+    UPDATE_TASK(state, payload) {
+      let index = state.tasks.findIndex((task) => task._id == payload.id);
+      state.tasks[index][payload.field] = payload.newValue;
     },
     UPDATE_TASK_COMPLETED(state, payload) {
       let index = state.tasks.findIndex((task) => task._id == payload.taskId)
