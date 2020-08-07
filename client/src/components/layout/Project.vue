@@ -47,6 +47,10 @@
 
         return this.$route.params.name;
       },
+      // sortBy() {
+      //   let index = this.$store.getters.projects.findIndex((project) => project._id == this.$route.params.id);
+      //   return this.$store.getters.projects[index].sortBy;
+      // },
     },
     created() {
       console.log('Project Created: ', this.$route.params.id);
