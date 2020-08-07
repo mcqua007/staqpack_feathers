@@ -33,6 +33,10 @@ module.exports = function (app) {
       type: Schema.Types.ObjectId,
       ref: 'Users'
     },
+    sortBy: {
+      type: String,
+      default: 'oldest'
+    },
     githubSync: {
       type: Boolean,
       default: true
