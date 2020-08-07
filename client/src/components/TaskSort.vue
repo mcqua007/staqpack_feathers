@@ -1,8 +1,8 @@
 <template>
   <div class="push-left">
     <select class="form-control sort-select" v-model="sortVal" @change="sortTasks">
-      <option value="old">Old Tasks</option>
-      <option value="new">Newest Tasks</option>
+      <option value="oldest">Old Tasks</option>
+      <option value="newest">Newest Tasks</option>
       <option value="high">Highest Priority</option>
       <option value="low">Lowest Priority</option>
     </select>
@@ -14,7 +14,7 @@
     name: 'TaskSort',
     data() {
       return {
-        sortVal: 'old',
+        sortVal: 'oldest',
       };
     },
     methods: {
@@ -23,12 +23,12 @@
       },
       sortSwitch(val) {
         switch (val) {
-          case 'new':
+          case 'newest':
             return {
               sortBy: 'createdAt',
               ascending: false,
             };
-          case 'old':
+          case 'oldest':
             return {
               sortBy: 'createdAt',
               ascending: true,
