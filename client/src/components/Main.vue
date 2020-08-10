@@ -68,14 +68,15 @@
         // if (this.$route.name === "project") {
         //   this.$store.dispatch("getAllCurrentProjectData", this.$route.params.id);
         // }
-        //listen for server emitting events
-        feathersClient.service('tasks').on('webhook', (data) => {
-          console.log('on webhook', data);
-          this.$store.commit('UPDATE_TASK', {
-            id: data.id,
-            field: data.field,
-            newValue: data.newValue,
-          });
+      });
+
+      //listen for server emitting events
+      feathersClient.service('tasks').on('webhook', (data) => {
+        console.log('on webhook', data);
+        this.$store.commit('UPDATE_TASK', {
+          id: data.id,
+          field: data.field,
+          newValue: data.newValue,
         });
       });
     },
