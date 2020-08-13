@@ -1,142 +1,142 @@
 <template lang="html">
-  <div class="col-12 col-sm-6 col-lg-4 task-wrap">
-    <div v-if="task != null">
-      <div
-        :class="{
-          'col-xs-12': true,
-          card: true,
-          'card-shadow': true,
-          'card-back-active': backActive,
-        }"
-      >
-        <div class="btn-group" role="group">
-          <button v-bind:class="{ btn: true, 'btn-outline-primary': true }" :disabled="task.completed">
-            <i class="la la-calendar"></i>
-          </button>
-          <button v-bind:class="{ btn: true, 'btn-outline-danger': true }" :disabled="task.completed">
-            <i class="la la-images"></i>
-          </button>
-          <div class="btn-group">
-            <button class="btn btn-outline-secondary dropdown-btn" aria-haspopup="true" @click="toggleDropdown()">
-              <i
-                :class="{
-                  'dropdown-btn': true,
-                  la: true,
-                  'la-angle-down': !dropdownExpanded,
-                  'la-angle-up': dropdownExpanded,
-                }"
-              ></i>
-            </button>
-            <div
-              v-show="dropdownExpanded"
+  <div class="col-12 col-sm-6 col-lg-4 task-wrap" :data-id="task._id">
+    <div
+      :class="{
+        'col-xs-12': true,
+        card: true,
+        'card-shadow': true,
+        'card-back-active': backActive,
+      }"
+    >
+      <div class="btn-group" role="group">
+        <button v-bind:class="{ btn: true, 'btn-outline-primary': true }" :disabled="task.completed">
+          <i class="la la-calendar"></i>
+        </button>
+        <button v-bind:class="{ btn: true, 'btn-outline-danger': true }" :disabled="task.completed">
+          <i class="la la-images"></i>
+        </button>
+        <div class="btn-group">
+          <button class="btn btn-outline-secondary dropdown-btn" aria-haspopup="true" @click="toggleDropdown()">
+            <i
               :class="{
-                'dropdown-menu': true,
-                'dropdown-menu-right': true,
-                active: dropdownExpanded == true,
+                'dropdown-btn': true,
+                la: true,
+                'la-angle-down': !dropdownExpanded,
+                'la-angle-up': dropdownExpanded,
               }"
+            ></i>
+          </button>
+          <div
+            v-show="dropdownExpanded"
+            :class="{
+              'dropdown-menu': true,
+              'dropdown-menu-right': true,
+              active: dropdownExpanded == true,
+            }"
+          >
+            <div v-show="!task.completed">
+              <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
+                <i class="la la-check"></i>Completed
+              </button>
+            </div>
+            <div v-show="task.completed">
+              <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
+                <i class="la la-redo"></i>Re-open
+              </button>
+            </div>
+            <button class="dropdown-item" @click="toggleTodoVisibility()">
+              <div v-show="todosHidden"><i class="la la-eye"></i>Show Todos</div>
+              <div v-show="!todosHidden"><i class="la la-eye-slash"></i>Hide Todos</div>
+            </button>
+            <button
+              class="dropdown-item"
+              v-bind:data-delete-btn-id="task._id"
+              @click="deleteTask(task._id, task.projectId)"
             >
-              <div v-show="!task.completed">
-                <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
-                  <i class="la la-check"></i>Completed
-                </button>
-              </div>
-              <div v-show="task.completed">
-                <button class="dropdown-item" @click="toggleCompletedTask(task._id)">
-                  <i class="la la-redo"></i>Re-open
-                </button>
-              </div>
-              <div v-show="!backActive">
-                <button class="dropdown-item" @click="toggleBack()"><i class="la la-arrow-left"></i>Show Back</button>
-              </div>
-              <div v-show="backActive">
-                <button class="dropdown-item" @click="toggleBack()">
-                  Go Home
-                </button>
-              </div>
-              <button class="dropdown-item" @click="toggleTodoVisibility()">
-                <div v-show="todosHidden"><i class="la la-eye"></i>Show Todos</div>
-                <div v-show="!todosHidden"><i class="la la-eye-slash"></i>Hide Todos</div>
-              </button>
-              <button
-                class="dropdown-item"
-                v-bind:data-delete-btn-id="task._id"
-                @click="deleteTask(task._id, task.projectId)"
-              >
-                <i class="la la-trash"></i>Delete
-              </button>
-              <!-- <button class="dropdown-item" v-bind:data-image-upload-btn-id="task._id" 
-              onclick='showImageUpload(" + task._id + ")'> <i class='la la-file-image' style=' 
-              margin-right:8px;'></i>Upload Images</button> -->
+              <i class="la la-trash"></i>Delete
+            </button>
+            <button v-show="!imagesActive" class="dropdown-item" @click="toggleImages(task._id)">
+              <i class="la la-file-image"></i>Images
+            </button>
+            <button v-show="backActive" class="dropdown-item" @click="toggleImages(task._id)">
+              <div><i class="la la-arrow-left"></i>Go Back</div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        v-show="!backActive"
+        :class="{ 'front-of-card': true, 'card-main-wrap': true, 'due-date-active': task.dueDate }"
+      >
+        <div
+          role="button"
+          class="card-title-badge-wrap text-left"
+          v-if="task.severity == 1 && task.completed == false"
+          @click="toggleBadge(task._id)"
+        >
+          <span class="card-title">{{ task.name }}</span
+          ><span class="badge  badge-success severity-badge">Low</span>
+        </div>
+        <div
+          role="button"
+          class="card-title-badge-wrap text-left"
+          v-else-if="task.severity == 2 && task.completed == false"
+          @click="toggleBadge(task._id)"
+        >
+          <span class="card-title">{{ task.name }}</span
+          ><span class="badge  badge-warning severity-badge">Medium</span>
+        </div>
+        <div
+          role="button"
+          class="card-title-badge-wrap text-left"
+          v-else-if="task.severity == 3 && task.completed == false"
+          @click="toggleBadge(task._id)"
+        >
+          <span class="card-title">{{ task.name }}</span
+          ><span class="badge  badge-danger severity-badge">High</span>
+        </div>
+        <div class="card-title-badge-wrap text-left" v-else-if="task.completed == true">
+          <span class="card-title disabled">{{ task.name }}</span
+          ><span class="badge  badge-secondary severity-badge">Closed</span>
+        </div>
+        <div class="card-body text-left">
+          <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
+          <div v-show="!todosHidden">
+            <hr />
+            <div v-for="(todo, index) in todos" :key="index">
+              <TodoList v-bind:todo="todo"></TodoList>
             </div>
           </div>
         </div>
-        <div :class="{ 'card-main-wrap': true, 'due-date-active': task.dueDate }">
-          <div
-            role="button"
-            class="card-title-badge-wrap text-left"
-            v-if="task.severity == 1 && task.completed == false"
-            @click="toggleBadge(task._id)"
-          >
-            <span class="card-title">{{ task.name }}</span
-            ><span class="badge  badge-success severity-badge">Low</span>
-          </div>
-          <div
-            role="button"
-            class="card-title-badge-wrap text-left"
-            v-else-if="task.severity == 2 && task.completed == false"
-            @click="toggleBadge(task._id)"
-          >
-            <span class="card-title">{{ task.name }}</span
-            ><span class="badge  badge-warning severity-badge">Medium</span>
-          </div>
-          <div
-            role="button"
-            class="card-title-badge-wrap text-left"
-            v-else-if="task.severity == 3 && task.completed == false"
-            @click="toggleBadge(task._id)"
-          >
-            <span class="card-title">{{ task.name }}</span
-            ><span class="badge  badge-danger severity-badge">High</span>
-          </div>
-          <div class="card-title-badge-wrap text-left" v-else-if="task.completed == true">
-            <span class="card-title disabled">{{ task.name }}</span
-            ><span class="badge  badge-secondary severity-badge">Closed</span>
-          </div>
-          <div class="card-body text-left">
-            <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
-            <div v-show="!todosHidden">
-              <hr />
-              <div v-for="(todo, index) in todos" :key="index">
-                <TodoList v-bind:todo="todo"></TodoList>
-              </div>
-            </div>
-          </div>
-          <div class="input-group todo-input-group">
-            <p class="red-text" v-show="feedback">
-              {{ feedback }}
-            </p>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Add to do here..."
-              v-model="todoInput"
-              aria-describedby="button-addtodo"
+        <div class="input-group todo-input-group">
+          <p class="red-text" v-show="feedback">
+            {{ feedback }}
+          </p>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Add to do here..."
+            v-model="todoInput"
+            aria-describedby="button-addtodo"
+            :disabled="task.completed"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary"
+              @click="addTodo(task._id, task.projectId)"
               :disabled="task.completed"
-            />
-            <div class="input-group-append">
-              <button
-                class="btn btn-outline-secondary"
-                @click="addTodo(task._id, task.projectId)"
-                :disabled="task.completed"
-              >
-                <i class="la la-plus"></i>
-              </button>
-            </div>
+            >
+              <i class="la la-plus"></i>
+            </button>
           </div>
-          <div v-if="task.dueDate" class="due-date">Due: {{ dueDate }}</div>
         </div>
-        <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
-        <div v-bind:data-card-back="task._id" class="" style="display:none;"></div>
+        <div v-if="task.dueDate" class="due-date">Due: {{ dueDate }}</div>
+      </div>
+      <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
+      <div v-show="backActive" class="back-of-card card-main-wrap">
+        <div v-show="imagesActive" class="back-of-card-images">
+          <h5>Images</h5>
+        </div>
       </div>
     </div>
   </div>
@@ -162,18 +162,17 @@
         dropdownExpanded: false,
         backActive: false,
         timer: null,
+        imagesActive: false,
       };
     },
     computed: {
       dueDate() {
-        //const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
         let date = new Date(this.task.dueDate);
         return date.toLocaleDateString();
       },
       mainClick() {
         return this.$store.getters.mainClick;
       },
-      //mapState(['mainClick']);
     },
     methods: {
       //maybe can combine these two below into one function such as toggleCompleted
@@ -222,8 +221,19 @@
           //do something here once delete is complete
         });
       },
-      toggleBack() {
+      toggleBack(id) {
+        //if back of card is going to be in view get height of front so they are the same
+        if (!this.backActive) {
+          let backCard = document.querySelector('.task-wrap[data-id="' + id + '"] .back-of-card');
+          let frontCardHeight = document.querySelector('.task-wrap[data-id="' + id + '"] .front-of-card').offsetHeight;
+          backCard.style = 'min-height: ' + frontCardHeight + 'px;';
+        }
         this.backActive = !this.backActive;
+        this.dropdownExpanded = false;
+      },
+      toggleImages(id) {
+        this.toggleBack(id);
+        this.imagesActive = !this.imagesActive;
       },
       toggleTodoVisibility() {
         this.todosHidden = !this.todosHidden;
@@ -240,7 +250,6 @@
           completed: false,
         };
         this.$store.dispatch('createTodo', data).then((res) => {
-          console.log('Todo creation res: ', res);
           //if success addTodo to dom
           this.todos.push(res);
           this.todoInput = null;
@@ -272,8 +281,6 @@
       },
     },
     created() {
-      console.log('taskCompled: ', this.task.completed);
-      console.log('Created TaskCard -Fired: ', this.task._id);
       this.getTodos();
     },
   };
@@ -408,6 +415,8 @@
   }
   .dropdown-item i {
     margin-right: 5px;
+  }
+  .back-of-card {
   }
   @-webkit-keyframes rotateY {
     to {
