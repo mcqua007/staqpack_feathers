@@ -16,6 +16,7 @@ export default new Vuex.Store({
     tasksInitalized: false,
     projectFormVisible: false,
     taskFormVisible: false,
+    teamFormVisible: false,
     sideBarVisible: false,
     loading: true,
     mainClick: null,
@@ -427,10 +428,13 @@ export default new Vuex.Store({
     toggleTaskForm(state, formState) {
       state.taskFormVisible = !formState;
     },
+    toggleTeamForm(state, formState) {
+      state.teamFormVisible = !formState;
+    },
     hideAllForms(state) {
       state.taskFormVisible = false;
       state.projectFormVisible = false;
-      //state.teamFormVisible = false;
+      state.teamFormVisible = false;
     },
     toggleSideBar(state, sideBarState) {
       state.sideBarVisible = !sideBarState;
@@ -457,6 +461,9 @@ export default new Vuex.Store({
     },
     taskFormState(state) {
       return state.taskFormVisible;
+    },
+    teamFormState(state) {
+      return state.teamFormVisible;
     },
     sideBarState(state) {
       return state.sideBarVisible;

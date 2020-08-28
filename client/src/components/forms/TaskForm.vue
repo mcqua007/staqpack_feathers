@@ -58,7 +58,7 @@
                 'alert-danger': alertType === 'danger',
                 'alert-success': alertType === 'success',
                 'alert-warning': alertType === 'warning',
-                'alert-primary': alertType === 'primary',
+                'alert-primary': alertType === 'primary'
               }"
             >
               {{ feedback }}
@@ -86,7 +86,7 @@
         feedback: null,
         projectId: this.$route.name == 'Project' ? this.$route.params.id : null,
         projects: null,
-        taskDueDate: null,
+        taskDueDate: null
       };
     },
     methods: {
@@ -111,7 +111,7 @@
             //assignTo: this.assignTo,
             description: this.description,
             projectId: this.projectId,
-            dueDate: this.taskDueDate,
+            dueDate: this.taskDueDate
           };
 
           this.$store
@@ -128,13 +128,13 @@
               this.$emit('taskFormInput');
               this.alertFeedback('You new task has been created.', 'primary');
             })
-            .catch((e) => {
+            .catch(e => {
               this.alertFeedback('Error: ' + e, 'danger'); //alert error feedback
             });
         } else {
           this.alertFeedback('You must have a Task Name and a choose a Project!', 'danger');
         }
-      },
+      }
     },
     computed: mapState(['loading']),
     watch: {
@@ -147,14 +147,14 @@
         if (this.$route.name == 'Project') {
           this.projectId = this.$route.params.id; //refering to project id
         }
-      },
+      }
     },
     created() {
       //make taskForm select option the same as the project it is in
       if (this.$route.name == 'Project') {
         this.projectId = this.$route.params.id; //refering to project id
       }
-    },
+    }
   };
 </script>
 

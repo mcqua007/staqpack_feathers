@@ -13,7 +13,7 @@
           'dropdown-tbtn': true,
           'add-btn-menu': true,
           'c-white': true,
-          'dropdown-expanded': dropdownExpanded,
+          'dropdown-expanded': dropdownExpanded
         }"
         @click="toggleDropdown()"
         id="btnGroupDrop1"
@@ -26,7 +26,7 @@
             'dropdown-btn': true,
             la: true,
             'la-plus': true,
-            active: dropdownExpanded == true,
+            active: dropdownExpanded == true
           }"
         ></i>
       </button>
@@ -35,7 +35,7 @@
         :class="{
           'dropdown-menu': true,
           'dropdown-menu-right': true,
-          active: dropdownExpanded == true,
+          active: dropdownExpanded == true
         }"
         aria-labelledby="btnGroupDrop1"
         data-dropdown-task-id=""
@@ -46,20 +46,22 @@
         <button class="dropdown-item" type="button" @click="toggleProjectForm()">
           <i class="la la-plus margin-r-5"></i> New Project
         </button>
-        <!-- <button class="dropdown-item"   type="button" data-complete-btn-id=""  @click="toggleTeamForm()"> Team</button> -->
+        <button class="dropdown-item" type="button" @click="toggleTeamForm()">
+          <i class="la la-plus margin-r-5"></i> New Team
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from "vuex";
+  import { mapState } from 'vuex';
 
   export default {
-    name: "TopBar",
+    name: 'TopBar',
     data() {
       return {
-        dropdownExpanded: false,
+        dropdownExpanded: false
       };
     },
     methods: {
@@ -69,9 +71,9 @@
       toggleTaskForm() {
         // Hide any other forms open by turning there state to false
         //sets all forms stats to false
-        this.$store.commit("hideAllForms");
+        this.$store.commit('hideAllForms');
         // Toggle Task From state
-        this.$store.commit("toggleTaskForm", this.$store.getters.taskFormState);
+        this.$store.commit('toggleTaskForm', this.$store.getters.taskFormState);
         // if form showing/true
         if (this.$store.getters.taskFormState == true) {
           // if in view scroll up to top of page -later maybe make a modal
@@ -82,10 +84,10 @@
       toggleProjectForm() {
         // Hide any other forms open by turning there state to false
         //sets all forms stats to false
-        this.$store.commit("hideAllForms");
+        this.$store.commit('hideAllForms');
 
         // Toggle Project Form state
-        this.$store.commit("toggleProjectForm", this.$store.getters.projectFormState);
+        this.$store.commit('toggleProjectForm', this.$store.getters.projectFormState);
         // if form showing/true
         if (this.$store.getters.projectFormState == true) {
           // if in view scroll up to top of page -later maybe make a modal
@@ -93,24 +95,38 @@
           window.scrollTo(0, 0);
         }
       },
+      toggleTeamForm() {
+        // Hide any other forms open by turning there state to false
+        //sets all forms stats to false
+        this.$store.commit('hideAllForms');
+
+        // Toggle Project Form state
+        this.$store.commit('toggleTeamForm', this.$store.getters.teamFormState);
+        // if form showing/true
+        if (this.$store.getters.teamFormState == true) {
+          // if in view scroll up to top of page -later maybe make a modal
+          this.toggleDropdown(); //close drop down menu
+          window.scrollTo(0, 0);
+        }
+      },
       toggleSideBar() {
         // Toggle SideBar state
-        this.$store.commit("toggleSideBar", this.$store.getters.sideBarState);
-      },
+        this.$store.commit('toggleSideBar', this.$store.getters.sideBarState);
+      }
     },
-    computed: mapState(["mainClick"]),
+    computed: mapState(['mainClick']),
     watch: {
       mainClick(newEvent) {
         // console.log("Watch topbar mainClick: ", newEvent.target.className);
         if (
-          !newEvent.target.className.toString().includes("dropdown-btn") &&
-          !newEvent.target.className.toString().includes("dropdown-item")
+          !newEvent.target.className.toString().includes('dropdown-btn') &&
+          !newEvent.target.className.toString().includes('dropdown-item')
         ) {
           this.dropdownExpanded = false;
         }
-      },
+      }
     },
-    mounted() {},
+    mounted() {}
   };
 </script>
 

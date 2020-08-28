@@ -1,7 +1,7 @@
 <template>
   <div class="project-form">
     <transition name="fade">
-      <div v-if="$store.getters.projectFormState == true" class="jumbotron">
+      <div v-show="$store.getters.projectFormState == true" class="jumbotron">
         <i
           class="la la-times close"
           role="button"
@@ -58,7 +58,7 @@
                 'alert-danger': alertType === 'danger',
                 'alert-success': alertType === 'success',
                 'alert-warning': alertType === 'warning',
-                'alert-primary': alertType === 'primary',
+                'alert-primary': alertType === 'primary'
               }"
               v-show="feedback"
             >
@@ -103,7 +103,7 @@
         responseData: null,
         progress: false,
         userData: {},
-        options: [],
+        options: []
       };
     },
     methods: {
@@ -122,7 +122,7 @@
             type: this.projectType,
             //team: this.team,
             description: this.projectDesc,
-            dueDate: this.projectDueDate,
+            dueDate: this.projectDueDate
           };
           this.$store
             .dispatch('createProject', formData)
@@ -138,7 +138,7 @@
                 that.alertFeedback('Your new project has been created!', 'primary');
               }, 490);
             })
-            .catch((e) => {
+            .catch(e => {
               this.alertFeedback('Error: ' + e, 'danger'); //alert error feedback
             });
           //load new project here using routes
@@ -168,8 +168,8 @@
             element.style.width = width + '%';
           }
         }, 10);
-      },
-    },
+      }
+    }
   };
 </script>
 <style lang="css" scoped>
