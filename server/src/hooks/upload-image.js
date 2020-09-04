@@ -1,6 +1,6 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
-
+//CURRENLTY NOT BEING USED FOR ANYTHING
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');

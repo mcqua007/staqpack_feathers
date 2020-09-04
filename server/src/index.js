@@ -11,7 +11,6 @@ dotenv.config({
   path: path.resolve(__dirname, '../.env')
 }); //load config enviornment file
 
-console.log(process.env.AWSAccessKeyId);
 process.on('unhandledRejection', (reason, p) =>
   logger.error('Unhandled Rejection at: Promise ', p, reason)
 );

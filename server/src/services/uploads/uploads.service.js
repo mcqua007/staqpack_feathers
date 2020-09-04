@@ -1,4 +1,6 @@
 // Initializes the `uploads` service on path `/uploads`
+//Need to add multipart support using multer and a way for more security
+//so no one can upload executables
 const {
   Uploads
 } = require('./uploads.class');
