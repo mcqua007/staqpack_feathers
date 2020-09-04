@@ -50,6 +50,7 @@
     "feathers-hooks-common": "^5.0.1",
     "feathers-mongoose": "^8.1.1",
     "feathers-permissions": "^2.0.0",
+    "fs-blob-store": "^5.2.1",
     "helmet": "^3.21.2",
     "mongodb-core": "^3.2.7",
     "mongoose": "^5.8.3",
