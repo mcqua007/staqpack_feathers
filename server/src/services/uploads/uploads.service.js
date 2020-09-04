@@ -29,7 +29,7 @@ module.exports = function (app) {
     Model: blobStorage
   }));
 
-  console.log('Blogstorage: ', blobStorage);
+  // console.log('Blogstorage: ', blobStorage);
   // Initialize our service with any options it requires
   app.use('/uploads', new Uploads(options, app));
 
