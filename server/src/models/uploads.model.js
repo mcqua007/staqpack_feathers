@@ -5,7 +5,7 @@
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const {
-    Schem
+    Schema
   } = mongooseClient;
   const uploads = new Schema({
     uri: String
