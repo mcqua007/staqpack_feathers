@@ -4,7 +4,14 @@ const app = require('./app');
 const hostname = app.get('host');
 const port = app.get('port');
 const server = app.listen(port, hostname);
+const dotenv = require('dotenv');
+const path = require('path');
 
+dotenv.config({
+  path: path.resolve(__dirname, '../.env')
+}); //load config enviornment file
+
+console.log(process.env.AWSAccessKeyId);
 process.on('unhandledRejection', (reason, p) =>
   logger.error('Unhandled Rejection at: Promise ', p, reason)
 );
