@@ -5,7 +5,7 @@
         'col-xs-12': true,
         card: true,
         'card-shadow': true,
-        'card-back-active': backActive,
+        'card-back-active': backActive
       }"
     >
       <div class="btn-group" role="group">
@@ -22,7 +22,7 @@
                 'dropdown-btn': true,
                 la: true,
                 'la-angle-down': !dropdownExpanded,
-                'la-angle-up': dropdownExpanded,
+                'la-angle-up': dropdownExpanded
               }"
             ></i>
           </button>
@@ -31,7 +31,7 @@
             :class="{
               'dropdown-menu': true,
               'dropdown-menu-right': true,
-              active: dropdownExpanded == true,
+              active: dropdownExpanded == true
             }"
           >
             <div v-show="!task.completed">
@@ -136,6 +136,12 @@
       <div v-show="backActive" class="back-of-card card-main-wrap">
         <div v-show="imagesActive" class="back-of-card-images">
           <h5>Images</h5>
+          <div class="flex-row">
+            <form action="" @submit.prevent>
+              <input type="file" :change="changeFileInput()" />
+              <button class="btn btn-secondary" @click="uploadImage()">Upload</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -149,7 +155,7 @@
   export default {
     name: 'TaskCard',
     components: {
-      TodoList,
+      TodoList
     },
     props: ['task'],
     data() {
@@ -163,6 +169,7 @@
         backActive: false,
         timer: null,
         imagesActive: false,
+        imageForm: null
       };
     },
     computed: {
@@ -172,9 +179,18 @@
       },
       mainClick() {
         return this.$store.getters.mainClick;
-      },
+      }
     },
     methods: {
+      changeFileInput() {
+        // var files = e.target.files || e.dataTransfer.files;
+        // if (!files.length) return;
+        // this.createImage(files[0]);
+        // console.log(e.target.files);
+      },
+      uploadImage() {
+        console.log('btn click');
+      },
       //maybe can combine these two below into one function such as toggleCompleted
       toggleCompletedTask(taskId) {
         this.$store.dispatch('patchTask', { id: taskId, update: { completed: !this.task.completed } }).then(() => {
@@ -182,7 +198,7 @@
           this.$store.commit('UPDATE_TASK', {
             id: taskId,
             field: 'completed',
-            newValue: !this.task.completed,
+            newValue: !this.task.completed
           });
           this.dropdownExpanded = false;
         });
@@ -200,7 +216,7 @@
             this.$store.commit('UPDATE_TASK', {
               id: taskId,
               field: 'severity',
-              newValue: this.task.severity,
+              newValue: this.task.severity
             });
           });
         }, 2300);
@@ -209,12 +225,12 @@
         let data = {
           task: {
             id: taskId,
-            query: { projectId: projectId },
+            query: { projectId: projectId }
           },
           todo: {
             id: null,
-            query: { taskId: taskId },
-          },
+            query: { taskId: taskId }
+          }
         };
 
         this.$store.dispatch('deleteTasks', data).then(() => {
@@ -247,19 +263,19 @@
           name: this.todoInput,
           taskId: taskId,
           projectId: projectId,
-          completed: false,
+          completed: false
         };
-        this.$store.dispatch('createTodo', data).then((res) => {
+        this.$store.dispatch('createTodo', data).then(res => {
           //if success addTodo to dom
           this.todos.push(res);
           this.todoInput = null;
         });
       },
       getTodos() {
-        this.$store.dispatch('fetchTodos', { taskId: this.task._id }).then((res) => {
+        this.$store.dispatch('fetchTodos', { taskId: this.task._id }).then(res => {
           this.todos = res.data;
         });
-      },
+      }
     },
     //added key to router-view in main and this seems to make sur ethe ocmponent reloads
     //if this eventually fails for some reason watch the route chang ebelow worked to fetch the todos
@@ -278,11 +294,11 @@
         ) {
           this.dropdownExpanded = false;
         }
-      },
+      }
     },
     created() {
       this.getTodos();
-    },
+    }
   };
 </script>
 
@@ -427,5 +443,9 @@
     to {
       transform: rotateY(180deg);
     }
+  }
+  .flex-row {
+    display: inline-flex;
+    width: 100%;
   }
 </style>
