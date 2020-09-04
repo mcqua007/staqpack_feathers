@@ -15,7 +15,7 @@ const fs = require('fs-blob-store');
 
 // File storage location. Folder must be created before upload.
 // Example: './uploads' will be located under feathers app top level.
-const blobStorage = fs('./uploads');
+const blobStorage = fs('./public/uploads');
 
 module.exports = function (app) {
   const options = {
@@ -26,6 +26,8 @@ module.exports = function (app) {
   app.use('/uploads', blobService({
     Model: blobStorage
   }));
+
+  console.log('Blogstorage: ', blobStorage);
   // Initialize our service with any options it requires
   app.use('/uploads', new Uploads(options, app));
 
