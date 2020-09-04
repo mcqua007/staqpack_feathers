@@ -21,6 +21,9 @@ const authentication = require('./authentication');
 
 const mongoose = require('./mongoose');
 
+
+
+
 const app = express(feathers());
 
 // Load app configuration
@@ -36,6 +39,8 @@ app.use(express.urlencoded({
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
+
+
 
 // Set up Plugins and providers
 app.configure(express.rest());
