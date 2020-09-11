@@ -2,12 +2,10 @@
   <div v-if="todo != null" class="todo" :style="todoStyle">
     <div style="width:100%;">
       <div class="form-check" v-show="!editInputState">
-        <!-- <input type='checkbox' :checked="!todo.open" data-checked='false'  @change="toggleCheckBox(todo._id)" class="form-check-input" v-bind:disabled="!taskOpen"> -->
         <input
           type="checkbox"
-          :checked="todo.completed"
-          data-checked="false"
           :id="todo._id"
+          v-model="checkedState"
           @change="toggleCheckBox(todo._id)"
           class="form-check-input"
         />
@@ -40,7 +38,7 @@
     props: ["todo", "taskOpen"],
     data() {
       return {
-        checkedState: null,
+        checkedState: this.todo.completed,
         editInputState: false,
         editInput: null,
         todoChange: false,
@@ -62,12 +60,10 @@
           this.todoChange = false;
         }
       },
-      toggleCheckBox(id) {
-        var taskId = id;
-
-        this.checkedState = !this.todo.completed;
-        //changed - todo data with dispatch action to update DB
-        console.log("open state: ", this.checkedState, taskId);
+      toggleCheckBox(id) {  
+         this.$store
+            .dispatch("patchTodo", { id: id, update: { completed: this.checkedState } })
+            .then();
       },
       saveTodoEdit(id, original_todo) {
         if (this.editInput != original_todo) {
