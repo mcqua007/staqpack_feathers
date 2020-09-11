@@ -143,17 +143,17 @@
     z-index: 2;
     left: 0;
     opacity: 1;
-    overflow: hidden;
     margin-top: 0px;
-    min-width: 0px;
+    width: 20%;
+    min-width: 250px;
     max-width: 325px;
-    transition: width 0.75s ease-in, min-width 0.75s ease-in;
+    transform: translateX(-100%);
+    transition: transform 0.55s ease-in-out;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     height: 100%;
   }
   .sidebar-nav.expanded {
-    width: 20%;
-    min-width: 250px;
+    transform: none;
   }
   .m-left-10 {
     margin-left: 10px;
