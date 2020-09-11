@@ -138,7 +138,7 @@
           <h5>Images</h5>
           <div class="flex-row">
             <form action="" @submit.prevent>
-              <input type="file" :change="changeFileInput()" />
+              <input type="file" @change="onFileChange">
               <button class="btn btn-secondary" @click="uploadImage()">Upload</button>
             </form>
           </div>
@@ -151,6 +151,7 @@
 <script>
   import TodoList from '@/components/TodoList.vue';
   //import { mapState } from "vuex";
+import axios from "axios";
 
   export default {
     name: 'TaskCard',
@@ -169,7 +170,7 @@
         backActive: false,
         timer: null,
         imagesActive: false,
-        imageForm: null
+        imageUrl: null,
       };
     },
     computed: {
@@ -182,14 +183,29 @@
       }
     },
     methods: {
-      changeFileInput() {
-        // var files = e.target.files || e.dataTransfer.files;
-        // if (!files.length) return;
-        // this.createImage(files[0]);
-        // console.log(e.target.files);
-      },
+    onFileChange(e) {
+      var reader = new FileReader();
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      reader.readAsDataURL(files[0]);
+      reader.onload = () => {
+       this.imageUrl = reader.result;
+      };
+    },
       uploadImage() {
-        console.log('btn click');
+         axios({
+          method: "post",
+          url: "http://localhost:3030/uploads",
+          data: {"uri": this.imageUrl}
+        }).then((res) => {
+            console.log('res', res);
+            this.imageUrl = null;
+          })
+          .catch((e) => {
+            alert(e);
+          });
+   
       },
       //maybe can combine these two below into one function such as toggleCompleted
       toggleCompletedTask(taskId) {
