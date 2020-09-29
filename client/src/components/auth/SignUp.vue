@@ -54,7 +54,7 @@ export default {
            password: this.password
        }).then((res) =>{
            console.log('Created User:', res)
-          this.$store.dispatch('authenticateUser', { 
+          this.$store.dispatch('authenticate', { 
               strategy: 'local',
               email: this.email, 
               password: this.password
