@@ -19,7 +19,7 @@
     },
     methods: {
       sortTasks() {
-        this.$store.commit('SORT_TASKS', this.sortSwitch(this.sortVal));
+        this.$store.commit('SORT_TASKS', this.sortSwitch(this.sortVal)); //commit store
       },
       sortSwitch(val) {
         switch (val) {
