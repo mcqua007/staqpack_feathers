@@ -38,7 +38,7 @@ export default new Vuex.Store({
                     resolve();
                 }).catch((e) => {
                     if (context.state.debug) {
-                        console.error("Action Login | Authentication error", e);
+                        console.error("Action Login() | Authentication error", e);
                     }
                     reject(e);
                 });
@@ -50,9 +50,9 @@ export default new Vuex.Store({
                     context.commit("setUser", res.user);
                     resolve();
                 }).catch((e) => { // show login page
-                    if (context.state.debug) 
-                        console.error("Action Authenticat | Authentication error", e);
-                    
+                    if (context.state.debug) {
+                        console.error("Action Authenticate() | Authentication error", e);
+                    }
                     reject(e);
                 });
             });
@@ -61,18 +61,15 @@ export default new Vuex.Store({
         createGithubRepoProject(context, data) {
             return new Promise((resolve, reject) => {
                 feathersClient.service("github-repositories").create(data).then((res) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.log("Veux - Create Github Repo PRoject", res);
-                    
-
-
+                    }
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("createGithubRepoProject error", e);
-                    
 
-
+                    }
                     reject(e);
                 });
             });
@@ -84,11 +81,10 @@ export default new Vuex.Store({
                     console.log("Action - deleteGithubRepoProject Res:", res);
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("deleteGithubRepoProject Error:", e);
-                    
 
-
+                    }
                     reject(e);
                 });
             });
@@ -104,17 +100,15 @@ export default new Vuex.Store({
                     },
                     data: JSON.stringify(payload.json)
                 }).then((res) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.log('CreateWebhook Res', res);
-                    
+                    }
 
 
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("createWebhook error", e);
-                    
-
-
+                    }
                     reject(e);
                 })
             });
@@ -124,19 +118,15 @@ export default new Vuex.Store({
         fetchProjects(context, query) {
             return new Promise((resolve, reject) => {
                 feathersClient.service("projects").find(query).then((res) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.log("Veux - Fetch Projects", res);
-                    
-
-
+                    }
                     context.commit("setProjects", res);
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("FetchProjects error", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -153,11 +143,10 @@ export default new Vuex.Store({
                     context.commit("addProject", res);
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("createProject error", e);
-                    
 
-
+                    }
                     reject(e);
                 });
             });
@@ -204,19 +193,17 @@ export default new Vuex.Store({
         createTask(context, data) {
             return new Promise((resolve, reject) => {
                 feathersClient.service("tasks").create(data).then((res) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.log("Veux - Create Task", res);
-                    
+                    }
 
 
                     context.commit("ADD_TASKS", res);
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("createTask error", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -227,21 +214,18 @@ export default new Vuex.Store({
                 // tasks inalized being true means the server has already been called
                 if (context.state.tasksInitalized === false) {
                     feathersClient.service("tasks").find(query).then((res) => {
-                        if (context.state.debug) 
+                        if (context.state.debug) {
                             console.log("Veux - fetchAllTasks", res);
-                        
-
+                        }
 
                         context.commit("ADD_TASKS", res.data);
                         context.commit('SET_TASKS_INITALIZED', true); // set that tasks has been initalized
                         resolve(res);
 
                     }).catch((e) => {
-                        if (context.state.debug) 
+                        if (context.state.debug) {
                             console.error("FetchTasks error", e);
-                        
-
-
+                        }
                         reject(e);
                     });
                 } else {
@@ -256,11 +240,9 @@ export default new Vuex.Store({
                     console.log('patchTask: ', res);
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("patchTask Error:", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -277,11 +259,9 @@ export default new Vuex.Store({
                     });
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("deleteTasks error", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -294,11 +274,9 @@ export default new Vuex.Store({
                     resolve(res);
                     context.commit('ADD_TODOS', res.data);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("FetchTodos error", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -308,11 +286,9 @@ export default new Vuex.Store({
                 feathersClient.service("todos").create(data).then((res) => {
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("createTodo Error:", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -323,11 +299,9 @@ export default new Vuex.Store({
                     console.log("Action - deleteTodos Res:", res);
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("deleteTodo Error:", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
@@ -338,11 +312,9 @@ export default new Vuex.Store({
                 feathersClient.service("todos").patch(data.id, data.update).then((res) => {
                     resolve(res);
                 }).catch((e) => {
-                    if (context.state.debug) 
+                    if (context.state.debug) {
                         console.error("patchTodo Error:", e);
-                    
-
-
+                    }
                     reject(e);
                 });
             });
