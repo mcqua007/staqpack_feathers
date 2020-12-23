@@ -9,14 +9,34 @@
       }"
     >
       <div class="btn-group" role="group">
-        <button
-          v-bind:class="{ btn: true, 'btn-outline-primary': true }"
+        <!-- <button
+          v-if="!showDatePicker"
+          v-bind:class="{
+            btn: true,
+            'btn-outline-primary': true,
+            'big-btn-width': true
+          }"
           :disabled="task.completed"
+          @click="toggleDatePicker()"
         >
           <i class="la la-calendar"></i>
-        </button>
+        </button>-->
+
+        <flat-pickr
+          class="date-picker-btn btn btn-outline-primary big-btn-width empty"
+          v-if="showDatePicker"
+          v-model="newDueDatetime"
+          @on-change="datetimeChange"
+          placeholder="due date"
+          :config="dateConfig"
+        ></flat-pickr>
+
         <button
-          v-bind:class="{ btn: true, 'btn-outline-danger': true }"
+          v-bind:class="{
+            btn: true,
+            'btn-outline-danger': true,
+            'big-btn-width': true
+          }"
           :disabled="task.completed"
         >
           <i class="la la-images"></i>
@@ -188,12 +208,25 @@
 <script>
 import TodoList from "@/components/TodoList.vue";
 //import { mapState } from "vuex";
+
+import flatPickr from "vue-flatpickr-component";
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.css";
+
 import axios from "axios";
+flatpickr.setDefaults({
+  disableMobile: true,
+  onClose: () => {
+    console.log("closeevent from global config");
+  }
+});
 
 export default {
   name: "TaskCard",
   components: {
-    TodoList
+    TodoList,
+    flatPickr
   },
   props: ["task"],
   data() {
@@ -207,7 +240,17 @@ export default {
       backActive: false,
       timer: null,
       imagesActive: false,
-      imageUrl: null
+      imageUrl: null,
+      newDueDatetime: null,
+      showDatePicker: true,
+      dateConfig: {
+        wrap: true,
+        disableMobile: true,
+        enableTime: true,
+        dateFormat: "Z",
+        altInput: true,
+        altFormat: "n/j/y"
+      }
     };
   },
   computed: {
@@ -220,6 +263,17 @@ export default {
     }
   },
   methods: {
+    // toggleDatePicker() {
+    //   this.showDatePicker = true;
+    // },
+    datetimeChange() {
+      console.log("Called dataTimeChange: ", this.newDueDatetime);
+      if (this.newDueDatetime) {
+        console.log(this.newDueDatetime);
+        let r = new Date(this.newDueDatetime);
+        console.log(("r:", r));
+      }
+    },
     onFileChange(e) {
       var reader = new FileReader();
       var files = e.target.files || e.dataTransfer.files;
@@ -369,7 +423,22 @@ export default {
   }
 };
 </script>
-
+<style>
+.date-picker-btn.form-control[readonly] {
+  border-top-left-radius: 0.25em;
+}
+.date-picker-btn.form-control[readonly],
+.date-picker-btn::placeholder {
+  background-color: transparent;
+  color: #007bff;
+}
+.active.date-picker-btn::placeholder {
+  color: #fff;
+}
+.big-btn-width {
+  width: 50%;
+}
+</style>
 <style lang="css" scoped>
 .dropdown-menu {
   display: block;
