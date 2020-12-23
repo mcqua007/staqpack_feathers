@@ -243,7 +243,7 @@ export default {
           : null,
         defaultMinute: this.task.dueDate
           ? new Date(this.task.dueDate).getMinutes()
-          : null
+          : 0
       }
     };
   },
