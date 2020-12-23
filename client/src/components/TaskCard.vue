@@ -12,7 +12,6 @@
         <div class="big-btn-width btn btn-outline-primary btn-input-container">
           <flat-pickr
             class="date-picker-btn"
-            v-if="showDatePicker"
             v-model="newDueDatetime"
             @on-change="datePickerOpen"
             @on-close="datetimeChange"
@@ -105,8 +104,7 @@
         v-show="!backActive"
         :class="{
           'front-of-card': true,
-          'card-main-wrap': true,
-          'due-date-active': task.dueDate
+          'card-main-wrap': true
         }"
       >
         <div
@@ -174,7 +172,6 @@
             </button>
           </div>
         </div>
-        <div v-if="task.dueDate" class="due-date">Due: {{ dueDate }}</div>
       </div>
       <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
       <div v-show="backActive" class="back-of-card card-main-wrap">
@@ -231,14 +228,15 @@ export default {
       imagesActive: false,
       imageUrl: null,
       newDueDatetime: null,
-      dateIconShow: true,
+      dateIconShow: this.task.dueDate ? false : true,
       dateConfig: {
         wrap: true,
         disableMobile: true,
         enableTime: true,
         dateFormat: "Z",
         altInput: true,
-        altFormat: "n/j/y"
+        altFormat: "n/j/y",
+        defaultDate: this.task.dueDate ? this.task.dueDate : null
       }
     };
   },
@@ -547,16 +545,7 @@ div.card-shadow:hover {
 .card-main-wrap {
   padding: 0.9em;
 }
-.card-main-wrap.due-date-active {
-  padding-bottom: 0;
-}
-.due-date {
-  margin: 0.5em 0 0.2em 0;
-  float: right;
-  font-size: 0.85em;
-  color: #bcbcbc;
-  font-style: italic;
-}
+
 .card-body {
   padding: 0;
 }
