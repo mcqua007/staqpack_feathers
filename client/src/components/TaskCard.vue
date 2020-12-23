@@ -261,7 +261,7 @@ export default {
       this.dateIconShow = false;
     },
     datetimeChange() {
-      console.log("Called dataTimeChange: ", this.newDueDatetime, this.id);
+      console.log("Called dataTimeChange: ", this.newDueDatetime);
       if (this.newDueDatetime) {
         console.log(this.newDueDatetime);
         this.$store
