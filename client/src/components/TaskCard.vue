@@ -21,16 +21,17 @@
         >
           <i class="la la-calendar"></i>
         </button>-->
-
-        <flat-pickr
-          class="date-picker-btn btn btn-outline-primary big-btn-width empty"
-          v-if="showDatePicker"
-          v-model="newDueDatetime"
-          @on-change="datetimeChange"
-          placeholder="due date"
-          :config="dateConfig"
-        ></flat-pickr>
-
+        <div class="big-btn-width btn btn-outline-primary btn-input-container">
+          <flat-pickr
+            class="date-picker-btn"
+            v-if="showDatePicker"
+            v-model="newDueDatetime"
+            @on-change="datePickerOpen"
+            @on-close="datetimeChange"
+            :config="dateConfig"
+          ></flat-pickr>
+          <i class="la la-calendar" v-show="dateIconShow"></i>
+        </div>
         <button
           v-bind:class="{
             btn: true,
@@ -242,6 +243,7 @@ export default {
       imagesActive: false,
       imageUrl: null,
       newDueDatetime: null,
+      dateIconShow: true,
       showDatePicker: true,
       dateConfig: {
         wrap: true,
@@ -266,12 +268,13 @@ export default {
     // toggleDatePicker() {
     //   this.showDatePicker = true;
     // },
+    datePickerOpen() {
+      this.dateIconShow = false;
+    },
     datetimeChange() {
       console.log("Called dataTimeChange: ", this.newDueDatetime);
       if (this.newDueDatetime) {
         console.log(this.newDueDatetime);
-        let r = new Date(this.newDueDatetime);
-        console.log(("r:", r));
       }
     },
     onFileChange(e) {
@@ -423,20 +426,63 @@ export default {
   }
 };
 </script>
+<!-- Date Picker Can't be Scoped Since it's another componenet -->
 <style>
 .date-picker-btn.form-control[readonly] {
   border-top-left-radius: 0.25em;
+  border: none;
+  cursor: pointer;
 }
 .date-picker-btn.form-control[readonly],
 .date-picker-btn::placeholder {
   background-color: transparent;
   color: #007bff;
+  border: none;
+  width: 100%;
+  text-align: center;
+  position: relative;
 }
-.active.date-picker-btn::placeholder {
+.active.date-picker-btn::placeholder,
+.date-picker-btn.form-control[readonly]:hover {
   color: #fff;
 }
 .big-btn-width {
   width: 50%;
+}
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+  background: #007bff;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #fff;
+  border-color: #007bff;
+}
+.btn-input-container {
+  position: relative;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-input-container i {
+  position: absolute;
+  pointer-events: none;
 }
 </style>
 <style lang="css" scoped>
@@ -584,5 +630,23 @@ div.card-shadow:hover {
 .flex-row {
   display: inline-flex;
   width: 100%;
+}
+input.tester {
+  position: relative;
+}
+input.tester::-webkit-input-placeholder {
+  font-family: "Line Awesome Free";
+  content: "\f133";
+  color: #000;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
 }
 </style>
