@@ -9,18 +9,6 @@
       }"
     >
       <div class="btn-group" role="group">
-        <!-- <button
-          v-if="!showDatePicker"
-          v-bind:class="{
-            btn: true,
-            'btn-outline-primary': true,
-            'big-btn-width': true
-          }"
-          :disabled="task.completed"
-          @click="toggleDatePicker()"
-        >
-          <i class="la la-calendar"></i>
-        </button>-->
         <div class="big-btn-width btn btn-outline-primary btn-input-container">
           <flat-pickr
             class="date-picker-btn"
@@ -244,7 +232,6 @@ export default {
       imageUrl: null,
       newDueDatetime: null,
       dateIconShow: true,
-      showDatePicker: true,
       dateConfig: {
         wrap: true,
         disableMobile: true,
@@ -265,9 +252,6 @@ export default {
     }
   },
   methods: {
-    // toggleDatePicker() {
-    //   this.showDatePicker = true;
-    // },
     datePickerOpen() {
       this.dateIconShow = false;
     },
