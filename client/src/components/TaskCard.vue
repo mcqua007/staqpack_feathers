@@ -217,6 +217,7 @@ export default {
   props: ["task"],
   data() {
     return {
+      id: this.task._id,
       todos: null,
       todoInput: null,
       feedback: null,
@@ -236,7 +237,13 @@ export default {
         dateFormat: "Z",
         altInput: true,
         altFormat: "n/j/y",
-        defaultDate: this.task.dueDate ? this.task.dueDate : null
+        defaultDate: this.task.dueDate ? this.task.dueDate : null,
+        defaultHour: this.task.dueDate
+          ? new Date(this.task.dueDate).getHours()
+          : null,
+        defaultMinute: this.task.dueDate
+          ? new Date(this.task.dueDate).getMinutes()
+          : null
       }
     };
   },
@@ -254,9 +261,23 @@ export default {
       this.dateIconShow = false;
     },
     datetimeChange() {
-      console.log("Called dataTimeChange: ", this.newDueDatetime);
+      console.log("Called dataTimeChange: ", this.newDueDatetime, this.id);
       if (this.newDueDatetime) {
         console.log(this.newDueDatetime);
+        this.$store
+          .dispatch("patchTask", {
+            id: this.id,
+            update: { dueDate: this.newDueDatetime }
+          })
+          .then(() => {
+            //update tasks in store
+            this.$store.commit("UPDATE_TASK", {
+              id: this.id,
+              field: "dueDate",
+              newValue: this.newDueDatetime
+            });
+            this.dropdownExpanded = false;
+          });
       }
     },
     onFileChange(e) {
