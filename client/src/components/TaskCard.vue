@@ -193,20 +193,12 @@
 
 <script>
 import TodoList from "@/components/TodoList.vue";
-//import { mapState } from "vuex";
-
+//used for date picker component
 import flatPickr from "vue-flatpickr-component";
-import flatpickr from "flatpickr";
-
 import "flatpickr/dist/flatpickr.css";
 
 import axios from "axios";
-flatpickr.setDefaults({
-  disableMobile: true,
-  onClose: () => {
-    console.log("closeevent from global config");
-  }
-});
+//import { mapState } from "vuex";
 
 export default {
   name: "TaskCard",
