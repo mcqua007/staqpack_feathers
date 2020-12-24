@@ -2,14 +2,23 @@
   <div class="task-form">
     <!-- componenet wrapper -->
     <transition name="fade">
-      <div v-if="$store.getters.taskFormState == true" class="jumbotron" style=" margin-top:10px;">
+      <div
+        v-if="$store.getters.taskFormState == true"
+        class="jumbotron"
+        style=" margin-top:10px;"
+      >
         <i class="la la-times close" role="button" @click="hideTaskForm()"></i>
         <h3 style="margin-bottom: 25px;">Add New Task</h3>
         <form data-project-id @submit.prevent>
           <div class="row">
             <div class="form-group col-md-4">
               <label for="issueDescInput">Task</label>
-              <input type="text" class="form-control" placeholder="Name of new task..." v-model="name" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Name of new task..."
+                v-model="name"
+              />
             </div>
             <div class="form-group col-md-4">
               <label for="issueSeverityInput">Severity</label>
@@ -24,7 +33,12 @@
               <label for="issueProjectId">Project</label>
               <select class="form-control" v-model="projectId">
                 <option value="null" disabled>[Choose Project]</option>
-                <option v-for="project in projects" :value="project._id" :key="project.name">{{ project.name }}</option>
+                <option
+                  v-for="project in projects"
+                  :value="project._id"
+                  :key="project.name"
+                  >{{ project.name }}</option
+                >
               </select>
             </div>
             <!-- use v-if project is a team project then allow to assign -->
@@ -37,14 +51,28 @@
           <div class="row flex-end">
             <div class="form-group col-12 col-md-6">
               <label for="description">Description (optional)</label>
-              <input type="text" class="form-control" placeholder="Describe the issue..." v-model="description" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Describe the issue..."
+                v-model="description"
+              />
             </div>
             <div class="form-group col-12 col-md-3">
               <label for="dueDate">Due Date (optional)</label>
-              <input type="date" class="form-control" v-model="taskDueDate" />
+              <!--<input type="date" class="form-control" v-model="taskDueDate" />-->
+              <flat-pickr
+                class="date-picker-task-form"
+                v-model="taskDueDate"
+                :config="dateConfig"
+                placeholder="Select Date"
+              ></flat-pickr>
             </div>
             <div class="form-group col-12 col-md-3">
-              <button class="btn btn-primary btn-block" @click="submitTaskForm()">
+              <button
+                class="btn btn-primary btn-block"
+                @click="submitTaskForm()"
+              >
                 Create Task
               </button>
             </div>
@@ -71,120 +99,168 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+//used for date picker component
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
-  export default {
-    name: 'TaskForm',
-    props: ['currentProjectId'],
-    data() {
-      return {
-        name: null,
-        alertType: null,
-        severity: '1',
-        assignTo: null,
-        description: null,
-        feedback: null,
-        projectId: this.$route.name == 'Project' ? this.$route.params.id : null,
-        projects: null,
-        taskDueDate: null
-      };
+import { mapState } from "vuex";
+
+export default {
+  name: "TaskForm",
+  props: ["currentProjectId"],
+  components: {
+    flatPickr
+  },
+  data() {
+    return {
+      name: null,
+      alertType: null,
+      severity: "1",
+      assignTo: null,
+      description: null,
+      feedback: null,
+      projectId: this.$route.name == "Project" ? this.$route.params.id : null,
+      projects: null,
+      taskDueDate: null,
+      dateConfig: {
+        disableMobile: true,
+        enableTime: false,
+        dateFormat: "Z",
+        altInput: true,
+        altFormat: "n/j/Y"
+      }
+    };
+  },
+  methods: {
+    alertFeedback(message, type, time) {
+      let timeOut = time != undefined ? time : 2500;
+      this.feedback = message;
+      this.alertType = type;
+      var that = this;
+      setTimeout(function() {
+        that.feedback = null;
+        this.alertType = null;
+      }, timeOut);
     },
-    methods: {
-      alertFeedback(message, type, time) {
-        let timeOut = time != undefined ? time : 2500;
-        this.feedback = message;
-        this.alertType = type;
-        var that = this;
-        setTimeout(function() {
-          that.feedback = null;
-          this.alertType = null;
-        }, timeOut);
-      },
-      hideTaskForm() {
-        this.$store.commit('toggleTaskForm', this.$store.getters.taskFormState);
-      },
-      submitTaskForm() {
-        if (this.name && this.projectId) {
-          let formData = {
-            name: this.name,
-            severity: this.severity,
-            //assignTo: this.assignTo,
-            description: this.description,
-            projectId: this.projectId,
-            dueDate: this.taskDueDate
-          };
+    hideTaskForm() {
+      this.$store.commit("toggleTaskForm", this.$store.getters.taskFormState);
+    },
+    submitTaskForm() {
+      if (this.name && this.projectId) {
+        let formData = {
+          name: this.name,
+          severity: this.severity,
+          //assignTo: this.assignTo,
+          description: this.description,
+          projectId: this.projectId,
+          dueDate: this.taskDueDate
+        };
 
-          this.$store
-            .dispatch('createTask', formData)
-            .then(() => {
-              //RESETING FORM VALUES
-              this.name = null;
-              this.severity = '1';
-              //this.assignTo = null;
-              this.description = null;
-              this.projectId = null;
-              this.taskDueDate = null;
-              //Emit event to main down to project d Task that where submitted
-              this.$emit('taskFormInput');
-              this.alertFeedback('You new task has been created.', 'primary');
-            })
-            .catch(e => {
-              this.alertFeedback('Error: ' + e, 'danger'); //alert error feedback
-            });
-        } else {
-          this.alertFeedback('You must have a Task Name and a choose a Project!', 'danger');
-        }
+        this.$store
+          .dispatch("createTask", formData)
+          .then(() => {
+            //RESETING FORM VALUES
+            this.name = null;
+            this.severity = "1";
+            //this.assignTo = null;
+            this.description = null;
+            this.projectId = null;
+            this.taskDueDate = null;
+            //Emit event to main down to project d Task that where submitted
+            this.$emit("taskFormInput");
+            this.alertFeedback("You new task has been created.", "primary");
+          })
+          .catch(e => {
+            this.alertFeedback("Error: " + e, "danger"); //alert error feedback
+          });
+      } else {
+        this.alertFeedback(
+          "You must have a Task Name and a choose a Project!",
+          "danger"
+        );
+      }
+    }
+  },
+  computed: mapState(["loading"]),
+  watch: {
+    loading(newValue) {
+      if (newValue === false) {
+        this.projects = this.$store.getters.projects;
       }
     },
-    computed: mapState(['loading']),
-    watch: {
-      loading(newValue) {
-        if (newValue === false) {
-          this.projects = this.$store.getters.projects;
-        }
-      },
-      $route() {
-        if (this.$route.name == 'Project') {
-          this.projectId = this.$route.params.id; //refering to project id
-        }
-      }
-    },
-    created() {
-      //make taskForm select option the same as the project it is in
-      if (this.$route.name == 'Project') {
+    $route() {
+      if (this.$route.name == "Project") {
         this.projectId = this.$route.params.id; //refering to project id
       }
     }
-  };
+  },
+  created() {
+    //make taskForm select option the same as the project it is in
+    if (this.$route.name == "Project") {
+      this.projectId = this.$route.params.id; //refering to project id
+    }
+  }
+};
 </script>
+<!-- Date Picker Can't be Scoped Since it's another componenet -->
+<style>
+.date-picker-task-form.form-control[readonly] {
+  background-color: #fff;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+  background: #007bff;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #fff;
+  border-color: #007bff;
+}
+</style>
 
 <style lang="css" scoped>
-  .red-text {
-    color: red;
-  }
+.red-text {
+  color: red;
+}
 
-  /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-  .form-group {
-    text-align: left;
-  }
-  .jumbotron {
-    padding: 30px 20px;
-  }
-  .close {
-    float: right;
-    font-size: 30px;
-    color: #ccc;
-    position: relative;
-  }
-  .flex-end {
-    align-items: flex-end;
-  }
-  /*================================*/
+/* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.form-group {
+  text-align: left;
+}
+.jumbotron {
+  padding: 30px 20px;
+}
+.close {
+  float: right;
+  font-size: 30px;
+  color: #ccc;
+  position: relative;
+}
+.flex-end {
+  align-items: flex-end;
+}
+/*================================*/
 </style>
