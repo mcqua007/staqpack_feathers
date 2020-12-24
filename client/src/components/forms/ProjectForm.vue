@@ -5,7 +5,9 @@
         <i
           class="la la-times close"
           role="button"
-          @click="$store.commit('toggleProjectForm', $store.getters.projectFormState)"
+          @click="
+            $store.commit('toggleProjectForm', $store.getters.projectFormState)
+          "
         ></i>
         <h3 style="margin-bottom: 25px;">Add a New Project</h3>
         <form @submit.prevent>
@@ -40,20 +42,40 @@
           <div class="row flex-end">
             <div class="form-group col-md-6 col-12">
               <label for="issueDescInput">Project Description (optional)</label>
-              <input type="text" class="form-control" placeholder="Describe the Project..." v-model="projectDesc" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Describe the Project..."
+                v-model="projectDesc"
+              />
             </div>
             <div class="form-group col-md-3 col-12">
               <label for="projectDueDate">Due Date (optional)</label>
-              <input type="date" class="form-control" v-model="projectDueDate" />
+              <!--<input
+                type="date"
+                class="form-control"
+                v-model="projectDueDate"
+              />-->
+              <flat-pickr
+                class="date-picker-project-form"
+                v-model="projectDueDate"
+                :config="dateConfig"
+                placeholder="Select Date"
+              ></flat-pickr>
             </div>
             <div class="form-group col-md-3 col-12">
-              <button class="btn btn-primary btn-block" @click="submitProjectForm()">Create Project</button>
+              <button
+                class="btn btn-primary btn-block"
+                @click="submitProjectForm()"
+              >
+                Create Project
+              </button>
             </div>
           </div>
           <transition name="fade">
             <p
               :class="{
-                'alert': true,
+                alert: true,
                 'text-center': true,
                 'alert-danger': alertType === 'danger',
                 'alert-success': alertType === 'success',
@@ -88,116 +110,168 @@
   <!-- end componenet wrapper -->
 </template>
 <script>
-  export default {
-    name: 'ProjectForm',
-    data() {
-      return {
-        projectName: null,
-        projectType: 'personal',
-        team: 'none',
-        projectDesc: null,
-        projectDueDate: null,
-        feedback: null,
-        alertType: null,
-        projectData: null,
-        responseData: null,
-        progress: false,
-        userData: {},
-        options: []
-      };
-    },
-    methods: {
-      hideProjectForm() {
-        this.$store.commit('toggleProjectForm', this.$store.getters.projectFormState);
-      },
-      submitProjectForm() {
-        var that = this;
-        if (this.projectName && this.projectType) {
-          //show progress bar
-          this.progress = true;
-          this.updateProgressBar();
-          // let user = this.$store.getUser;
-          let formData = {
-            name: this.projectName,
-            type: this.projectType,
-            //team: this.team,
-            description: this.projectDesc,
-            dueDate: this.projectDueDate
-          };
-          this.$store
-            .dispatch('createProject', formData)
-            .then(() => {
-              //RESETING FORM VALUES
-              this.projectName = null;
-              this.projectType = 'personal';
-              //this.team = 'none';
-              this.projectDesc = null;
-              this.projectDueDate = null;
-              setTimeout(function() {
-                that.progress = false;
-                that.alertFeedback('Your new project has been created!', 'primary');
-              }, 490);
-            })
-            .catch(e => {
-              this.alertFeedback('Error: ' + e, 'danger'); //alert error feedback
-            });
-          //load new project here using routes
-        } else {
-          this.alertFeedback('You must fill out all required fields.', 'danger');
-        }
-      },
-      //THESE FUNCTIONS ARE DEFINED IN TEAM FORM AS WELL - NEED TO DEINFE THEM IN ONE placeholder
-      alertFeedback(message, type, time) {
-        let timeOut = time != undefined ? time : 2500;
-        this.feedback = message;
-        this.alertType = type;
-        var that = this;
-        setTimeout(function() {
-          that.feedback = null;
-          this.alertType = null;
-        }, timeOut);
-      },
-      updateProgressBar() {
-        var width = 1;
-        var identity = setInterval(function() {
-          if (width >= 100) {
-            clearInterval(identity);
-          } else {
-            width += 10;
-            var element = document.getElementById('progressBar');
-            element.style.width = width + '%';
-          }
-        }, 10);
-      }
-    }
-  };
-</script>
-<style lang="css" scoped>
-  .red-text {
-    color: red;
-  }
+//used for date picker component
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
-  /* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
+export default {
+  name: "ProjectForm",
+  components: {
+    flatPickr
+  },
+  data() {
+    return {
+      projectName: null,
+      projectType: "personal",
+      team: "none",
+      projectDesc: null,
+      projectDueDate: null,
+      feedback: null,
+      alertType: null,
+      projectData: null,
+      responseData: null,
+      progress: false,
+      userData: {},
+      options: [],
+      dateConfig: {
+        disableMobile: true,
+        enableTime: false,
+        dateFormat: "Z",
+        altInput: true,
+        altFormat: "n/j/Y"
+      }
+    };
+  },
+  methods: {
+    hideProjectForm() {
+      this.$store.commit(
+        "toggleProjectForm",
+        this.$store.getters.projectFormState
+      );
+    },
+    submitProjectForm() {
+      var that = this;
+      if (this.projectName && this.projectType) {
+        //show progress bar
+        this.progress = true;
+        this.updateProgressBar();
+        // let user = this.$store.getUser;
+        let formData = {
+          name: this.projectName,
+          type: this.projectType,
+          //team: this.team,
+          description: this.projectDesc,
+          dueDate: this.projectDueDate
+        };
+        this.$store
+          .dispatch("createProject", formData)
+          .then(() => {
+            //RESETING FORM VALUES
+            this.projectName = null;
+            this.projectType = "personal";
+            //this.team = 'none';
+            this.projectDesc = null;
+            this.projectDueDate = null;
+            setTimeout(function() {
+              that.progress = false;
+              that.alertFeedback(
+                "Your new project has been created!",
+                "primary"
+              );
+            }, 490);
+          })
+          .catch(e => {
+            this.alertFeedback("Error: " + e, "danger"); //alert error feedback
+          });
+        //load new project here using routes
+      } else {
+        this.alertFeedback("You must fill out all required fields.", "danger");
+      }
+    },
+    //THESE FUNCTIONS ARE DEFINED IN TEAM FORM AS WELL - NEED TO DEINFE THEM IN ONE placeholder
+    alertFeedback(message, type, time) {
+      let timeOut = time != undefined ? time : 2500;
+      this.feedback = message;
+      this.alertType = type;
+      var that = this;
+      setTimeout(function() {
+        that.feedback = null;
+        this.alertType = null;
+      }, timeOut);
+    },
+    updateProgressBar() {
+      var width = 1;
+      var identity = setInterval(function() {
+        if (width >= 100) {
+          clearInterval(identity);
+        } else {
+          width += 10;
+          var element = document.getElementById("progressBar");
+          element.style.width = width + "%";
+        }
+      }, 10);
+    }
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-  .form-group {
-    text-align: left;
-  }
-  .flex-end {
-    align-items: flex-end;
-  }
-  .jumbotron {
-    padding: 30px 20px;
-  }
-  .close {
-    float: right;
-    font-size: 30px;
-    color: #ccc;
-    position: relative;
-  }
+};
+</script>
+<!-- Date Picker Can't be Scoped Since it's another componenet -->
+<style>
+.date-picker-project-form.form-control[readonly] {
+  background-color: #fff;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+  background: #007bff;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #fff;
+  border-color: #007bff;
+}
+</style>
+
+<style lang="css" scoped>
+.red-text {
+  color: red;
+}
+
+/* USED IN MAIN OTHER COMPONENS - MAIN *NOT DRY */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.form-group {
+  text-align: left;
+}
+.flex-end {
+  align-items: flex-end;
+}
+.jumbotron {
+  padding: 30px 20px;
+}
+.close {
+  float: right;
+  font-size: 30px;
+  color: #ccc;
+  position: relative;
+}
 </style>
