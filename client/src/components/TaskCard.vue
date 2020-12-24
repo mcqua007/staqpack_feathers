@@ -233,7 +233,7 @@ export default {
       dateConfig: {
         wrap: true,
         disableMobile: true,
-        enableTime: true,
+        enableTime: false,
         dateFormat: "Z",
         altInput: true,
         altFormat: "n/j/y",
