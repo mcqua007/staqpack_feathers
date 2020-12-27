@@ -165,7 +165,10 @@
             </div>
           </div>
         </div>
-        <div class="input-group todo-input-group">
+        <form
+          class="input-group todo-input-group"
+          @submit.prevent="addTodo(task._id, task.projectId)"
+        >
           <p class="red-text" v-show="feedback">
             {{ feedback }}
           </p>
@@ -180,13 +183,13 @@
           <div class="input-group-append">
             <button
               class="btn btn-outline-secondary"
-              @click="addTodo(task._id, task.projectId)"
+              type="submit"
               :disabled="task.completed"
             >
               <i class="la la-plus"></i>
             </button>
           </div>
-        </div>
+        </form>
       </div>
       <!-- <div class="assigned-to-text">Assigned To: {{ task.assignTo }}</div> -->
       <div v-show="backActive" class="back-of-card card-main-wrap">
