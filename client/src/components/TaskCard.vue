@@ -9,13 +9,23 @@
       }"
     >
       <div class="btn-group" role="group">
-        <div class="big-btn-width btn btn-outline-primary btn-input-container">
+        <div
+          :class="{
+            'big-btn-width': true,
+            btn: true,
+            'btn-outline-primary': true,
+            'btn-input-container': true,
+            disabled: task.completed
+          }"
+          :disabled="task.completed"
+        >
           <flat-pickr
             class="date-picker-btn"
             v-model="newDueDatetime"
             @on-change="datePickerOpen"
             @on-close="datetimeChange"
             :config="dateConfig"
+            :disabled="task.completed"
           ></flat-pickr>
           <i class="la la-calendar" v-show="dateIconShow"></i>
         </div>
@@ -446,6 +456,10 @@ export default {
 .date-picker-btn.form-control[readonly]:hover {
   color: #fff;
 }
+.btn-outline-primary.disabled .date-picker-btn.form-control[readonly]:hover {
+  color: #007bff;
+  cursor: default;
+}
 .big-btn-width {
   width: 50%;
 }
@@ -487,6 +501,9 @@ export default {
 </style>
 <!-- Scoped to this component -->
 <style lang="css" scoped>
+.btn-outline-danger[disabled="disabled"] {
+  cursor: default;
+}
 .card-todo-wrap {
   /* max-height: 275px; */
   overflow-y: auto;
