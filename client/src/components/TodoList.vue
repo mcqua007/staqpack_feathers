@@ -1,48 +1,52 @@
 <template lang="html">
-  <div v-if="todo != null" class="todo" :style="todoStyle">
-    <div style="width:100%;">
-      <div class="form-check" v-show="!editInputState">
-        <input
-          type="checkbox"
-          :id="todo._id"
-          v-model="checkedState"
-          @change="toggleCheckBox(todo._id)"
-          class="form-check-input"
-        />
-        <label
-          class="form-check-label todo-name"
-          :for="todo._id"
-          v-bind:data-id="todo._id"
-          >{{ todo.name }}</label
-        >
-        <i
-          class="la la-edit edit-todo"
-          role="button"
-          @click="toggleEditTodo(todo.name)"
-        ></i>
-      </div>
-      <div class="edit-todo-row" v-show="editInputState">
-        <input
-          class="form-check-label"
-          type="text"
-          v-model="editInput"
-          v-on:keyup="checkChange(todo.name)"
-        />
-        <i
-          :class="{
-            la: true,
-            'la-check': todoChange === true,
-            'la-times': !todoChange
-          }"
-          role="button"
-          @click="saveTodoEdit(todo._id, todo.name)"
-        ></i>
-        <i
-          class="la la-trash edit-todo-delete"
-          role="button"
-          @click="deleteTodo(todo._id)"
-        ></i>
-      </div>
+  <div
+    v-if="todo != null"
+    class="todo"
+    :style="todoStyle"
+    :disabled="taskCompleted"
+  >
+    <div class="form-check" v-show="!editInputState">
+      <input
+        type="checkbox"
+        :id="todo._id"
+        v-model="checkedState"
+        @change="toggleCheckBox(todo._id)"
+        class="form-check-input"
+        :disabled="taskCompleted"
+      />
+      <label
+        class="form-check-label todo-name"
+        :for="todo._id"
+        v-bind:data-id="todo._id"
+        >{{ todo.name }}</label
+      >
+      <i
+        class="la la-edit edit-todo"
+        role="button"
+        @click="toggleEditTodo(todo.name)"
+      ></i>
+    </div>
+    <div class="edit-todo-row" v-show="editInputState">
+      <input
+        class="form-check-label"
+        type="text"
+        v-model="editInput"
+        v-on:keyup="checkChange(todo.name)"
+      />
+      <i
+        :class="{
+          la: true,
+          'la-check': todoChange === true,
+          'la-times': !todoChange
+        }"
+        role="button"
+        @click="saveTodoEdit(todo._id, todo.name)"
+      ></i>
+      <i
+        class="la la-trash edit-todo-delete"
+        role="button"
+        @click="deleteTodo(todo._id)"
+      ></i>
     </div>
   </div>
 </template>
@@ -50,7 +54,7 @@
 <script>
 export default {
   name: "TodoList",
-  props: ["todo", "taskOpen"],
+  props: ["todo", "taskCompleted"],
   data() {
     return {
       checkedState: this.todo.completed,
@@ -117,9 +121,13 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.todo[disabled="disabled"] .edit-todo {
+  display: none;
+}
 .form-check {
   display: inline-flex;
   width: 100%;
+  padding-left: 1.3em;
 }
 .form-check i {
   opacity: 0;

@@ -145,8 +145,13 @@
           <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
           <div v-show="!todosHidden">
             <hr />
-            <div v-for="(todo, index) in todos" :key="index">
-              <TodoList v-bind:todo="todo"></TodoList>
+            <div class="card-todo-wrap">
+              <div v-for="(todo, index) in todos" :key="index">
+                <TodoList
+                  :todo="todo"
+                  :taskCompleted="task.completed"
+                ></TodoList>
+              </div>
             </div>
           </div>
         </div>
@@ -480,7 +485,13 @@ export default {
   pointer-events: none;
 }
 </style>
+<!-- Scoped to this component -->
 <style lang="css" scoped>
+.card-todo-wrap {
+  /* max-height: 275px; */
+  overflow-y: auto;
+}
+
 .dropdown-menu {
   display: block;
   margin-top: -1px;
