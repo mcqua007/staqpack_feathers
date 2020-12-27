@@ -197,7 +197,7 @@
           <h5>Images</h5>
           <div class="flex-row">
             <form action="" @submit.prevent>
-              <input type="file" @change="onFileChange" />
+              <input class="file-input" type="file" @change="onFileChange" />
               <button class="btn btn-secondary" @click="uploadImage()">
                 Upload
               </button>
@@ -504,6 +504,11 @@ export default {
 </style>
 <!-- Scoped to this component -->
 <style lang="css" scoped>
+.file-input {
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+}
 .btn-outline-danger[disabled="disabled"] {
   cursor: default;
 }
