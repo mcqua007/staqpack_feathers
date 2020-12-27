@@ -1,0 +1,20 @@
+{
+  "name": "staqpack-feathers",
+  "version": "1.0.0",
+  "description": "Client and Server ",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd server && npm run dev",
+    "client": "cd client && yarn serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcqua007/staqpack_feathers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcqua007/staqpack_feathers/issues"
+  },
+  "homepage": "https://github.com/mcqua007/staqpack_feathers#readme"
+}
