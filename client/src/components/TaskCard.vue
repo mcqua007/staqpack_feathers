@@ -179,6 +179,7 @@
             <i class="la la-list-alt"></i> Completed: {{ numCompletedTodos }}/{{
               totalTaskTodos
             }}
+            ({{ todoPercentCompleted }}%)
           </div>
           <div v-else>
             No Todos yet.
@@ -278,8 +279,9 @@ export default {
       uploadImageActive: false,
       imageUrl: null,
       newDueDatetime: null,
-      totalTaskTodos: null,
-      numCompletedTodos: null,
+      totalTaskTodos: 0,
+      todoPercentCompleted: 0,
+      numCompletedTodos: 0,
       images: this.task.images ? this.task.images : [],
       //newImages: [],
       dateIconShow: this.task.dueDate ? false : true,
@@ -486,9 +488,20 @@ export default {
         .then(res => {
           this.todos = res.data;
           this.totalTaskTodos = res.total;
-          this.numCompletedTodos = res.data.filter(
-            todo => todo.completed === true
-          ).length;
+          if (res.total > 0) {
+            this.numCompletedTodos = res.data.filter(
+              todo => todo.completed === true
+            ).length;
+          }
+          //calculate percent complete
+          if (this.numCompletedTodos > 0 && res.total > 0) {
+            this.todoPercentCompleted = (
+              (this.numCompletedTodos / this.totalTaskTodos) *
+              100
+            ).toFixed(0);
+          }
+
+          console.log(this.todoPercentCompleted);
         });
     }
   },
