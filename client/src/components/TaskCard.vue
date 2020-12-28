@@ -38,7 +38,13 @@
           }"
           :disabled="task.completed"
         >
-          <i class="la la-images"></i>
+          <i
+            :class="{
+              la: true,
+              'la-images': !imagesActive,
+              'la-home': imagesActive
+            }"
+          ></i>
         </button>
         <div class="btn-group">
           <button
