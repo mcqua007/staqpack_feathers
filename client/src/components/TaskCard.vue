@@ -175,6 +175,7 @@
           <p class="card-subtitle mb-2 text-muted" v-if="task.description">
             {{ task.description }}
           </p>
+          <!-- Below is not reactive -->
           <div v-if="totalTaskTodos != 0">
             <i class="la la-list-alt"></i> Completed: {{ numCompletedTodos }}/{{
               totalTaskTodos
@@ -488,6 +489,7 @@ export default {
         .then(res => {
           this.todos = res.data;
           this.totalTaskTodos = res.total;
+          //TODO: below is not reactive
           if (res.total > 0) {
             this.numCompletedTodos = res.data.filter(
               todo => todo.completed === true
@@ -502,6 +504,7 @@ export default {
           }
 
           console.log(this.todoPercentCompleted);
+          //End not reactive
         });
     }
   },
