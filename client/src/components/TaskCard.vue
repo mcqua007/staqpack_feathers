@@ -30,6 +30,7 @@
           <i class="la la-calendar" v-show="dateIconShow"></i>
         </div>
         <button
+          @click="toggleImages(task._id)"
           v-bind:class="{
             btn: true,
             'btn-outline-danger': true,
@@ -64,6 +65,7 @@
           >
             <div v-show="!task.completed">
               <button
+                v-show="!imagesActive"
                 class="dropdown-item"
                 @click="toggleCompletedTask(task._id)"
               >
@@ -78,7 +80,11 @@
                 <i class="la la-redo"></i>Re-open
               </button>
             </div>
-            <button class="dropdown-item" @click="toggleTodoVisibility()">
+            <button
+              v-show="!imagesActive"
+              class="dropdown-item"
+              @click="toggleTodoVisibility()"
+            >
               <div v-show="todosHidden">
                 <i class="la la-eye"></i>Show Todos
               </div>
@@ -87,6 +93,7 @@
               </div>
             </button>
             <button
+              v-show="!imagesActive"
               class="dropdown-item"
               v-bind:data-delete-btn-id="task._id"
               @click="deleteTask(task._id, task.projectId)"
@@ -99,6 +106,13 @@
               @click="toggleImages(task._id)"
             >
               <i class="la la-file-image"></i>Images
+            </button>
+            <button
+              v-show="backActive && imagesActive"
+              class="dropdown-item"
+              @click="toggleFileUpload()"
+            >
+              <i class="la la-upload"></i> Upload Image
             </button>
             <button
               v-show="backActive"
@@ -195,9 +209,17 @@
       <div v-show="backActive" class="back-of-card card-main-wrap">
         <div v-show="imagesActive" class="back-of-card-images">
           <h5>Images</h5>
-          <div class="flex-row">
+          <div class="new-images-grid" v-show="images">
+            <img v-for="image in images" :src="image" :key="image" />
+          </div>
+          <div class="flex-row" v-show="uploadImageActive">
             <form action="" @submit.prevent>
-              <input class="file-input" type="file" @change="onFileChange" />
+              <input
+                class="file-input"
+                type="file"
+                @change="onFileChange"
+                ref="inputFile"
+              />
               <button class="btn btn-secondary" @click="uploadImage()">
                 Upload
               </button>
@@ -237,8 +259,11 @@ export default {
       backActive: false,
       timer: null,
       imagesActive: false,
+      uploadImageActive: false,
       imageUrl: null,
       newDueDatetime: null,
+      images: this.task.images ? this.task.images : [],
+      //newImages: [],
       dateIconShow: this.task.dueDate ? false : true,
       dateConfig: {
         wrap: true,
@@ -267,6 +292,9 @@ export default {
     }
   },
   methods: {
+    toggleFileUpload() {
+      this.uploadImageActive = !this.uploadImageActive;
+    },
     datePickerOpen() {
       this.dateIconShow = false;
     },
@@ -300,6 +328,7 @@ export default {
       };
     },
     uploadImage() {
+      console.log(this.images);
       axios({
         method: "post",
         url: "http://localhost:3030/uploads",
@@ -308,9 +337,34 @@ export default {
         .then(res => {
           console.log("res", res);
           this.imageUrl = null;
+
+          var newImageUrl = res.config.url + "/" + res.data.id;
+          var tempImages = this.images;
+          tempImages.push(newImageUrl);
+          if (res.status === 201) {
+            this.$store
+              .dispatch("patchTask", {
+                id: this.id,
+                update: {
+                  images: tempImages
+                }
+              })
+              .then(() => {
+                //do something here once delete is complete
+                this.$store.commit("UPDATE_TASK", {
+                  id: this.id,
+                  field: "images",
+                  newValue: tempImages
+                });
+
+                //this.newImages.push(newImageUrl); //update current ui for the file upload section
+                this.$refs.inputFile.value = null; //reset input file
+              });
+          }
         })
         .catch(e => {
           alert(e);
+          this.$refs.inputFile.value = null; //reset input file
         });
     },
     //maybe can combine these two below into one function such as toggleCompleted
@@ -504,6 +558,16 @@ export default {
 </style>
 <!-- Scoped to this component -->
 <style lang="css" scoped>
+.new-images-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 6px;
+  margin: 10px 0;
+}
+.new-images-grid > img {
+  width: 100%;
+}
 .file-input {
   text-overflow: ellipsis;
   width: 100%;
