@@ -176,7 +176,9 @@
             {{ task.description }}
           </p>
           <div v-if="totalTaskTodos != 0">
-            Completed: {{ numCompletedTodos }}/{{ totalTaskTodos }}
+            <i class="la la-list-alt"></i> Completed: {{ numCompletedTodos }}/{{
+              totalTaskTodos
+            }}
           </div>
           <div v-else>
             No Todos yet.
