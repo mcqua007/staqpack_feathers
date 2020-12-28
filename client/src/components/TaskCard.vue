@@ -172,7 +172,15 @@
           ><span class="badge  badge-secondary severity-badge">Closed</span>
         </div>
         <div class="card-body text-left">
-          <p class="card-subtitle mb-2 text-muted">{{ task.description }}</p>
+          <p class="card-subtitle mb-2 text-muted" v-if="task.description">
+            {{ task.description }}
+          </p>
+          <div v-if="totalTaskTodos != 0">
+            Completed: {{ numCompletedTodos }} /{{ totalTaskTodos }}
+          </div>
+          <div v-else>
+            No Todos yet.
+          </div>
           <div v-show="!todosHidden">
             <hr />
             <div class="card-todo-wrap">
@@ -268,6 +276,8 @@ export default {
       uploadImageActive: false,
       imageUrl: null,
       newDueDatetime: null,
+      totalTaskTodos: null,
+      numCompletedTodos: null,
       images: this.task.images ? this.task.images : [],
       //newImages: [],
       dateIconShow: this.task.dueDate ? false : true,
@@ -431,6 +441,7 @@ export default {
     },
     toggleBack(id) {
       //if back of card is going to be in view get height of front so they are the same
+      //TODO: can do this with refs instead
       if (!this.backActive) {
         let backCard = document.querySelector(
           '.task-wrap[data-id="' + id + '"] .back-of-card'
@@ -472,6 +483,10 @@ export default {
         .dispatch("fetchTodos", { taskId: this.task._id })
         .then(res => {
           this.todos = res.data;
+          this.totalTaskTodos = res.total;
+          this.numCompletedTodos = res.data.filter(
+            todo => todo.completed === true
+          ).length;
         });
     }
   },
