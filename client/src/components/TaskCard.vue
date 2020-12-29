@@ -138,7 +138,16 @@
         }"
       >
         <div class="card-title-badge-wrap text-left">
-          <span class="card-title">{{ task.name }}</span>
+          <div class="card-title">
+            <div v-if="editTaskNameActive">
+              <input type="text" autofocus v-model="taskNameEdit" />
+              <i class="la la-check" @click="saveNameEdit(task.name)"></i>
+            </div>
+            <div v-show="!editTaskNameActive">
+              {{ task.name }}
+              <i class="la la-edit edit-task" @click="editTaskName()"></i>
+            </div>
+          </div>
           <div role="button" @click="toggleBadge(task._id)">
             <span
               class="badge severity-badge badge-success"
@@ -259,6 +268,7 @@ export default {
   data() {
     return {
       id: this.task._id,
+      taskNameEdit: this.task.name,
       todos: null,
       todoInput: null,
       feedback: null,
@@ -266,6 +276,7 @@ export default {
       todosHidden: false,
       dropdownExpanded: false,
       backActive: false,
+      editTaskNameActive: false,
       timer: null,
       imagesActive: false,
       uploadImageActive: false,
@@ -304,6 +315,35 @@ export default {
     }
   },
   methods: {
+    editTaskName() {
+      this.editTaskNameActive = true;
+    },
+    saveNameEdit(currentTaskName) {
+      if (this.taskNameEdit.trim() !== currentTaskName.trim()) {
+        this.$store
+          .dispatch("patchTask", {
+            id: this.id,
+            update: { name: this.taskNameEdit }
+          })
+          .then(() => {
+            //update tasks in store
+            this.$store.commit("UPDATE_TASK", {
+              id: this.id,
+              field: "name",
+              newValue: this.taskNameEdit
+            });
+            this.editTaskNameActive = false;
+          })
+          .catch(e => {
+            alert(
+              "Error: Change to task name cannot be saved at this time. Message: ",
+              e
+            );
+          });
+      } else {
+        this.editTaskNameActive = false;
+      }
+    },
     toggleFileUpload() {
       this.uploadImageActive = !this.uploadImageActive;
     },
@@ -326,7 +366,6 @@ export default {
               field: "dueDate",
               newValue: this.newDueDatetime
             });
-            this.dropdownExpanded = false;
           });
       }
     },
@@ -588,6 +627,25 @@ export default {
 </style>
 <!-- Scoped to this component -->
 <style lang="css" scoped>
+.card-title i.edit-task {
+  opacity: 0;
+  margin-left: 5px;
+  transition: opacity 0.25s ease-in-out;
+}
+.card-title:hover i.edit-task {
+  opacity: 1;
+  cursor: pointer;
+}
+.card-title input {
+  width: 85%;
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  /*border-bottom: 1px solid #ced4da;*/
+}
+.card-title .la-check {
+  color: #28a745;
+}
 .new-images-grid {
   width: 100%;
   display: grid;
