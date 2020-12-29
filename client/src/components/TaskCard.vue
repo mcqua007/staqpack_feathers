@@ -327,11 +327,6 @@ export default {
           })
           .then(() => {
             //update tasks in store
-            this.$store.commit("UPDATE_TASK", {
-              id: this.id,
-              field: "name",
-              newValue: this.taskNameEdit
-            });
             this.editTaskNameActive = false;
           })
           .catch(e => {
@@ -351,21 +346,14 @@ export default {
       this.dateIconShow = false;
     },
     datetimeChange() {
-      console.log("Called dataTimeChange: ", this.newDueDatetime);
       if (this.newDueDatetime) {
-        console.log(this.newDueDatetime);
         this.$store
           .dispatch("patchTask", {
             id: this.id,
             update: { dueDate: this.newDueDatetime }
           })
           .then(() => {
-            //update tasks in store
-            this.$store.commit("UPDATE_TASK", {
-              id: this.id,
-              field: "dueDate",
-              newValue: this.newDueDatetime
-            });
+            //date has been changed can do something here
           });
       }
     },
@@ -401,14 +389,6 @@ export default {
                 }
               })
               .then(() => {
-                //do something here once delete is complete
-                this.$store.commit("UPDATE_TASK", {
-                  id: this.id,
-                  field: "images",
-                  newValue: tempImages
-                });
-
-                //this.newImages.push(newImageUrl); //update current ui for the file upload section
                 this.$refs.inputFile.value = null; //reset input file
               });
           }
@@ -427,11 +407,6 @@ export default {
         })
         .then(() => {
           //do something here once delete is complete
-          this.$store.commit("UPDATE_TASK", {
-            id: taskId,
-            field: "completed",
-            newValue: !this.task.completed
-          });
           this.dropdownExpanded = false;
         });
     },
@@ -450,11 +425,7 @@ export default {
             update: { severity: this.task.severity }
           })
           .then(() => {
-            this.$store.commit("UPDATE_TASK", {
-              id: taskId,
-              field: "severity",
-              newValue: this.task.severity
-            });
+            //can do something after task badge has been updated
           });
       }, 2300);
     },

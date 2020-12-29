@@ -239,6 +239,8 @@ export default new Vuex.Store({
                 feathersClient.service("tasks").patch(data.id, data.update).then((res) => {
                     console.log('patchTask: ', res);
                     resolve(res);
+                    // perform mutation on local task data
+                    context.commit('NEW_UPDATE_TASK', data);
                 }).catch((e) => {
                     if (context.state.debug) {
                         console.error("patchTask Error:", e);
@@ -377,11 +379,18 @@ export default new Vuex.Store({
                 state.tasks.splice(index, 1);
             }
         },
+        // only bein gused in main for a webhook - line 61, need to only use NEW_UPDATE_TASK
         UPDATE_TASK(state, payload) {
             let index = state.tasks.findIndex((task) => task._id == payload.id);
             state.tasks[index][payload.field] = payload.newValue;
         },
-
+        NEW_UPDATE_TASK(state, payload) {
+            console.log('In New update task');
+            let index = state.tasks.findIndex((task) => task._id == payload.id);
+            var fields = Object.keys(payload.update);
+            var values = Object.values(payload.update);
+            state.tasks[index][fields[0]] = values[0];
+        },
         // 'todos' mutations
         ADD_TODOS(state, payload) {
             if (Array.isArray(payload)) {
