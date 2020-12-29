@@ -137,39 +137,30 @@
           'card-main-wrap': true
         }"
       >
-        <div
-          role="button"
-          class="card-title-badge-wrap text-left"
-          v-if="task.severity == 1 && task.completed == false"
-          @click="toggleBadge(task._id)"
-        >
-          <span class="card-title">{{ task.name }}</span
-          ><span class="badge  badge-success severity-badge">Low</span>
-        </div>
-        <div
-          role="button"
-          class="card-title-badge-wrap text-left"
-          v-else-if="task.severity == 2 && task.completed == false"
-          @click="toggleBadge(task._id)"
-        >
-          <span class="card-title">{{ task.name }}</span
-          ><span class="badge  badge-warning severity-badge">Medium</span>
-        </div>
-        <div
-          role="button"
-          class="card-title-badge-wrap text-left"
-          v-else-if="task.severity == 3 && task.completed == false"
-          @click="toggleBadge(task._id)"
-        >
-          <span class="card-title">{{ task.name }}</span
-          ><span class="badge  badge-danger severity-badge">High</span>
-        </div>
-        <div
-          class="card-title-badge-wrap text-left"
-          v-else-if="task.completed == true"
-        >
-          <span class="card-title disabled">{{ task.name }}</span
-          ><span class="badge  badge-secondary severity-badge">Closed</span>
+        <div class="card-title-badge-wrap text-left">
+          <span class="card-title">{{ task.name }}</span>
+          <div role="button" @click="toggleBadge(task._id)">
+            <span
+              class="badge severity-badge badge-success"
+              v-if="task.severity == 1 && task.completed == false"
+              >Low</span
+            >
+            <span
+              class="badge severity-badge badge-warning"
+              v-else-if="task.severity == 2 && task.completed == false"
+              >Medium</span
+            >
+            <span
+              class="badge severity-badge badge-danger"
+              v-else-if="task.severity == 3 && task.completed == false"
+              >High</span
+            >
+            <span
+              class="badge severity-badge badge-secondary"
+              v-else-if="task.completed == true"
+              >Closed</span
+            >
+          </div>
         </div>
         <div class="card-body text-left">
           <p class="card-subtitle mb-2 text-muted" v-if="task.description">
@@ -683,7 +674,8 @@ div.card-shadow:hover {
 
 .severity-badge {
   margin-left: auto;
-  width: 20%;
+  width: 100%;
+  min-width: 60px;
   padding: 5px;
   line-height: normal;
   color: #fff;
@@ -718,7 +710,7 @@ div.card-shadow:hover {
     padding: 0;
   } */
 .card-title {
-  width: 80%;
+  width: 100%;
   margin: 0;
   font-weight: 700;
   font-size: 16px;
@@ -728,7 +720,7 @@ div.card-shadow:hover {
   overflow: hidden;
 }
 .card-title-badge-wrap {
-  margin: 0 0 1em 0;
+  margin: 0 0 0.75em 0;
   display: inline-flex;
   width: 100%;
   align-items: flex-end;
