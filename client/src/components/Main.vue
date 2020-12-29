@@ -61,12 +61,7 @@ export default {
     //listen for server emitting events
     feathersClient.service("tasks").on("webhook", data => {
       console.log("on webhook", data);
-      //eventually change this to  NEW UPDATE TASK MUTATION
-      this.$store.commit("UPDATE_TASK", {
-        id: data.id,
-        field: data.field,
-        newValue: data.newValue
-      });
+      this.$store.commit("UPDATE_TASK", data);
     });
   }
 };

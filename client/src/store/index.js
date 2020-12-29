@@ -240,7 +240,7 @@ export default new Vuex.Store({
                     console.log('patchTask: ', res);
                     resolve(res);
                     // perform mutation on local task data
-                    context.commit('NEW_UPDATE_TASK', data);
+                    context.commit('UPDATE_TASK', data);
                 }).catch((e) => {
                     if (context.state.debug) {
                         console.error("patchTask Error:", e);
@@ -379,12 +379,7 @@ export default new Vuex.Store({
                 state.tasks.splice(index, 1);
             }
         },
-        // only bein gused in main for a webhook - line 61, need to only use NEW_UPDATE_TASK
         UPDATE_TASK(state, payload) {
-            let index = state.tasks.findIndex((task) => task._id == payload.id);
-            state.tasks[index][payload.field] = payload.newValue;
-        },
-        NEW_UPDATE_TASK(state, payload) {
             console.log('In New update task');
             let index = state.tasks.findIndex((task) => task._id == payload.id);
             var fields = Object.keys(payload.update);
