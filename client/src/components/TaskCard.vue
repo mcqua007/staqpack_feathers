@@ -616,6 +616,7 @@ export default {
 }
 .card-title .la-check {
   color: #28a745;
+  cursor: pointer;
 }
 .new-images-grid {
   width: 100%;
