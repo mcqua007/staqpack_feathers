@@ -66,7 +66,30 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #181818;
+  }
+  body #app {
+    background-color: #181818;
+    color: #fff;
+    .top-bar {
+      background-color: #007bff;
+    }
+    .card,
+    .card input,
+    .sidebar-nav,
+    select {
+      background-color: #212121;
+      color: #fff;
+    }
+    hr {
+      border-top: 1px solid #fff;
+    }
+  }
+}
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
